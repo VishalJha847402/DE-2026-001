@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OOP Practice Bank · Python T5 · DE-2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root[data-theme="dark"]{
+  --bg-primary:#080D1A;--bg-secondary:#0F172A;--bg-card:#111827;--bg-card-hover:#1a2235;
+  --bg-surface:#1E293B;--bg-editor:#0D1117;--bg-editor-tab:#161B22;--bg-editor-line:#161B22;
+  --border:rgba(255,255,255,0.06);--border-hover:rgba(99,102,241,0.4);--border-strong:rgba(255,255,255,0.10);
+  --text-primary:#F1F5F9;--text-secondary:#94A3B8;--text-muted:#475569;--text-line:#6B7280;
+  --accent-blue:#6366F1;--accent-purple:#A855F7;--accent-cyan:#22D3EE;--accent-green:#10B981;
+  --accent-orange:#F59E0B;--accent-red:#EF4444;--accent-yellow:#FBBF24;--accent-pink:#EC4899;
+  --gradient-main:linear-gradient(135deg,#6366F1 0%,#A855F7 100%);
+  --gradient-python:linear-gradient(135deg,#3776AB 0%,#FFD43B 100%);
+  --glow-blue:0 0 30px rgba(99,102,241,0.25);
+  --shadow-card:0 4px 32px rgba(0,0,0,0.5);
+  --shadow-hover:0 8px 48px rgba(0,0,0,0.6);
+  --syn-keyword:#C586C0;--syn-string:#CE9178;--syn-number:#B5CEA8;--syn-comment:#6A9955;
+  --syn-fn:#DCDCAA;--syn-var:#9CDCFE;--syn-type:#4EC9B0;--syn-builtin:#569CD6;--syn-op:#D4D4D4;
+}
+:root[data-theme="light"]{
+  --bg-primary:#F0F4FF;--bg-secondary:#E8EDFF;--bg-card:#FFFFFF;--bg-card-hover:#F8FAFF;
+  --bg-surface:#EEF2FF;--bg-editor:#1E1E1E;--bg-editor-tab:#2D2D2D;--bg-editor-line:#252526;
+  --border:rgba(0,0,0,0.06);--border-hover:rgba(99,102,241,0.4);--border-strong:rgba(0,0,0,0.10);
+  --text-primary:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;--text-line:#9CA3AF;
+  --accent-blue:#4F46E5;--accent-purple:#9333EA;--accent-cyan:#0891B2;--accent-green:#059669;
+  --accent-orange:#D97706;--accent-red:#DC2626;--accent-yellow:#CA8A04;--accent-pink:#DB2777;
+  --gradient-main:linear-gradient(135deg,#4F46E5 0%,#9333EA 100%);
+  --gradient-python:linear-gradient(135deg,#3776AB 0%,#FFD43B 100%);
+  --glow-blue:0 0 30px rgba(79,70,229,0.15);
+  --shadow-card:0 4px 24px rgba(0,0,0,0.07);
+  --shadow-hover:0 8px 40px rgba(0,0,0,0.12);
+  --syn-keyword:#C586C0;--syn-string:#CE9178;--syn-number:#B5CEA8;--syn-comment:#6A9955;
+  --syn-fn:#DCDCAA;--syn-var:#9CDCFE;--syn-type:#4EC9B0;--syn-builtin:#569CD6;--syn-op:#D4D4D4;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg-primary);color:var(--text-primary);
+  transition:background .4s,color .4s;min-height:100vh;line-height:1.65}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg-secondary)}
+::-webkit-scrollbar-thumb{background:var(--accent-blue);border-radius:10px}
+code,pre,kbd{font-family:'JetBrains Mono',monospace}
+
+.bg-orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;animation:float 8s ease-in-out infinite}
+.bg-orb-1{width:500px;height:500px;background:radial-gradient(circle,rgba(99,102,241,0.10) 0%,transparent 70%);top:-100px;left:-100px}
+.bg-orb-2{width:600px;height:600px;background:radial-gradient(circle,rgba(168,85,247,0.07) 0%,transparent 70%);bottom:100px;right:-200px;animation-delay:-4s}
+@keyframes float{0%,100%{transform:translateY(0px) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+
+header{position:sticky;top:0;z-index:1000;height:68px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;background:rgba(8,13,26,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border)}
+[data-theme="light"] header{background:rgba(240,244,255,0.85)}
+.header-left{display:flex;align-items:center;gap:24px}
+.back-link{display:flex;align-items:center;gap:8px;color:var(--text-secondary);text-decoration:none;
+  font-size:13px;font-weight:500;padding:7px 14px;border-radius:10px;border:1px solid var(--border);transition:all .2s}
+.back-link:hover{color:var(--text-primary);border-color:var(--border-hover);background:var(--bg-card)}
+.crumb{display:flex;align-items:center;gap:10px;font-size:14px}
+.crumb-icon{width:32px;height:32px;background:var(--gradient-python);border-radius:9px;
+  display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:var(--glow-blue)}
+.crumb-title{font-weight:800;font-size:15px}
+.crumb-sub{font-size:11px;color:var(--text-muted);font-weight:500}
+.header-right{display:flex;align-items:center;gap:16px}
+.bank-progress{display:flex;align-items:center;gap:8px;background:var(--bg-card);
+  border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--text-secondary)}
+.bank-progress b{color:var(--text-primary);font-weight:700}
+.theme-toggle-wrap{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.toggle-track{width:48px;height:26px;background:var(--bg-surface);border:1px solid var(--border);
+  border-radius:13px;position:relative}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;background:var(--gradient-main);
+  border-radius:50%;transition:transform .3s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(99,102,241,0.4)}
+[data-theme="light"] .toggle-thumb{transform:translateX(22px)}
+
+.page{max-width:none;width:100%;margin:0 auto;padding:48px 56px 100px;position:relative;z-index:1}
+
+.bank-hero{margin-bottom:40px}
+.bank-eyebrow{display:inline-flex;align-items:center;gap:10px;background:rgba(99,102,241,0.10);
+  border:1px solid rgba(99,102,241,0.25);border-radius:20px;padding:6px 16px;font-size:11px;
+  font-weight:700;color:var(--accent-blue);letter-spacing:.06em;text-transform:uppercase;margin-bottom:18px}
+.bank-title{font-size:clamp(32px,4vw,46px);font-weight:900;line-height:1.1;letter-spacing:-0.02em;margin-bottom:12px}
+.bank-title .grad{background:var(--gradient-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.bank-lead{font-size:16px;color:var(--text-secondary);max-width:720px;margin-bottom:24px}
+
+/* Level tabs */
+.level-tabs{display:flex;gap:10px;margin-bottom:36px;flex-wrap:wrap}
+.level-tab{display:flex;align-items:center;gap:10px;padding:12px 22px;background:var(--bg-card);
+  border:1px solid var(--border);border-radius:14px;font-size:14px;font-weight:600;color:var(--text-secondary);
+  cursor:pointer;transition:all .25s}
+.level-tab:hover{color:var(--text-primary);border-color:var(--border-hover)}
+.level-tab.active{background:var(--gradient-main);color:white;border-color:transparent;box-shadow:var(--glow-blue)}
+.level-tab .dot{width:9px;height:9px;border-radius:50%}
+.level-tab .dot.e{background:var(--accent-green)}
+.level-tab .dot.m{background:var(--accent-orange)}
+.level-tab .dot.h{background:var(--accent-red)}
+.level-tab .count{font-size:11px;color:var(--text-muted);background:var(--bg-surface);padding:2px 8px;border-radius:10px;font-weight:700}
+.level-tab.active .count{background:rgba(255,255,255,0.2);color:white}
+
+.level-panel{display:none}
+.level-panel.active{display:block}
+
+/* Question card */
+.q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:32px;margin-bottom:32px;
+  position:relative;transition:border-color .2s}
+.q-card.solved{border-color:rgba(16,185,129,0.30);background:linear-gradient(135deg,var(--bg-card) 0%,rgba(16,185,129,0.04) 100%)}
+.q-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:14px;flex-wrap:wrap}
+.q-num-row{display:flex;align-items:center;gap:12px}
+.q-num{width:36px;height:36px;background:var(--gradient-main);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:14px}
+.q-meta{display:flex;flex-direction:column}
+.q-tag{font-size:11px;font-weight:700;color:var(--accent-blue);text-transform:uppercase;letter-spacing:.06em}
+.q-type{font-size:11px;color:var(--text-muted);font-weight:600;margin-top:2px}
+.q-actions-row{display:flex;align-items:center;gap:8px}
+.q-status-pill{font-size:11px;font-weight:700;padding:5px 12px;border-radius:12px;background:var(--bg-surface);color:var(--text-muted)}
+.q-status-pill.solved{background:rgba(16,185,129,0.15);color:var(--accent-green)}
+.q-status-pill.attempted{background:rgba(245,158,11,0.15);color:var(--accent-orange)}
+
+.q-title{font-size:20px;font-weight:800;margin-bottom:12px;letter-spacing:-0.01em;line-height:1.3}
+.q-scenario{background:var(--bg-surface);border-left:3px solid var(--accent-cyan);border-radius:0 10px 10px 0;
+  padding:14px 18px;margin-bottom:16px;font-size:14px;color:var(--text-secondary);line-height:1.65}
+.q-scenario b{color:var(--text-primary)}
+.q-task{font-size:14px;margin-bottom:18px;line-height:1.65;color:var(--text-primary)}
+.q-task b{color:var(--text-primary)}
+
+.q-actions{display:flex;gap:10px;margin:14px 0;flex-wrap:wrap}
+.q-btn{background:var(--bg-surface);border:1px solid var(--border);color:var(--text-secondary);
+  border-radius:9px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;
+  display:inline-flex;align-items:center;gap:6px}
+.q-btn:hover{border-color:var(--border-hover);color:var(--text-primary)}
+.q-btn.solved{background:rgba(16,185,129,0.10);border-color:rgba(16,185,129,0.30);color:var(--accent-green)}
+
+.q-reveal{display:none;margin-top:16px;padding:18px;background:rgba(168,85,247,0.05);
+  border:1px solid rgba(168,85,247,0.20);border-radius:12px}
+.q-reveal.open{display:block}
+.q-reveal h4{font-size:13px;font-weight:700;color:var(--accent-purple);text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:10px}
+.q-reveal p{font-size:14px;line-height:1.65;color:var(--text-secondary);margin-bottom:10px}
+.q-reveal code{background:var(--bg-surface);padding:1px 6px;border-radius:4px;font-size:12.5px;color:var(--syn-var)}
+
+.q-hint{display:none;margin-top:12px;padding:14px 18px;background:rgba(99,102,241,0.06);
+  border:1px solid rgba(99,102,241,0.20);border-left:3px solid var(--accent-blue);border-radius:10px;
+  font-size:13.5px;color:var(--text-secondary);line-height:1.65}
+.q-hint.open{display:block}
+.q-hint b{color:var(--accent-blue);text-transform:uppercase;font-size:11px;letter-spacing:.06em;display:block;margin-bottom:5px}
+
+/* Playground */
+.pg{background:var(--bg-editor);border:1px solid var(--border-strong);border-radius:12px;overflow:hidden;margin-top:14px}
+.pg-tabs{display:flex;align-items:center;background:var(--bg-editor-tab);padding:0 12px;height:36px;border-bottom:1px solid var(--border);justify-content:space-between}
+.pg-tab-name{font-size:12px;color:#E5E7EB;display:flex;align-items:center;gap:6px}
+.pg-status{font-size:10.5px;color:var(--text-muted);font-family:'JetBrains Mono',monospace}
+.pg-status.ready{color:var(--accent-green)}
+.pg-ta{width:100%;background:transparent;color:#D4D4D4;border:none;outline:none;resize:vertical;
+  font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;padding:14px 18px;min-height:260px;tab-size:4}
+.pg-actions{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg-editor-tab);border-top:1px solid var(--border)}
+.pg-run-btn{background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:8px 18px;
+  font-size:12px;font-weight:700;cursor:pointer;box-shadow:var(--glow-blue);transition:all .2s;display:flex;align-items:center;gap:6px}
+.pg-run-btn:hover{transform:translateY(-1px)}
+.pg-run-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.pg-reset-btn{background:transparent;border:1px solid var(--border);color:var(--text-muted);
+  border-radius:8px;padding:8px 14px;font-size:11.5px;font-weight:600;cursor:pointer}
+.pg-reset-btn:hover{color:var(--text-primary)}
+.pg-out{background:#0A0E16;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:12.5px;
+  line-height:1.7;color:var(--accent-green);white-space:pre-wrap;min-height:46px;max-height:340px;overflow-y:auto;border-top:1px solid var(--border)}
+.pg-out.error{color:var(--accent-red)}
+.pg-out-empty{color:var(--text-muted);font-style:italic}
+
+/* Editor code block (reveal) */
+.editor{background:var(--bg-editor);border:1px solid var(--border-strong);border-radius:10px;overflow:hidden;margin:10px 0}
+.editor-tabs-row{display:flex;align-items:center;background:var(--bg-editor-tab);height:32px;padding:0 12px}
+.editor-tab-name{font-size:11.5px;color:#E5E7EB}
+.editor-body{display:flex;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7}
+.editor-code{padding:12px 16px;color:#D4D4D4;white-space:pre;flex:1;overflow-x:auto;tab-size:4}
+.editor-code .kw{color:var(--syn-keyword)}
+.editor-code .str{color:var(--syn-string)}
+.editor-code .num{color:var(--syn-number)}
+.editor-code .com{color:var(--syn-comment);font-style:italic}
+.editor-code .fn{color:var(--syn-fn)}
+.editor-code .var{color:var(--syn-var)}
+.editor-code .type{color:var(--syn-type)}
+.editor-code .bi{color:var(--syn-builtin)}
+.editor-code .op{color:var(--syn-op)}
+
+/* Progress dots */
+.lvl-dots{display:flex;gap:8px;margin-bottom:24px}
+.lvl-dot{width:14px;height:14px;border-radius:50%;background:var(--bg-surface);border:2px solid var(--border)}
+.lvl-dot.attempted{background:var(--accent-orange);border-color:var(--accent-orange)}
+.lvl-dot.solved{background:var(--accent-green);border-color:var(--accent-green)}
+
+.summary-bar{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:18px 24px;margin-bottom:32px}
+.summary-bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.summary-bar-label{font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.summary-bar-num{font-size:22px;font-weight:800;background:var(--gradient-main);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.summary-bar-track{height:8px;background:var(--bg-surface);border-radius:4px;overflow:hidden}
+.summary-bar-fill{height:100%;background:var(--gradient-main);border-radius:4px;width:0%;transition:width 1s cubic-bezier(0.4,0,0.2,1)}
+
+@media (max-width:768px){
+  .page{padding:24px 18px 80px}
+  .q-card{padding:20px}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+
+<header>
+  <div class="header-left">
+    <a class="back-link" href="python.html#topic-5">← Back to OOP Topic</a>
+    <div class="crumb">
+      <div class="crumb-icon">🎯</div>
+      <div>
+        <div class="crumb-title">OOP Practice Bank</div>
+        <div class="crumb-sub">Topic 5 · 15 Problems</div>
+      </div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="bank-progress"><span>Solved</span><b id="bank-solved">0</b><span>of 15</span></div>
+    <div class="theme-toggle-wrap" onclick="toggleTheme()">
+      <div class="toggle-track"><div class="toggle-thumb"></div></div>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+
+  <div class="bank-hero">
+    <div class="bank-eyebrow">🎯 Practice Bank · Topic 5 · OOP</div>
+    <h1 class="bank-title">15 Real-World <span class="grad">DE Problems</span></h1>
+    <p class="bank-lead">5 Easy + 5 Medium + 5 Hard. Indian e-commerce, fintech, stock market, logistics scenarios. Build classes, fix bugs, refactor with dataclasses, trace through attribute lookups.</p>
+  </div>
+
+  <div class="summary-bar">
+    <div class="summary-bar-top">
+      <span class="summary-bar-label">Bank Progress</span>
+      <span class="summary-bar-num" id="bank-pct">0%</span>
+    </div>
+    <div class="summary-bar-track"><div class="summary-bar-fill" id="bank-fill"></div></div>
+  </div>
+
+  <div class="level-tabs">
+    <div class="level-tab active" data-level="easy" onclick="setLevel('easy')"><div class="dot e"></div>Easy <span class="count" id="cnt-easy">0/5</span></div>
+    <div class="level-tab" data-level="med" onclick="setLevel('med')"><div class="dot m"></div>Medium <span class="count" id="cnt-med">0/5</span></div>
+    <div class="level-tab" data-level="hard" onclick="setLevel('hard')"><div class="dot h"></div>Hard <span class="count" id="cnt-hard">0/5</span></div>
+  </div>
+
+  <!-- ===== EASY ===== -->
+  <div class="level-panel active" data-panel="easy">
+
+    <div class="lvl-dots" id="dots-easy"></div>
+
+    <!-- Q1 EASY -->
+    <div class="q-card" data-q="e1">
+      <div class="q-head">
+        <div class="q-num-row">
+          <div class="q-num">E1</div>
+          <div class="q-meta"><span class="q-tag">Easy · Build from scratch</span><span class="q-type">E-commerce</span></div>
+        </div>
+        <div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div>
+      </div>
+      <div class="q-title">Build a <code>Product</code> class</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> An e-commerce team needs a clean way to hold product data. Currently they pass around loose dicts and it's messy.</div>
+      <div class="q-task"><b>Task:</b> Build <code>Product</code> with attributes <code>sku</code>, <code>name</code>, <code>price</code>. Add a method <code>display()</code> that prints "<code>SKU-123 — Shoes (₹1499)</code>".</div>
+
+      <div class="q-actions">
+        <button class="q-btn" onclick="toggleHint(this)">💡 Hint</button>
+        <button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button>
+        <button class="q-btn" onclick="markSolved(this,'e1')">✓ Mark Solved</button>
+      </div>
+      <div class="q-hint"><b>Hint</b>Use <code>__init__(self, sku, name, price)</code> to store attributes. Inside <code>display()</code> use an f-string: <code>f"{self.sku} — {self.name} (₹{self.price})"</code>.</div>
+
+      <div class="pg" data-pg="e1">
+        <div class="pg-tabs"><div class="pg-tab-name">🐍 product.py</div><div class="pg-status" data-status>loading runtime…</div></div>
+        <textarea class="pg-ta" spellcheck="false">class Product:
+    # Your code here
+    pass
+
+# Test
+p = Product("SKU-123", "Shoes", 1499)
+p.display()</textarea>
+        <div class="pg-actions">
+          <button class="pg-run-btn" data-run disabled>▶ Run</button>
+          <button class="pg-reset-btn" data-reset>↺ Reset</button>
+        </div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+
+      <div class="q-reveal">
+        <h4>✨ Solution</h4>
+        <div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="kw">class</span> <span class="type">Product</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="var">self</span>, <span class="var">sku</span>, <span class="var">name</span>, <span class="var">price</span>):
+        <span class="var">self</span>.<span class="var">sku</span> <span class="op">=</span> <span class="var">sku</span>
+        <span class="var">self</span>.<span class="var">name</span> <span class="op">=</span> <span class="var">name</span>
+        <span class="var">self</span>.<span class="var">price</span> <span class="op">=</span> <span class="var">price</span>
+
+    <span class="kw">def</span> <span class="fn">display</span>(<span class="var">self</span>):
+        <span class="bi">print</span>(<span class="kw">f</span><span class="str">"{self.sku} — {self.name} (₹{self.price})"</span>)</div></div></div>
+        <p><b>Why it works:</b> <code>__init__</code> stores raw values on the new object via <code>self</code>. The <code>display()</code> method reads from <code>self</code> and prints. Classic class pattern.</p>
+      </div>
+    </div>
+
+    <!-- Q2 EASY -->
+    <div class="q-card" data-q="e2">
+      <div class="q-head">
+        <div class="q-num-row"><div class="q-num">E2</div><div class="q-meta"><span class="q-tag">Easy · Build from scratch</span><span class="q-type">Fintech</span></div></div>
+        <div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div>
+      </div>
+      <div class="q-title">Build a <code>BankAccount</code> with balance methods</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> A small fintech app needs a basic account class to hold balance and track deposits/withdrawals.</div>
+      <div class="q-task"><b>Task:</b> Build <code>BankAccount</code> with <code>holder</code> and <code>balance</code> (default 0). Methods: <code>deposit(amount)</code>, <code>withdraw(amount)</code>. Withdraw should print "Insufficient funds" if amount exceeds balance.</div>
+
+      <div class="q-actions">
+        <button class="q-btn" onclick="toggleHint(this)">💡 Hint</button>
+        <button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button>
+        <button class="q-btn" onclick="markSolved(this,'e2')">✓ Mark Solved</button>
+      </div>
+      <div class="q-hint"><b>Hint</b>Set <code>balance=0</code> as default in <code>__init__</code>. In <code>withdraw</code>, check <code>if amount &gt; self.balance</code> before subtracting.</div>
+
+      <div class="pg" data-pg="e2">
+        <div class="pg-tabs"><div class="pg-tab-name">🐍 account.py</div><div class="pg-status" data-status>loading runtime…</div></div>
+        <textarea class="pg-ta" spellcheck="false">class BankAccount:
+    # Your code here
+    pass
+
+# Test
+a = BankAccount("Ravi")
+a.deposit(5000)
+a.withdraw(2000)
+print(a.balance)         # → 3000
+a.withdraw(10000)        # → Insufficient funds</textarea>
+        <div class="pg-actions">
+          <button class="pg-run-btn" data-run disabled>▶ Run</button>
+          <button class="pg-reset-btn" data-reset>↺ Reset</button>
+        </div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+
+      <div class="q-reveal">
+        <h4>✨ Solution</h4>
+        <div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="kw">class</span> <span class="type">BankAccount</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="var">self</span>, <span class="var">holder</span>, <span class="var">balance</span><span class="op">=</span><span class="num">0</span>):
+        <span class="var">self</span>.<span class="var">holder</span> <span class="op">=</span> <span class="var">holder</span>
+        <span class="var">self</span>.<span class="var">balance</span> <span class="op">=</span> <span class="var">balance</span>
+
+    <span class="kw">def</span> <span class="fn">deposit</span>(<span class="var">self</span>, <span class="var">amount</span>):
+        <span class="var">self</span>.<span class="var">balance</span> <span class="op">+=</span> <span class="var">amount</span>
+
+    <span class="kw">def</span> <span class="fn">withdraw</span>(<span class="var">self</span>, <span class="var">amount</span>):
+        <span class="kw">if</span> <span class="var">amount</span> <span class="op">&gt;</span> <span class="var">self</span>.<span class="var">balance</span>:
+            <span class="bi">print</span>(<span class="str">"Insufficient funds"</span>)
+        <span class="kw">else</span>:
+            <span class="var">self</span>.<span class="var">balance</span> <span class="op">-=</span> <span class="var">amount</span></div></div></div>
+      </div>
+    </div>
+
+    <!-- Q3 EASY -->
+    <div class="q-card" data-q="e3">
+      <div class="q-head">
+        <div class="q-num-row"><div class="q-num">E3</div><div class="q-meta"><span class="q-tag">Easy · Predict output</span><span class="q-type">E-commerce</span></div></div>
+        <div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div>
+      </div>
+      <div class="q-title">Predict — what does this print?</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> A teammate sends you this code. Before running, predict what it prints.</div>
+      <div class="q-task"><b>Task:</b> Read carefully. Write your prediction. Then click Run.</div>
+
+      <div class="q-actions">
+        <button class="q-btn" onclick="toggleHint(this)">💡 Hint</button>
+        <button class="q-btn" onclick="toggleReveal(this)">👁️ Answer</button>
+        <button class="q-btn" onclick="markSolved(this,'e3')">✓ Mark Solved</button>
+      </div>
+      <div class="q-hint"><b>Hint</b>Two separate objects. Each has its own <code>quantity</code> attribute. The class attribute is shared.</div>
+
+      <div class="pg" data-pg="e3">
+        <div class="pg-tabs"><div class="pg-tab-name">🐍 predict.py</div><div class="pg-status" data-status>loading runtime…</div></div>
+        <textarea class="pg-ta" spellcheck="false">class CartItem:
+    currency = "INR"
+
+    def __init__(self, name, qty):
+        self.name = name
+        self.qty = qty
+
+a = CartItem("shoes", 2)
+b = CartItem("socks", 3)
+
+a.qty += 5
+print(a.qty, b.qty)
+print(a.currency, b.currency)</textarea>
+        <div class="pg-actions">
+          <button class="pg-run-btn" data-run disabled>▶ Run</button>
+          <button class="pg-reset-btn" data-reset>↺ Reset</button>
+        </div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+
+      <div class="q-reveal">
+        <h4>✨ Answer</h4>
+        <p><b>Output:</b> <code>7 3</code> then <code>INR INR</code></p>
+        <p><b>Why:</b> <code>qty</code> is an instance attribute — each object has its own. Changing <code>a.qty</code> doesn't affect <code>b</code>. <code>currency</code> is a class attribute — both instances share the same one.</p>
+      </div>
+    </div>
+
+    <!-- Q4 EASY -->
+    <div class="q-card" data-q="e4">
+      <div class="q-head">
+        <div class="q-num-row"><div class="q-num">E4</div><div class="q-meta"><span class="q-tag">Easy · Fix the bug</span><span class="q-type">Logistics</span></div></div>
+        <div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div>
+      </div>
+      <div class="q-title">Fix — missing <code>self</code> bug</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> A logistics dashboard breaks with a confusing error. Find the bug.</div>
+      <div class="q-task"><b>Task:</b> Fix the code so it runs and prints "Tracking ABC123: in transit".</div>
+
+      <div class="q-actions">
+        <button class="q-btn" onclick="toggleHint(this)">💡 Hint</button>
+        <button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button>
+        <button class="q-btn" onclick="markSolved(this,'e4')">✓ Mark Solved</button>
+      </div>
+      <div class="q-hint"><b>Hint</b>Look at the method signature. Every method that uses object data needs <code>self</code> as the first parameter.</div>
+
+      <div class="pg" data-pg="e4">
+        <div class="pg-tabs"><div class="pg-tab-name">🐍 shipment.py</div><div class="pg-status" data-status>loading runtime…</div></div>
+        <textarea class="pg-ta" spellcheck="false">class Shipment:
+    def __init__(self, tracking_id, status):
+        self.tracking_id = tracking_id
+        self.status = status
+
+    def show():                              # BUG here
+        print(f"Tracking {self.tracking_id}: {self.status}")
+
+s = Shipment("ABC123", "in transit")
+s.show()</textarea>
+        <div class="pg-actions">
+          <button class="pg-run-btn" data-run disabled>▶ Run</button>
+          <button class="pg-reset-btn" data-reset>↺ Reset</button>
+        </div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+
+      <div class="q-reveal">
+        <h4>✨ Solution</h4>
+        <p><b>Fix:</b> Change <code>def show():</code> to <code>def show(self):</code>.</p>
+        <p><b>Why:</b> When you call <code>s.show()</code>, Python silently passes <code>s</code> as the first argument. If the method doesn't accept it, you get "takes 0 positional arguments but 1 was given."</p>
+      </div>
+    </div>
+
+    <!-- Q5 EASY -->
+    <div class="q-card" data-q="e5">
+      <div class="q-head">
+        <div class="q-num-row"><div class="q-num">E5</div><div class="q-meta"><span class="q-tag">Easy · Refactor</span><span class="q-type">Stock market</span></div></div>
+        <div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div>
+      </div>
+      <div class="q-title">Refactor — add <code>__str__</code> for clean printing</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Logs are filled with <code>&lt;Tick object at 0x7f...&gt;</code>. Make tick objects print clean.</div>
+      <div class="q-task"><b>Task:</b> Add <code>__str__</code> so <code>print(t)</code> shows <code>"RELIANCE @ ₹2450.50"</code>.</div>
+
+      <div class="q-actions">
+        <button class="q-btn" onclick="toggleHint(this)">💡 Hint</button>
+        <button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button>
+        <button class="q-btn" onclick="markSolved(this,'e5')">✓ Mark Solved</button>
+      </div>
+      <div class="q-hint"><b>Hint</b><code>__str__</code> must <em>return</em> a string (don't print inside it).</div>
+
+      <div class="pg" data-pg="e5">
+        <div class="pg-tabs"><div class="pg-tab-name">🐍 tick.py</div><div class="pg-status" data-status>loading runtime…</div></div>
+        <textarea class="pg-ta" spellcheck="false">class Tick:
+    def __init__(self, symbol, price):
+        self.symbol = symbol
+        self.price = price
+
+    # Add __str__ here
+
+t = Tick("RELIANCE", 2450.50)
+print(t)         # Expected: RELIANCE @ ₹2450.5</textarea>
+        <div class="pg-actions">
+          <button class="pg-run-btn" data-run disabled>▶ Run</button>
+          <button class="pg-reset-btn" data-reset>↺ Reset</button>
+        </div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+
+      <div class="q-reveal">
+        <h4>✨ Solution</h4>
+        <div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code">    <span class="kw">def</span> <span class="fn">__str__</span>(<span class="var">self</span>):
+        <span class="kw">return</span> <span class="kw">f</span><span class="str">"{self.symbol} @ ₹{self.price}"</span></div></div></div>
+        <p><b>Why:</b> Python calls <code>__str__</code> whenever you <code>print()</code> the object or use <code>str()</code> on it. Always return — don't print.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== MEDIUM ===== -->
+  <div class="level-panel" data-panel="med">
+
+    <div class="lvl-dots" id="dots-med"></div>
+
+    <!-- Q1 MEDIUM -->
+    <div class="q-card" data-q="m1">
+      <div class="q-head">
+        <div class="q-num-row"><div class="q-num">M1</div><div class="q-meta"><span class="q-tag">Medium · Build from scratch</span><span class="q-type">E-commerce</span></div></div>
+        <div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div>
+      </div>
+      <div class="q-title">Build <code>Order</code> with <code>@property</code> for total + GST</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> The team wants <code>order.total_with_gst</code> to feel like an attribute, not a method call. Use <code>@property</code>.</div>
+      <div class="q-task"><b>Task:</b> <code>Order(amount)</code> with class attribute <code>gst_rate = 0.18</code>. Add <code>total_with_gst</code> as a property returning <code>amount * 1.18</code>.</div>
+
+      <div class="q-actions">
+        <button class="q-btn" onclick="toggleHint(this)">💡 Hint</button>
+        <button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button>
+        <button class="q-btn" onclick="markSolved(this,'m1')">✓ Mark Solved</button>
+      </div>
+      <div class="q-hint"><b>Hint</b>Decorate the method with <code>@property</code>. Caller uses <code>order.total_with_gst</code> — no parentheses.</div>
+
+      <div class="pg" data-pg="m1">
+        <div class="pg-tabs"><div class="pg-tab-name">🐍 order_property.py</div><div class="pg-status" data-status>loading runtime…</div></div>
+        <textarea class="pg-ta" spellcheck="false">class Order:
+    gst_rate = 0.18
+    # Your code here
+
+o = Order(1000)
+print(o.total_with_gst)    # Expected: 1180.0 (no parentheses!)</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+
+      <div class="q-reveal">
+        <h4>✨ Solution</h4>
+        <div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="kw">class</span> <span class="type">Order</span>:
+    <span class="var">gst_rate</span> <span class="op">=</span> <span class="num">0.18</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="var">self</span>, <span class="var">amount</span>):
+        <span class="var">self</span>.<span class="var">amount</span> <span class="op">=</span> <span class="var">amount</span>
+
+    <span class="kw">@property</span>
+    <span class="kw">def</span> <span class="fn">total_with_gst</span>(<span class="var">self</span>):
+        <span class="kw">return</span> <span class="var">self</span>.<span class="var">amount</span> <span class="op">*</span> (<span class="num">1</span> <span class="op">+</span> <span class="var">self</span>.<span class="var">gst_rate</span>)</div></div></div>
+      </div>
+    </div>
+
+    <!-- Q2 MEDIUM -->
+    <div class="q-card" data-q="m2">
+      <div class="q-head">
+        <div class="q-num-row"><div class="q-num">M2</div><div class="q-meta"><span class="q-tag">Medium · Build from scratch</span><span class="q-type">Fintech</span></div></div>
+        <div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div>
+      </div>
+      <div class="q-title">Add <code>@classmethod</code> alternate constructor</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> KYC team receives customer records as JSON dicts. Build a way to construct <code>Customer</code> from such a dict.</div>
+      <div class="q-task"><b>Task:</b> Add <code>from_dict(cls, d)</code> classmethod. Call it like <code>Customer.from_dict({"name":"Ravi","kyc_status":"verified"})</code>.</div>
+
+      <div class="q-actions">
+        <button class="q-btn" onclick="toggleHint(this)">💡 Hint</button>
+        <button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button>
+        <button class="q-btn" onclick="markSolved(this,'m2')">✓ Mark Solved</button>
+      </div>
+      <div class="q-hint"><b>Hint</b>Inside the classmethod return <code>cls(d["name"], d["kyc_status"])</code> — that creates a new instance.</div>
+
+      <div class="pg" data-pg="m2">
+        <div class="pg-tabs"><div class="pg-tab-name">🐍 customer_kyc.py</div><div class="pg-status" data-status>loading runtime…</div></div>
+        <textarea class="pg-ta" spellcheck="false">class Customer:
+    def __init__(self, name, kyc_status):
+        self.name = name
+        self.kyc_status = kyc_status
+
+    # Add @classmethod from_dict here
+
+c = Customer.from_dict({"name": "Ravi", "kyc_status": "verified"})
+print(c.name, c.kyc_status)</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+
+      <div class="q-reveal">
+        <h4>✨ Solution</h4>
+        <div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code">    <span class="kw">@classmethod</span>
+    <span class="kw">def</span> <span class="fn">from_dict</span>(<span class="var">cls</span>, <span class="var">d</span>):
+        <span class="kw">return</span> <span class="var">cls</span>(<span class="var">d</span>[<span class="str">"name"</span>], <span class="var">d</span>[<span class="str">"kyc_status"</span>])</div></div></div>
+        <p><b>Why:</b> <code>cls</code> refers to the class itself. <code>cls(...)</code> creates a new instance. Same pattern as <code>pd.DataFrame.from_dict()</code>.</p>
+      </div>
+    </div>
+
+    <!-- Q3 MEDIUM -->
+    <div class="q-card" data-q="m3">
+      <div class="q-head">
+        <div class="q-num-row"><div class="q-num">M3</div><div class="q-meta"><span class="q-tag">Medium · Predict</span><span class="q-type">Banking</span></div></div>
+        <div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div>
+      </div>
+      <div class="q-title">Predict attribute lookup order</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Senior dev wrote this — predict each print before running. Tests your attribute lookup model.</div>
+      <div class="q-task"><b>Task:</b> Read carefully, predict each print on paper, then run.</div>
+
+      <div class="q-actions">
+        <button class="q-btn" onclick="toggleHint(this)">💡 Hint</button>
+        <button class="q-btn" onclick="toggleReveal(this)">👁️ Answer</button>
+        <button class="q-btn" onclick="markSolved(this,'m3')">✓ Mark Solved</button>
+      </div>
+      <div class="q-hint"><b>Hint</b>Python checks instance attributes first, then class attributes. Assigning to <code>instance.x</code> creates an instance attribute that shadows the class one.</div>
+
+      <div class="pg" data-pg="m3">
+        <div class="pg-tabs"><div class="pg-tab-name">🐍 lookup.py</div><div class="pg-status" data-status>loading runtime…</div></div>
+        <textarea class="pg-ta" spellcheck="false">class Account:
+    interest_rate = 0.04
+
+a1 = Account()
+a2 = Account()
+
+print(a1.interest_rate, a2.interest_rate)   # P1
+
+Account.interest_rate = 0.05
+print(a1.interest_rate, a2.interest_rate)   # P2
+
+a1.interest_rate = 0.10
+print(a1.interest_rate, a2.interest_rate)   # P3
+
+Account.interest_rate = 0.06
+print(a1.interest_rate, a2.interest_rate)   # P4</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+
+      <div class="q-reveal">
+        <h4>✨ Answers</h4>
+        <p><b>P1:</b> <code>0.04 0.04</code> — both read class attribute.<br>
+        <b>P2:</b> <code>0.05 0.05</code> — class attribute changed, both see new value.<br>
+        <b>P3:</b> <code>0.1 0.05</code> — <code>a1</code> now has its OWN instance attribute (shadows class).<br>
+        <b>P4:</b> <code>0.1 0.06</code> — <code>a1</code> still uses its instance attribute. <code>a2</code> still uses class.</p>
+      </div>
+    </div>
+
+    <!-- Q4 MEDIUM -->
+    <div class="q-card" data-q="m4">
+      <div class="q-head">
+        <div class="q-num-row"><div class="q-num">M4</div><div class="q-meta"><span class="q-tag">Medium · Fix the bug</span><span class="q-type">E-commerce</span></div></div>
+        <div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div>
+      </div>
+      <div class="q-title">Fix — equality of two orders</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Two orders with same ID should be equal. Currently <code>==</code> returns False even when IDs match.</div>
+      <div class="q-task"><b>Task:</b> Override <code>__eq__</code> so two orders are equal when their <code>id</code> matches.</div>
+
+      <div class="q-actions">
+        <button class="q-btn" onclick="toggleHint(this)">💡 Hint</button>
+        <button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button>
+        <button class="q-btn" onclick="markSolved(this,'m4')">✓ Mark Solved</button>
+      </div>
+      <div class="q-hint"><b>Hint</b><code>__eq__(self, other)</code> — return <code>self.id == other.id</code>.</div>
+
+      <div class="pg" data-pg="m4">
+        <div class="pg-tabs"><div class="pg-tab-name">🐍 order_eq.py</div><div class="pg-status" data-status>loading runtime…</div></div>
+        <textarea class="pg-ta" spellcheck="false">class Order:
+    def __init__(self, id, amount):
+        self.id = id
+        self.amount = amount
+
+    # Add __eq__ here
+
+a = Order(101, 500)
+b = Order(101, 999)
+print(a == b)     # Expected: True</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+
+      <div class="q-reveal">
+        <h4>✨ Solution</h4>
+        <div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code">    <span class="kw">def</span> <span class="fn">__eq__</span>(<span class="var">self</span>, <span class="var">other</span>):
+        <span class="kw">return</span> <span class="bi">isinstance</span>(<span class="var">other</span>, <span class="type">Order</span>) <span class="kw">and</span> <span class="var">self</span>.<span class="var">id</span> <span class="op">==</span> <span class="var">other</span>.<span class="var">id</span></div></div></div>
+        <p><b>Note:</b> <code>isinstance</code> check protects against comparing with random objects.</p>
+      </div>
+    </div>
+
+    <!-- Q5 MEDIUM -->
+    <div class="q-card" data-q="m5">
+      <div class="q-head">
+        <div class="q-num-row"><div class="q-num">M5</div><div class="q-meta"><span class="q-tag">Medium · Refactor</span><span class="q-type">Stock market</span></div></div>
+        <div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div>
+      </div>
+      <div class="q-title">Refactor — convert verbose class to <code>@dataclass</code></div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> You inherit a verbose <code>Stock</code> class with 30 lines of <code>__init__</code> + <code>__repr__</code>. Modernize it.</div>
+      <div class="q-task"><b>Task:</b> Rewrite using <code>@dataclass</code>. Same fields, same behavior, fewer lines.</div>
+
+      <div class="q-actions">
+        <button class="q-btn" onclick="toggleHint(this)">💡 Hint</button>
+        <button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button>
+        <button class="q-btn" onclick="markSolved(this,'m5')">✓ Mark Solved</button>
+      </div>
+      <div class="q-hint"><b>Hint</b><code>from dataclasses import dataclass</code>. Decorate the class. Use type hints for fields. Drop the <code>__init__</code> and <code>__repr__</code>.</div>
+
+      <div class="pg" data-pg="m5">
+        <div class="pg-tabs"><div class="pg-tab-name">🐍 stock_dataclass.py</div><div class="pg-status" data-status>loading runtime…</div></div>
+        <textarea class="pg-ta" spellcheck="false"># OLD code — refactor below to use @dataclass
+# class Stock:
+#     def __init__(self, symbol, price, volume):
+#         self.symbol = symbol
+#         self.price = price
+#         self.volume = volume
+#     def __repr__(self):
+#         return f"Stock(symbol={self.symbol!r}, price={self.price}, volume={self.volume})"
+
+# Your refactor here using @dataclass:
+
+
+s = Stock("RELIANCE", 2450.5, 100000)
+print(s)</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+
+      <div class="q-reveal">
+        <h4>✨ Solution</h4>
+        <div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="kw">from</span> <span class="bi">dataclasses</span> <span class="kw">import</span> <span class="fn">dataclass</span>
+
+<span class="kw">@dataclass</span>
+<span class="kw">class</span> <span class="type">Stock</span>:
+    <span class="var">symbol</span>: <span class="bi">str</span>
+    <span class="var">price</span>: <span class="bi">float</span>
+    <span class="var">volume</span>: <span class="bi">int</span></div></div></div>
+        <p><b>Why:</b> <code>@dataclass</code> auto-generates <code>__init__</code> and <code>__repr__</code>. 7 lines → 4 lines. Cleaner, less error-prone.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== HARD ===== -->
+  <div class="level-panel" data-panel="hard">
+
+    <div class="lvl-dots" id="dots-hard"></div>
+
+    <!-- Q1 HARD -->
+    <div class="q-card" data-q="h1">
+      <div class="q-head">
+        <div class="q-num-row"><div class="q-num">H1</div><div class="q-meta"><span class="q-tag">Hard · Build from scratch</span><span class="q-type">DE Pipeline</span></div></div>
+        <div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div>
+      </div>
+      <div class="q-title">Build a <code>Pipeline</code> class with state tracking</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Build a mini ETL Pipeline class — runs extract → transform → load, tracks rows processed and current status. Mirrors how Airflow DAGs are structured.</div>
+      <div class="q-task"><b>Task:</b> Build <code>Pipeline(name, source)</code>. Methods <code>extract()</code> sets status, <code>transform()</code> sets status, <code>load()</code> sets status. <code>run()</code> calls all three in order. <code>__str__</code> shows pipeline summary.</div>
+
+      <div class="q-actions">
+        <button class="q-btn" onclick="toggleHint(this)">💡 Hint</button>
+        <button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button>
+        <button class="q-btn" onclick="markSolved(this,'h1')">✓ Mark Solved</button>
+      </div>
+      <div class="q-hint"><b>Hint</b>Track <code>self.status</code> and <code>self.rows_processed</code>. <code>run()</code> just calls <code>self.extract()</code> etc.</div>
+
+      <div class="pg" data-pg="h1">
+        <div class="pg-tabs"><div class="pg-tab-name">🐍 pipeline.py</div><div class="pg-status" data-status>loading runtime…</div></div>
+        <textarea class="pg-ta" spellcheck="false">class Pipeline:
+    # Your code here
+
+p = Pipeline("daily_orders", "postgres://prod")
+p.run()
+print(p)</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+
+      <div class="q-reveal">
+        <h4>✨ Solution</h4>
+        <div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="kw">class</span> <span class="type">Pipeline</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="var">self</span>, <span class="var">name</span>, <span class="var">source</span>):
+        <span class="var">self</span>.<span class="var">name</span> <span class="op">=</span> <span class="var">name</span>
+        <span class="var">self</span>.<span class="var">source</span> <span class="op">=</span> <span class="var">source</span>
+        <span class="var">self</span>.<span class="var">status</span> <span class="op">=</span> <span class="str">"idle"</span>
+        <span class="var">self</span>.<span class="var">rows_processed</span> <span class="op">=</span> <span class="num">0</span>
+
+    <span class="kw">def</span> <span class="fn">extract</span>(<span class="var">self</span>):
+        <span class="var">self</span>.<span class="var">status</span> <span class="op">=</span> <span class="str">"extracting"</span>
+        <span class="var">self</span>.<span class="var">rows_processed</span> <span class="op">=</span> <span class="num">1000</span>
+        <span class="bi">print</span>(<span class="kw">f</span><span class="str">"[{self.name}] extracted {self.rows_processed} rows"</span>)
+
+    <span class="kw">def</span> <span class="fn">transform</span>(<span class="var">self</span>):
+        <span class="var">self</span>.<span class="var">status</span> <span class="op">=</span> <span class="str">"transforming"</span>
+
+    <span class="kw">def</span> <span class="fn">load</span>(<span class="var">self</span>):
+        <span class="var">self</span>.<span class="var">status</span> <span class="op">=</span> <span class="str">"loaded"</span>
+
+    <span class="kw">def</span> <span class="fn">run</span>(<span class="var">self</span>):
+        <span class="var">self</span>.<span class="fn">extract</span>(); <span class="var">self</span>.<span class="fn">transform</span>(); <span class="var">self</span>.<span class="fn">load</span>()
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(<span class="var">self</span>):
+        <span class="kw">return</span> <span class="kw">f</span><span class="str">"&lt;Pipeline {self.name} status={self.status} rows={self.rows_processed}&gt;"</span></div></div></div>
+      </div>
+    </div>
+
+    <!-- Q2 HARD -->
+    <div class="q-card" data-q="h2">
+      <div class="q-head">
+        <div class="q-num-row"><div class="q-num">H2</div><div class="q-meta"><span class="q-tag">Hard · Fix the bug</span><span class="q-type">DE Pipeline</span></div></div>
+        <div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div>
+      </div>
+      <div class="q-title">Mutable default trap — the famous bug</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> A teammate's <code>Pipeline</code> class has a subtle bug. Adding tasks to one pipeline shows up in another. Boss says: fix without changing the public API.</div>
+      <div class="q-task"><b>Task:</b> Fix it so each pipeline gets its own task list when no <code>tasks=</code> is passed.</div>
+
+      <div class="q-actions">
+        <button class="q-btn" onclick="toggleHint(this)">💡 Hint</button>
+        <button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button>
+        <button class="q-btn" onclick="markSolved(this,'h2')">✓ Mark Solved</button>
+      </div>
+      <div class="q-hint"><b>Hint</b>The default <code>[]</code> is created ONCE at class definition. Replace with <code>None</code> + check inside <code>__init__</code>.</div>
+
+      <div class="pg" data-pg="h2">
+        <div class="pg-tabs"><div class="pg-tab-name">🐍 mutable_default.py</div><div class="pg-status" data-status>loading runtime…</div></div>
+        <textarea class="pg-ta" spellcheck="false">class Pipeline:
+    def __init__(self, name, tasks=[]):     # BUG
+        self.name = name
+        self.tasks = tasks
+
+    def add_task(self, task):
+        self.tasks.append(task)
+
+p1 = Pipeline("orders")
+p1.add_task("extract")
+p1.add_task("transform")
+
+p2 = Pipeline("customers")
+p2.add_task("load")
+
+print(p1.tasks)    # Expected: ['extract', 'transform']
+print(p2.tasks)    # Expected: ['load']</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+
+      <div class="q-reveal">
+        <h4>✨ Solution</h4>
+        <div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code">    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="var">self</span>, <span class="var">name</span>, <span class="var">tasks</span><span class="op">=</span><span class="kw">None</span>):
+        <span class="var">self</span>.<span class="var">name</span> <span class="op">=</span> <span class="var">name</span>
+        <span class="var">self</span>.<span class="var">tasks</span> <span class="op">=</span> [] <span class="kw">if</span> <span class="var">tasks</span> <span class="kw">is</span> <span class="kw">None</span> <span class="kw">else</span> <span class="var">tasks</span></div></div></div>
+        <p><b>Why:</b> The default <code>[]</code> is created ONCE when the function is defined, not on every call. All instances using the default share that one list. Using <code>None</code> sidesteps the issue.</p>
+      </div>
+    </div>
+
+    <!-- Q3 HARD -->
+    <div class="q-card" data-q="h3">
+      <div class="q-head">
+        <div class="q-num-row"><div class="q-num">H3</div><div class="q-meta"><span class="q-tag">Hard · Refactor + design</span><span class="q-type">Fintech</span></div></div>
+        <div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div>
+      </div>
+      <div class="q-title">Design <code>Transaction</code> with validation + multiple constructors</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> A payments service needs a clean <code>Transaction</code> class. Should support: validation (amount &gt; 0), creating from a dict, creating from a UPI string like "PAY:1042:1499.50".</div>
+      <div class="q-task"><b>Task:</b> Use <code>@dataclass</code> for storage, <code>@staticmethod</code> for validation, <code>@classmethod</code> for the two alternate constructors.</div>
+
+      <div class="q-actions">
+        <button class="q-btn" onclick="toggleHint(this)">💡 Hint</button>
+        <button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button>
+        <button class="q-btn" onclick="markSolved(this,'h3')">✓ Mark Solved</button>
+      </div>
+      <div class="q-hint"><b>Hint</b>Three decorators in play. Validate inside the classmethods before returning <code>cls(...)</code>.</div>
+
+      <div class="pg" data-pg="h3">
+        <div class="pg-tabs"><div class="pg-tab-name">🐍 transaction.py</div><div class="pg-status" data-status>loading runtime…</div></div>
+        <textarea class="pg-ta" spellcheck="false">from dataclasses import dataclass
+
+@dataclass
+class Transaction:
+    id: int
+    amount: float
+
+    # Add @staticmethod is_valid_amount
+    # Add @classmethod from_dict
+    # Add @classmethod from_upi_string  (parses "PAY:1042:1499.50")
+
+t1 = Transaction.from_dict({"id": 1, "amount": 500})
+t2 = Transaction.from_upi_string("PAY:1042:1499.50")
+print(t1, t2)</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+
+      <div class="q-reveal">
+        <h4>✨ Solution</h4>
+        <div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code">    <span class="kw">@staticmethod</span>
+    <span class="kw">def</span> <span class="fn">is_valid_amount</span>(<span class="var">x</span>):
+        <span class="kw">return</span> <span class="bi">isinstance</span>(<span class="var">x</span>, (<span class="bi">int</span>, <span class="bi">float</span>)) <span class="kw">and</span> <span class="var">x</span> <span class="op">&gt;</span> <span class="num">0</span>
+
+    <span class="kw">@classmethod</span>
+    <span class="kw">def</span> <span class="fn">from_dict</span>(<span class="var">cls</span>, <span class="var">d</span>):
+        <span class="kw">if</span> <span class="kw">not</span> <span class="var">cls</span>.<span class="fn">is_valid_amount</span>(<span class="var">d</span>[<span class="str">"amount"</span>]):
+            <span class="kw">raise</span> <span class="type">ValueError</span>(<span class="str">"Bad amount"</span>)
+        <span class="kw">return</span> <span class="var">cls</span>(<span class="var">d</span>[<span class="str">"id"</span>], <span class="var">d</span>[<span class="str">"amount"</span>])
+
+    <span class="kw">@classmethod</span>
+    <span class="kw">def</span> <span class="fn">from_upi_string</span>(<span class="var">cls</span>, <span class="var">s</span>):
+        <span class="var">_</span>, <span class="var">id_str</span>, <span class="var">amt_str</span> <span class="op">=</span> <span class="var">s</span>.<span class="fn">split</span>(<span class="str">":"</span>)
+        <span class="kw">return</span> <span class="var">cls</span>.<span class="fn">from_dict</span>({<span class="str">"id"</span>: <span class="bi">int</span>(<span class="var">id_str</span>), <span class="str">"amount"</span>: <span class="bi">float</span>(<span class="var">amt_str</span>)})</div></div></div>
+        <p><b>Why:</b> Static method for stateless validation (no <code>self</code>, no <code>cls</code>). Two classmethods for alternate constructors. <code>from_upi_string</code> reuses <code>from_dict</code> for validation.</p>
+      </div>
+    </div>
+
+    <!-- Q4 HARD -->
+    <div class="q-card" data-q="h4">
+      <div class="q-head">
+        <div class="q-num-row"><div class="q-num">H4</div><div class="q-meta"><span class="q-tag">Hard · Trace through</span><span class="q-type">DE Pipeline</span></div></div>
+        <div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div>
+      </div>
+      <div class="q-title">Mutable class attribute shared bug</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> A senior asks: what does this print? It's a classic class-attribute trap.</div>
+      <div class="q-task"><b>Task:</b> Predict each print before running. Tests whether you really understand instance vs class attribute lookup with mutable shared state.</div>
+
+      <div class="q-actions">
+        <button class="q-btn" onclick="toggleHint(this)">💡 Hint</button>
+        <button class="q-btn" onclick="toggleReveal(this)">👁️ Answer</button>
+        <button class="q-btn" onclick="markSolved(this,'h4')">✓ Mark Solved</button>
+      </div>
+      <div class="q-hint"><b>Hint</b>The class attribute <code>errors</code> is a single shared list. Appending to it via <code>p1.errors.append</code> mutates the shared object.</div>
+
+      <div class="pg" data-pg="h4">
+        <div class="pg-tabs"><div class="pg-tab-name">🐍 trap.py</div><div class="pg-status" data-status>loading runtime…</div></div>
+        <textarea class="pg-ta" spellcheck="false">class Pipeline:
+    errors = []     # class attribute — mutable!
+
+    def __init__(self, name):
+        self.name = name
+
+    def fail(self, msg):
+        self.errors.append(msg)
+
+p1 = Pipeline("orders")
+p2 = Pipeline("customers")
+
+p1.fail("timeout")
+p2.fail("auth")
+
+print(p1.errors)
+print(p2.errors)
+print(p1.errors is p2.errors)</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+
+      <div class="q-reveal">
+        <h4>✨ Answer</h4>
+        <p><b>Output:</b><br>
+        <code>['timeout', 'auth']</code><br>
+        <code>['timeout', 'auth']</code><br>
+        <code>True</code></p>
+        <p><b>Why:</b> <code>errors</code> is one shared list living on the class. Both pipelines see all errors. <code>p1.errors is p2.errors</code> is True — same object. <strong>Fix:</strong> create <code>self.errors = []</code> inside <code>__init__</code> per instance.</p>
+      </div>
+    </div>
+
+    <!-- Q5 HARD -->
+    <div class="q-card" data-q="h5">
+      <div class="q-head">
+        <div class="q-num-row"><div class="q-num">H5</div><div class="q-meta"><span class="q-tag">Hard · Senior interview</span><span class="q-type">DE Pipeline</span></div></div>
+        <div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div>
+      </div>
+      <div class="q-title">Design — <code>RetryablePipeline</code> with stateful retry counter</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Common interview question. Design a Pipeline class that tracks retry attempts internally and refuses to retry beyond max_attempts. Must use a <code>@property</code> for <code>can_retry</code>.</div>
+      <div class="q-task"><b>Task:</b> Class takes <code>name</code> and <code>max_attempts</code>. <code>attempt()</code> increments internal counter and returns True if allowed. <code>can_retry</code> is a property returning True/False. Test below should pass.</div>
+
+      <div class="q-actions">
+        <button class="q-btn" onclick="toggleHint(this)">💡 Hint</button>
+        <button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button>
+        <button class="q-btn" onclick="markSolved(this,'h5')">✓ Mark Solved</button>
+      </div>
+      <div class="q-hint"><b>Hint</b>Internal counter <code>self._attempts = 0</code>. Property <code>can_retry</code> returns <code>self._attempts &lt; self.max_attempts</code>.</div>
+
+      <div class="pg" data-pg="h5">
+        <div class="pg-tabs"><div class="pg-tab-name">🐍 retryable.py</div><div class="pg-status" data-status>loading runtime…</div></div>
+        <textarea class="pg-ta" spellcheck="false">class RetryablePipeline:
+    # Your code here
+
+p = RetryablePipeline("orders", max_attempts=3)
+print(p.can_retry)    # True
+print(p.attempt())    # True
+print(p.attempt())    # True
+print(p.attempt())    # True
+print(p.can_retry)    # False
+print(p.attempt())    # False (exhausted)</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+
+      <div class="q-reveal">
+        <h4>✨ Solution</h4>
+        <div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="kw">class</span> <span class="type">RetryablePipeline</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="var">self</span>, <span class="var">name</span>, <span class="var">max_attempts</span>):
+        <span class="var">self</span>.<span class="var">name</span> <span class="op">=</span> <span class="var">name</span>
+        <span class="var">self</span>.<span class="var">max_attempts</span> <span class="op">=</span> <span class="var">max_attempts</span>
+        <span class="var">self</span>.<span class="var">_attempts</span> <span class="op">=</span> <span class="num">0</span>
+
+    <span class="kw">@property</span>
+    <span class="kw">def</span> <span class="fn">can_retry</span>(<span class="var">self</span>):
+        <span class="kw">return</span> <span class="var">self</span>.<span class="var">_attempts</span> <span class="op">&lt;</span> <span class="var">self</span>.<span class="var">max_attempts</span>
+
+    <span class="kw">def</span> <span class="fn">attempt</span>(<span class="var">self</span>):
+        <span class="kw">if</span> <span class="kw">not</span> <span class="var">self</span>.<span class="var">can_retry</span>:
+            <span class="kw">return</span> <span class="kw">False</span>
+        <span class="var">self</span>.<span class="var">_attempts</span> <span class="op">+=</span> <span class="num">1</span>
+        <span class="kw">return</span> <span class="kw">True</span></div></div></div>
+        <p><b>Why:</b> <code>_attempts</code> is internal (underscore convention). <code>can_retry</code> as property gives clean API. <code>attempt()</code> checks and increments. This pattern appears in real Airflow retry logic.</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+<script>
+function toggleTheme(){
+  const html=document.documentElement;
+  const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+  html.setAttribute('data-theme',next);
+  localStorage.setItem('de2026-theme',next);
+}
+(function(){const saved=localStorage.getItem('de2026-theme')||'dark';document.documentElement.setAttribute('data-theme',saved);})();
+
+// ===== Level tabs =====
+function setLevel(lvl){
+  document.querySelectorAll('.level-tab').forEach(t=>t.classList.toggle('active',t.dataset.level===lvl));
+  document.querySelectorAll('.level-panel').forEach(p=>p.classList.toggle('active',p.dataset.panel===lvl));
+}
+
+// ===== Hint / Reveal toggles =====
+function toggleHint(btn){
+  const hint=btn.closest('.q-card').querySelector('.q-hint');
+  hint.classList.toggle('open');
+}
+function toggleReveal(btn){
+  const r=btn.closest('.q-card').querySelector('.q-reveal');
+  r.classList.toggle('open');
+}
+
+// ===== Solved tracking =====
+const BANK_KEY='de2026-py-t5-bank';
+function getBank(){return JSON.parse(localStorage.getItem(BANK_KEY)||'{}');}
+function setBank(b){localStorage.setItem(BANK_KEY,JSON.stringify(b));}
+
+function markSolved(btn,qid){
+  const bank=getBank();
+  bank[qid]=bank[qid]==='solved'?'attempted':'solved';
+  setBank(bank);
+  refreshUI();
+}
+
+function refreshUI(){
+  const bank=getBank();
+  const all=['e1','e2','e3','e4','e5','m1','m2','m3','m4','m5','h1','h2','h3','h4','h5'];
+  let totalSolved=0,easySolved=0,medSolved=0,hardSolved=0;
+  all.forEach(qid=>{
+    const card=document.querySelector('.q-card[data-q="'+qid+'"]');
+    if(!card)return;
+    const pill=card.querySelector('.q-status-pill');
+    const markBtn=Array.from(card.querySelectorAll('.q-btn')).find(b=>b.textContent.includes('Mark')||b.textContent.includes('Solved'));
+    const state=bank[qid];
+    pill.classList.remove('solved','attempted');
+    card.classList.remove('solved');
+    if(state==='solved'){
+      pill.classList.add('solved');pill.textContent='Solved ✓';
+      card.classList.add('solved');
+      if(markBtn){markBtn.classList.add('solved');markBtn.innerHTML='✓ Solved';}
+      totalSolved++;
+      if(qid.startsWith('e'))easySolved++;
+      if(qid.startsWith('m'))medSolved++;
+      if(qid.startsWith('h'))hardSolved++;
+    }else if(state==='attempted'){
+      pill.classList.add('attempted');pill.textContent='Attempted';
+      if(markBtn){markBtn.classList.remove('solved');markBtn.innerHTML='✓ Mark Solved';}
+    }else{
+      pill.textContent='Not attempted';
+      if(markBtn){markBtn.classList.remove('solved');markBtn.innerHTML='✓ Mark Solved';}
+    }
+  });
+
+  document.getElementById('bank-solved').textContent=totalSolved;
+  const pct=Math.round((totalSolved/15)*100);
+  document.getElementById('bank-pct').textContent=pct+'%';
+  document.getElementById('bank-fill').style.width=pct+'%';
+
+  document.getElementById('cnt-easy').textContent=easySolved+'/5';
+  document.getElementById('cnt-med').textContent=medSolved+'/5';
+  document.getElementById('cnt-hard').textContent=hardSolved+'/5';
+
+  // Dots
+  buildDots('easy',['e1','e2','e3','e4','e5'],bank);
+  buildDots('med',['m1','m2','m3','m4','m5'],bank);
+  buildDots('hard',['h1','h2','h3','h4','h5'],bank);
+}
+
+function buildDots(level,qids,bank){
+  const container=document.getElementById('dots-'+level);
+  if(!container)return;
+  container.innerHTML='';
+  qids.forEach(qid=>{
+    const d=document.createElement('div');
+    d.className='lvl-dot';
+    if(bank[qid]==='solved')d.classList.add('solved');
+    else if(bank[qid]==='attempted')d.classList.add('attempted');
+    container.appendChild(d);
+  });
+}
+
+// ===== Pyodide =====
+let py=null,pyReady=false;
+async function initPy(){
+  try{
+    py=await loadPyodide();
+    pyReady=true;
+    document.querySelectorAll('[data-status]').forEach(el=>{el.textContent='ready';el.classList.add('ready');});
+    document.querySelectorAll('[data-run]').forEach(b=>b.disabled=false);
+  }catch(e){
+    document.querySelectorAll('[data-status]').forEach(el=>el.textContent='load failed');
+  }
+}
+initPy();
+
+document.querySelectorAll('.pg').forEach(pg=>{
+  const ta=pg.querySelector('.pg-ta');
+  pg.dataset.original=ta.value;
+
+  pg.querySelector('[data-run]').addEventListener('click',async()=>{
+    if(!pyReady)return;
+    // Mark attempted
+    const card=pg.closest('.q-card');
+    const qid=card?card.dataset.q:null;
+    if(qid){
+      const bank=getBank();
+      if(!bank[qid])bank[qid]='attempted';
+      setBank(bank);
+      refreshUI();
+    }
+    const out=pg.querySelector('[data-output]');
+    out.classList.remove('error','pg-out-empty');
+    out.textContent='running…';
+    try{
+      py.runPython(`
+import io, sys
+_stdout=sys.stdout
+sys.stdout=io.StringIO()
+      `);
+      try{
+        py.runPython(ta.value);
+      }catch(err){
+        const captured=py.runPython('sys.stdout.getvalue()');
+        out.classList.add('error');
+        out.textContent=(captured?captured+'\n':'')+err.message;
+        py.runPython('sys.stdout=_stdout');
+        return;
+      }
+      const captured=py.runPython('sys.stdout.getvalue()');
+      py.runPython('sys.stdout=_stdout');
+      out.textContent=captured||'(no output)';
+    }catch(e){
+      out.classList.add('error');
+      out.textContent=String(e);
+    }
+  });
+
+  pg.querySelector('[data-reset]').addEventListener('click',()=>{
+    ta.value=pg.dataset.original;
+    const out=pg.querySelector('[data-output]');
+    out.classList.add('pg-out-empty');
+    out.classList.remove('error');
+    out.textContent='Output will appear here…';
+  });
+});
+
+refreshUI();
+</script>
+</body>
+</html>

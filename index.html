@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DE-2026 | Data Engineering Roadmap</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ─── THEME VARIABLES ─────────────────────────────── */
+        :root[data-theme="dark"] {
+            --bg-primary: #080D1A;
+            --bg-secondary: #0F172A;
+            --bg-card: #111827;
+            --bg-card-hover: #1a2235;
+            --bg-surface: #1E293B;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(99,102,241,0.4);
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --text-muted: #475569;
+            --accent-blue: #6366F1;
+            --accent-purple: #A855F7;
+            --accent-cyan: #22D3EE;
+            --accent-green: #10B981;
+            --accent-orange: #F59E0B;
+            --accent-red: #EF4444;
+            --gradient-main: linear-gradient(135deg, #6366F1 0%, #A855F7 100%);
+            --gradient-blue: linear-gradient(135deg, #3B82F6 0%, #6366F1 100%);
+            --gradient-green: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            --gradient-orange: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);
+            --gradient-cyan: linear-gradient(135deg, #22D3EE 0%, #6366F1 100%);
+            --glow-blue: 0 0 30px rgba(99,102,241,0.25);
+            --glow-purple: 0 0 30px rgba(168,85,247,0.25);
+            --shadow-card: 0 4px 32px rgba(0,0,0,0.5);
+            --shadow-hover: 0 8px 48px rgba(0,0,0,0.6);
+        }
+
+        :root[data-theme="light"] {
+            --bg-primary: #F0F4FF;
+            --bg-secondary: #E8EDFF;
+            --bg-card: #FFFFFF;
+            --bg-card-hover: #F8FAFF;
+            --bg-surface: #EEF2FF;
+            --border: rgba(0,0,0,0.06);
+            --border-hover: rgba(99,102,241,0.4);
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #94A3B8;
+            --accent-blue: #4F46E5;
+            --accent-purple: #9333EA;
+            --accent-cyan: #0891B2;
+            --accent-green: #059669;
+            --accent-orange: #D97706;
+            --accent-red: #DC2626;
+            --gradient-main: linear-gradient(135deg, #4F46E5 0%, #9333EA 100%);
+            --gradient-blue: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%);
+            --gradient-green: linear-gradient(135deg, #059669 0%, #047857 100%);
+            --gradient-orange: linear-gradient(135deg, #D97706 0%, #DC2626 100%);
+            --gradient-cyan: linear-gradient(135deg, #0891B2 0%, #4F46E5 100%);
+            --glow-blue: 0 0 30px rgba(79,70,229,0.15);
+            --glow-purple: 0 0 30px rgba(147,51,234,0.15);
+            --shadow-card: 0 4px 24px rgba(0,0,0,0.07);
+            --shadow-hover: 0 8px 40px rgba(0,0,0,0.12);
+        }
+
+        /* ─── RESET ─────────────────────────────────────────── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background 0.4s ease, color 0.4s ease;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ─── SCROLLBAR ─────────────────────────────────────── */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 10px; }
+
+        /* ─── ANIMATED BACKGROUND ───────────────────────────── */
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .bg-orb-1 {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+            top: -100px; left: -100px;
+        }
+
+        .bg-orb-2 {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(168,85,247,0.08) 0%, transparent 70%);
+            bottom: 100px; right: -200px;
+            animation-delay: -4s;
+        }
+
+        .bg-orb-3 {
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(34,211,238,0.07) 0%, transparent 70%);
+            top: 50%; left: 50%;
+            animation-delay: -2s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        /* ─── HEADER ────────────────────────────────────────── */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2.5rem;
+            background: rgba(8, 13, 26, 0.8);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        [data-theme="light"] header {
+            background: rgba(240,244,255,0.85);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+        }
+
+        .logo-mark {
+            width: 40px; height: 40px;
+            background: var(--gradient-main);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: var(--glow-blue);
+            flex-shrink: 0;
+        }
+
+        .logo-text-wrap { display: flex; flex-direction: column; }
+
+        .logo-name {
+            font-size: 17px;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .logo-tagline {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .header-right { display: flex; align-items: center; gap: 20px; }
+
+        .india-flag {
+            font-size: 14px;
+            color: var(--text-secondary);
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-dot {
+            width: 6px; height: 6px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
+        }
+
+        /* Theme toggle */
+        .theme-toggle-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .toggle-track {
+            width: 48px; height: 26px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            top: 3px; left: 3px;
+            width: 18px; height: 18px;
+            background: var(--gradient-main);
+            border-radius: 50%;
+            transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+            box-shadow: 0 2px 8px rgba(99,102,241,0.4);
+        }
+
+        [data-theme="light"] .toggle-thumb { transform: translateX(22px); }
+
+        .toggle-icon {
+            font-size: 16px;
+            transition: opacity 0.3s;
+        }
+
+        /* ─── HERO ──────────────────────────────────────────── */
+        .hero {
+            position: relative;
+            z-index: 1;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 72px 2.5rem 48px;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(99,102,241,0.08);
+            border: 1px solid rgba(99,102,241,0.2);
+            border-radius: 24px;
+            padding: 7px 18px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 5vw, 64px);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 .gradient-text {
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 17px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 520px;
+            margin-bottom: 52px;
+        }
+
+        /* ─── STATS ROW ─────────────────────────────────────── */
+        .stats-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 64px;
+        }
+
+        .stat-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px 28px;
+            flex: 1;
+            min-width: 140px;
+            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+            cursor: default;
+        }
+
+        .stat-chip:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover), var(--glow-blue);
+        }
+
+        .stat-num {
+            font-size: 36px;
+            font-weight: 900;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stat-lbl {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* ─── OVERALL PROGRESS ──────────────────────────────── */
+        .progress-banner {
+            position: relative;
+            z-index: 1;
+            max-width: 1280px;
+            margin: 0 auto 56px;
+            padding: 0 2.5rem;
+        }
+
+        .progress-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 32px 36px;
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .progress-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .progress-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .progress-pct-big {
+            font-size: 44px;
+            font-weight: 900;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .track {
+            height: 10px;
+            background: var(--bg-surface);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .fill {
+            height: 100%;
+            background: var(--gradient-main);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 1.4s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+        }
+
+        .fill::after {
+            content: '';
+            position: absolute;
+            right: -1px; top: 0; bottom: 0;
+            width: 4px;
+            background: white;
+            border-radius: 2px;
+            opacity: 0.6;
+            filter: blur(2px);
+        }
+
+        /* Phase mini bars */
+        .phase-progress-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .phase-mini {
+            flex: 1;
+        }
+
+        .phase-mini-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .phase-mini-track {
+            height: 4px;
+            background: var(--bg-surface);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .phase-mini-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 1.4s cubic-bezier(0.4,0,0.2,1);
+            width: 0%;
+        }
+
+        .p1-fill { background: var(--gradient-blue); }
+        .p2-fill { background: var(--gradient-main); }
+        .p3-fill { background: var(--gradient-cyan); }
+
+        /* ─── MARKET BANNER ─────────────────────────────────── */
+        .market-section {
+            position: relative;
+            z-index: 1;
+            max-width: 1280px;
+            margin: 0 auto 56px;
+            padding: 0 2.5rem;
+        }
+
+        .market-card {
+            background: linear-gradient(135deg, rgba(99,102,241,0.06) 0%, rgba(168,85,247,0.06) 100%);
+            border: 1px solid rgba(99,102,241,0.15);
+            border-radius: 24px;
+            padding: 28px 32px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .market-emoji { font-size: 36px; flex-shrink: 0; }
+
+        .market-body { flex: 1; min-width: 200px; }
+
+        .market-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .market-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .tag-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        .tag {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.02em;
+        }
+
+        .tag-i { background: rgba(99,102,241,0.12); color: var(--accent-blue); border: 1px solid rgba(99,102,241,0.2); }
+        .tag-p { background: rgba(168,85,247,0.12); color: var(--accent-purple); border: 1px solid rgba(168,85,247,0.2); }
+        .tag-g { background: rgba(16,185,129,0.12); color: var(--accent-green); border: 1px solid rgba(16,185,129,0.2); }
+        .tag-o { background: rgba(245,158,11,0.12); color: var(--accent-orange); border: 1px solid rgba(245,158,11,0.2); }
+
+        .market-numbers {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            text-align: right;
+        }
+
+        .market-num { font-size: 26px; font-weight: 900; background: var(--gradient-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; }
+        .market-num-label { font-size: 11px; color: var(--text-muted); }
+
+        /* ─── PHASE SECTION ─────────────────────────────────── */
+        .phases-wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2.5rem 100px;
+        }
+
+        .phase-block {
+            margin-bottom: 64px;
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .phase-block.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .phase-head {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .phase-num-badge {
+            width: 52px; height: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .p1 .phase-num-badge { background: rgba(59,130,246,0.12); color: #60A5FA; border: 1px solid rgba(59,130,246,0.25); }
+        .p2 .phase-num-badge { background: rgba(168,85,247,0.12); color: #C084FC; border: 1px solid rgba(168,85,247,0.25); }
+        .p3 .phase-num-badge { background: rgba(34,211,238,0.12); color: #67E8F9; border: 1px solid rgba(34,211,238,0.25); }
+
+        .phase-head-info h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; }
+        .phase-head-info p { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+
+        .phase-line { flex: 1; height: 1px; background: var(--border); }
+
+        .phase-pill {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            padding: 5px 14px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        /* ─── SKILL GRID ────────────────────────────────────── */
+        .skill-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 18px;
+        }
+
+        /* ─── SKILL CARD ────────────────────────────────────── */
+        .skill-card {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 26px;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .skill-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-main);
+            opacity: 0;
+            transition: opacity 0.35s;
+            border-radius: 24px;
+            pointer-events: none;
+        }
+
+        .skill-card:not(.locked):hover {
+            border-color: var(--border-hover);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover), var(--glow-blue);
+        }
+
+        .skill-card:not(.locked):hover::after { opacity: 0.04; }
+
+        .skill-card.locked {
+            opacity: 0.42;
+            cursor: not-allowed;
+            filter: grayscale(0.3);
+        }
+
+        /* Card top row */
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .skill-icon-wrap {
+            width: 52px; height: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+        }
+
+        .status-pill {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .pill-dot { width: 5px; height: 5px; border-radius: 50%; }
+
+        .s-new { background: rgba(71,85,105,0.15); color: var(--text-muted); border: 1px solid rgba(71,85,105,0.2); }
+        .s-new .pill-dot { background: var(--text-muted); }
+
+        .s-wip { background: rgba(245,158,11,0.12); color: var(--accent-orange); border: 1px solid rgba(245,158,11,0.25); }
+        .s-wip .pill-dot { background: var(--accent-orange); animation: pulse-dot 1.5s infinite; }
+
+        .s-done { background: rgba(16,185,129,0.12); color: var(--accent-green); border: 1px solid rgba(16,185,129,0.25); }
+        .s-done .pill-dot { background: var(--accent-green); }
+
+        .s-locked { background: rgba(71,85,105,0.1); color: var(--text-muted); border: 1px solid rgba(71,85,105,0.15); }
+
+        /* Card body */
+        .card-title {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            margin-bottom: 8px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .chip {
+            font-size: 11px;
+            padding: 3px 10px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Card progress */
+        .card-progress { margin-top: auto; }
+
+        .card-prog-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 7px;
+            font-weight: 500;
+        }
+
+        .card-prog-pct { font-weight: 700; color: var(--text-secondary); }
+
+        .card-track {
+            height: 5px;
+            background: var(--bg-surface);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .card-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1.3s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .p1 .card-fill { background: linear-gradient(90deg, #3B82F6, #6366F1); }
+        .p2 .card-fill { background: linear-gradient(90deg, #8B5CF6, #A855F7); }
+        .p3 .card-fill { background: linear-gradient(90deg, #22D3EE, #6366F1); }
+
+        /* Arrow button */
+        .card-arrow {
+            position: absolute;
+            bottom: 22px;
+            right: 22px;
+            width: 32px; height: 32px;
+            border-radius: 10px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            transition: all 0.3s;
+            color: var(--text-muted);
+        }
+
+        .skill-card:not(.locked):hover .card-arrow {
+            background: var(--gradient-main);
+            border-color: transparent;
+            color: white;
+            transform: translate(2px, -2px);
+            box-shadow: var(--glow-blue);
+        }
+
+        /* Dependency note */
+        .dep-note {
+            font-size: 10px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 16px;
+        }
+
+        /* ─── RESPONSIVE ────────────────────────────────────── */
+        @media (max-width: 900px) {
+            .skill-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+            .hero h1 { font-size: 36px; }
+            .market-numbers { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            header { padding: 0 1.25rem; }
+            .hero, .progress-banner, .market-section, .phases-wrap { padding-left: 1.25rem; padding-right: 1.25rem; }
+            .india-flag { display: none; }
+            .skill-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ─── ANIMATIONS ────────────────────────────────────── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-eyebrow { animation: fadeInUp 0.5s ease both; }
+        .hero h1 { animation: fadeInUp 0.5s 0.1s ease both; }
+        .hero-sub { animation: fadeInUp 0.5s 0.2s ease both; }
+        .stats-row { animation: fadeInUp 0.5s 0.3s ease both; }
+
+        /* Card stagger on load */
+        .skill-card:nth-child(1) { animation: fadeInUp 0.5s 0.05s ease both; }
+        .skill-card:nth-child(2) { animation: fadeInUp 0.5s 0.1s ease both; }
+        .skill-card:nth-child(3) { animation: fadeInUp 0.5s 0.15s ease both; }
+        .skill-card:nth-child(4) { animation: fadeInUp 0.5s 0.2s ease both; }
+    </style>
+</head>
+<body>
+
+<!-- Background orbs -->
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<div class="bg-orb bg-orb-3"></div>
+
+<!-- ─── HEADER ──────────────────────────────────────────────── -->
+<header>
+    <a class="logo" href="index.html">
+        <div class="logo-mark">⚡</div>
+        <div class="logo-text-wrap">
+            <span class="logo-name">DE-2026</span>
+            <span class="logo-tagline">Data Engineering Roadmap</span>
+        </div>
+    </a>
+    <div class="header-right">
+        <div class="india-flag">
+            <div class="live-dot"></div>
+            🇮🇳 India Market · June 2026
+        </div>
+        <div class="theme-toggle-wrap" onclick="toggleTheme()">
+            <span class="toggle-icon">🌙</span>
+            <div class="toggle-track"><div class="toggle-thumb"></div></div>
+            <span class="toggle-icon">☀️</span>
+        </div>
+    </div>
+</header>
+
+<!-- ─── HERO ────────────────────────────────────────────────── -->
+<section class="hero">
+    <div class="hero-eyebrow">
+        <div class="live-dot"></div>
+        Principal DE Learning System · Depth-First · AI Era
+    </div>
+    <h1>Your Road to<br><span class="gradient-text">Data Engineering</span></h1>
+    <p class="hero-sub">
+        India market grounded. Built from real Naukri + LinkedIn job data.
+        One topic at a time — no courses, no videos, no shortcuts.
+    </p>
+
+    <div class="stats-row">
+        <div class="stat-chip">
+            <div class="stat-num" id="stat-total">15</div>
+            <div class="stat-lbl">Total Skills</div>
+        </div>
+        <div class="stat-chip">
+            <div class="stat-num" id="stat-done">0</div>
+            <div class="stat-lbl">Completed</div>
+        </div>
+        <div class="stat-chip">
+            <div class="stat-num" id="stat-progress">0%</div>
+            <div class="stat-lbl">Progress</div>
+        </div>
+        <div class="stat-chip">
+            <div class="stat-num">3</div>
+            <div class="stat-lbl">Phases</div>
+        </div>
+        <div class="stat-chip">
+            <div class="stat-num">6–8</div>
+            <div class="stat-lbl">Months</div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── OVERALL PROGRESS ────────────────────────────────────── -->
+<div class="progress-banner">
+    <div class="progress-card">
+        <div class="progress-top">
+            <div>
+                <div class="progress-label">Overall Progress</div>
+                <div class="progress-meta" id="prog-meta">0 of 15 skills completed</div>
+            </div>
+            <div class="progress-pct-big" id="prog-pct">0%</div>
+        </div>
+        <div class="track"><div class="fill" id="prog-fill"></div></div>
+        <div class="phase-progress-row">
+            <div class="phase-mini">
+                <div class="phase-mini-label"><span>Phase 1 — Foundation</span><span id="p1-pct">0%</span></div>
+                <div class="phase-mini-track"><div class="phase-mini-fill p1-fill" id="p1-fill"></div></div>
+            </div>
+            <div class="phase-mini">
+                <div class="phase-mini-label"><span>Phase 2 — Core DE</span><span id="p2-pct">0%</span></div>
+                <div class="phase-mini-track"><div class="phase-mini-fill p2-fill" id="p2-fill"></div></div>
+            </div>
+            <div class="phase-mini">
+                <div class="phase-mini-label"><span>Phase 3 — Advanced</span><span id="p3-pct">0%</span></div>
+                <div class="phase-mini-track"><div class="phase-mini-fill p3-fill" id="p3-fill"></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ─── MARKET BANNER ───────────────────────────────────────── -->
+<div class="market-section">
+    <div class="market-card">
+        <div class="market-emoji">🇮🇳</div>
+        <div class="market-body">
+            <div class="market-title">Built from Real India Job Market Data — 2026</div>
+            <div class="market-desc">Every skill here is asked by Indian companies. No filler. No global generic advice.</div>
+            <div class="tag-row">
+                <span class="tag tag-i">SQL + Python</span>
+                <span class="tag tag-p">Azure preferred</span>
+                <span class="tag tag-g">Airflow · dbt</span>
+                <span class="tag tag-o">₹6–14 LPA fresher → ₹25–45 LPA senior</span>
+                <span class="tag tag-i">22K+ jobs Naukri</span>
+                <span class="tag tag-p">29K+ jobs LinkedIn</span>
+            </div>
+        </div>
+        <div class="market-numbers">
+            <div>
+                <div class="market-num">22K+</div>
+                <div class="market-num-label">Naukri Jobs</div>
+            </div>
+            <div>
+                <div class="market-num">29K+</div>
+                <div class="market-num-label">LinkedIn Jobs</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ─── PHASES ──────────────────────────────────────────────── -->
+<div class="phases-wrap">
+
+    <!-- PHASE 1 -->
+    <div class="phase-block p1" id="phase-1">
+        <div class="phase-head">
+            <div class="phase-num-badge">1</div>
+            <div class="phase-head-info">
+                <h2>Foundation</h2>
+                <p>Master these first. Everything in Phase 2 breaks without these.</p>
+            </div>
+            <div class="phase-line"></div>
+            <div class="phase-pill">4 Skills · Unlocked</div>
+        </div>
+        <div class="skill-grid">
+
+            <a class="skill-card" href="linux.html">
+                <div class="card-top">
+                    <div class="skill-icon-wrap" style="background:rgba(59,130,246,0.1)">🐧</div>
+                    <div class="status-pill s-new" id="badge-linux"><div class="pill-dot"></div>Not Started</div>
+                </div>
+                <div class="card-title">Linux / CLI</div>
+                <div class="card-desc">Control any machine from the terminal. Every DE tool runs here.</div>
+                <div class="chip-row">
+                    <span class="chip">Filesystem</span><span class="chip">Bash Scripts</span>
+                    <span class="chip">Pipes</span><span class="chip">SSH</span><span class="chip">Processes</span>
+                </div>
+                <div class="card-progress">
+                    <div class="card-prog-top"><span>Progress</span><span class="card-prog-pct" id="pct-linux">0%</span></div>
+                    <div class="card-track"><div class="card-fill" id="bar-linux" style="width:0%"></div></div>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <a class="skill-card" href="git.html">
+                <div class="card-top">
+                    <div class="skill-icon-wrap" style="background:rgba(245,158,11,0.1)">🌿</div>
+                    <div class="status-pill s-new" id="badge-git"><div class="pill-dot"></div>Not Started</div>
+                </div>
+                <div class="card-title">Git</div>
+                <div class="card-desc">Version control everything. No DE works without Git on the job.</div>
+                <div class="chip-row">
+                    <span class="chip">Commits</span><span class="chip">Branches</span>
+                    <span class="chip">Merge &amp; Rebase</span><span class="chip">PRs</span><span class="chip">Conflicts</span>
+                </div>
+                <div class="card-progress">
+                    <div class="card-prog-top"><span>Progress</span><span class="card-prog-pct" id="pct-git">0%</span></div>
+                    <div class="card-track"><div class="card-fill" id="bar-git" style="width:0%"></div></div>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <a class="skill-card" href="sql.html">
+                <div class="card-top">
+                    <div class="skill-icon-wrap" style="background:rgba(16,185,129,0.1)">🗄️</div>
+                    <div class="status-pill s-new" id="badge-sql"><div class="pill-dot"></div>Not Started</div>
+                </div>
+                <div class="card-title">SQL</div>
+                <div class="card-desc">From writing queries to understanding how the database actually thinks.</div>
+                <div class="chip-row">
+                    <span class="chip">CRUD &amp; Joins</span><span class="chip">Window Functions</span>
+                    <span class="chip">Indexes</span><span class="chip">Execution Plans</span>
+                    <span class="chip">Optimization</span><span class="chip">ACID</span>
+                </div>
+                <div class="card-progress">
+                    <div class="card-prog-top"><span>Progress</span><span class="card-prog-pct" id="pct-sql">0%</span></div>
+                    <div class="card-track"><div class="card-fill" id="bar-sql" style="width:0%"></div></div>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <a class="skill-card" href="python.html">
+                <div class="card-top">
+                    <div class="skill-icon-wrap" style="background:rgba(168,85,247,0.1)">🐍</div>
+                    <div class="status-pill s-new" id="badge-python"><div class="pill-dot"></div>Not Started</div>
+                </div>
+                <div class="card-title">Python</div>
+                <div class="card-desc">Production-grade Python — not just scripts, but real engineering.</div>
+                <div class="chip-row">
+                    <span class="chip">OOP</span><span class="chip">Data Structures</span>
+                    <span class="chip">Error Handling</span><span class="chip">Testing</span>
+                    <span class="chip">Pandas</span><span class="chip">APIs</span>
+                </div>
+                <div class="card-progress">
+                    <div class="card-prog-top"><span>Progress</span><span class="card-prog-pct" id="pct-python">0%</span></div>
+                    <div class="card-track"><div class="card-fill" id="bar-python" style="width:0%"></div></div>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+
+        </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="phase-block p2" id="phase-2">
+        <div class="phase-head">
+            <div class="phase-num-badge">2</div>
+            <div class="phase-head-info">
+                <h2>Core Data Engineering</h2>
+                <p>This is where a Data Analyst becomes a Data Engineer.</p>
+            </div>
+            <div class="phase-line"></div>
+            <div class="phase-pill" id="p2-pill">8 Skills · Locked until Phase 1</div>
+        </div>
+        <div class="skill-grid">
+
+            <a class="skill-card locked" href="data-modeling.html" id="card-modeling">
+                <div class="card-top">
+                    <div class="skill-icon-wrap" style="background:rgba(168,85,247,0.1)">🏗️</div>
+                    <div class="status-pill s-locked" id="badge-modeling"><div class="pill-dot"></div>Locked</div>
+                </div>
+                <div class="card-title">Data Modeling</div>
+                <div class="card-desc">Design databases that serve real business needs at scale.</div>
+                <div class="chip-row">
+                    <span class="chip">Star Schema</span><span class="chip">Normalization</span>
+                    <span class="chip">SCD Types</span><span class="chip">Data Vault</span>
+                </div>
+                <div class="dep-note">🔗 Requires: SQL</div>
+                <div class="card-progress">
+                    <div class="card-prog-top"><span>Progress</span><span class="card-prog-pct" id="pct-modeling">0%</span></div>
+                    <div class="card-track"><div class="card-fill" id="bar-modeling" style="width:0%"></div></div>
+                </div>
+                <div class="card-arrow">🔒</div>
+            </a>
+
+            <a class="skill-card locked" href="cloud.html" id="card-cloud">
+                <div class="card-top">
+                    <div class="skill-icon-wrap" style="background:rgba(34,211,238,0.1)">☁️</div>
+                    <div class="status-pill s-locked" id="badge-cloud"><div class="pill-dot"></div>Locked</div>
+                </div>
+                <div class="card-title">Cloud — Azure</div>
+                <div class="card-desc">Most in-demand cloud in India. Where production pipelines live.</div>
+                <div class="chip-row">
+                    <span class="chip">Storage &amp; ADLS</span><span class="chip">IAM &amp; Roles</span>
+                    <span class="chip">Azure CLI</span><span class="chip">Compute</span>
+                </div>
+                <div class="dep-note">🔗 Requires: Linux, Git</div>
+                <div class="card-progress">
+                    <div class="card-prog-top"><span>Progress</span><span class="card-prog-pct" id="pct-cloud">0%</span></div>
+                    <div class="card-track"><div class="card-fill" id="bar-cloud" style="width:0%"></div></div>
+                </div>
+                <div class="card-arrow">🔒</div>
+            </a>
+
+            <a class="skill-card locked" href="docker.html" id="card-docker">
+                <div class="card-top">
+                    <div class="skill-icon-wrap" style="background:rgba(59,130,246,0.1)">🐳</div>
+                    <div class="status-pill s-locked" id="badge-docker"><div class="pill-dot"></div>Locked</div>
+                </div>
+                <div class="card-title">Docker</div>
+                <div class="card-desc">Package anything, run anywhere. Standard for modern pipelines.</div>
+                <div class="chip-row">
+                    <span class="chip">Images</span><span class="chip">Containers</span>
+                    <span class="chip">Dockerfile</span><span class="chip">Compose</span>
+                </div>
+                <div class="dep-note">🔗 Requires: Python, Linux</div>
+                <div class="card-progress">
+                    <div class="card-prog-top"><span>Progress</span><span class="card-prog-pct" id="pct-docker">0%</span></div>
+                    <div class="card-track"><div class="card-fill" id="bar-docker" style="width:0%"></div></div>
+                </div>
+                <div class="card-arrow">🔒</div>
+            </a>
+
+            <a class="skill-card locked" href="etl.html" id="card-etl">
+                <div class="card-top">
+                    <div class="skill-icon-wrap" style="background:rgba(245,158,11,0.1)">🔄</div>
+                    <div class="status-pill s-locked" id="badge-etl"><div class="pill-dot"></div>Locked</div>
+                </div>
+                <div class="card-title">ETL / Pipelines</div>
+                <div class="card-desc">The core job of a DE — move, transform, and load data reliably.</div>
+                <div class="chip-row">
+                    <span class="chip">ETL vs ELT</span><span class="chip">Batch vs Streaming</span>
+                    <span class="chip">Idempotency</span><span class="chip">Incremental Loads</span>
+                </div>
+                <div class="dep-note">🔗 Requires: SQL, Python</div>
+                <div class="card-progress">
+                    <div class="card-prog-top"><span>Progress</span><span class="card-prog-pct" id="pct-etl">0%</span></div>
+                    <div class="card-track"><div class="card-fill" id="bar-etl" style="width:0%"></div></div>
+                </div>
+                <div class="card-arrow">🔒</div>
+            </a>
+
+            <a class="skill-card locked" href="spark-basics.html" id="card-spark">
+                <div class="card-top">
+                    <div class="skill-icon-wrap" style="background:rgba(245,158,11,0.1)">⚡</div>
+                    <div class="status-pill s-locked" id="badge-spark"><div class="pill-dot"></div>Locked</div>
+                </div>
+                <div class="card-title">Spark Basics</div>
+                <div class="card-desc">Process millions of rows fast. PySpark is Python for big data.</div>
+                <div class="chip-row">
+                    <span class="chip">What is Spark</span><span class="chip">RDDs vs DataFrames</span>
+                    <span class="chip">Transformations</span><span class="chip">Read / Write</span>
+                </div>
+                <div class="dep-note">🔗 Requires: Python</div>
+                <div class="card-progress">
+                    <div class="card-prog-top"><span>Progress</span><span class="card-prog-pct" id="pct-spark">0%</span></div>
+                    <div class="card-track"><div class="card-fill" id="bar-spark" style="width:0%"></div></div>
+                </div>
+                <div class="card-arrow">🔒</div>
+            </a>
+
+            <a class="skill-card locked" href="airflow.html" id="card-airflow">
+                <div class="card-top">
+                    <div class="skill-icon-wrap" style="background:rgba(16,185,129,0.1)">🌊</div>
+                    <div class="status-pill s-locked" id="badge-airflow"><div class="pill-dot"></div>Locked</div>
+                </div>
+                <div class="card-title">Airflow</div>
+                <div class="card-desc">Schedule and monitor pipelines. Most used orchestrator in India.</div>
+                <div class="chip-row">
+                    <span class="chip">DAGs</span><span class="chip">Operators</span>
+                    <span class="chip">Scheduling</span><span class="chip">Retries</span><span class="chip">Monitoring</span>
+                </div>
+                <div class="dep-note">🔗 Requires: Python, ETL</div>
+                <div class="card-progress">
+                    <div class="card-prog-top"><span>Progress</span><span class="card-prog-pct" id="pct-airflow">0%</span></div>
+                    <div class="card-track"><div class="card-fill" id="bar-airflow" style="width:0%"></div></div>
+                </div>
+                <div class="card-arrow">🔒</div>
+            </a>
+
+            <a class="skill-card locked" href="dbt.html" id="card-dbt">
+                <div class="card-top">
+                    <div class="skill-icon-wrap" style="background:rgba(168,85,247,0.1)">🔧</div>
+                    <div class="status-pill s-locked" id="badge-dbt"><div class="pill-dot"></div>Locked</div>
+                </div>
+                <div class="card-title">dbt</div>
+                <div class="card-desc">Transform data inside your warehouse. Standard in modern DE stacks.</div>
+                <div class="chip-row">
+                    <span class="chip">Models</span><span class="chip">Sources &amp; Refs</span>
+                    <span class="chip">Tests</span><span class="chip">Materializations</span><span class="chip">Docs</span>
+                </div>
+                <div class="dep-note">🔗 Requires: SQL, Data Modeling</div>
+                <div class="card-progress">
+                    <div class="card-prog-top"><span>Progress</span><span class="card-prog-pct" id="pct-dbt">0%</span></div>
+                    <div class="card-track"><div class="card-fill" id="bar-dbt" style="width:0%"></div></div>
+                </div>
+                <div class="card-arrow">🔒</div>
+            </a>
+
+            <a class="skill-card locked" href="warehouse.html" id="card-warehouse">
+                <div class="card-top">
+                    <div class="skill-icon-wrap" style="background:rgba(34,211,238,0.1)">🏢</div>
+                    <div class="status-pill s-locked" id="badge-warehouse"><div class="pill-dot"></div>Locked</div>
+                </div>
+                <div class="card-title">Data Warehousing</div>
+                <div class="card-desc">Snowflake or BigQuery — where analytics data lives at scale.</div>
+                <div class="chip-row">
+                    <span class="chip">Warehouse Concepts</span><span class="chip">Clustering</span>
+                    <span class="chip">Partitioning</span><span class="chip">Query Optimization</span>
+                </div>
+                <div class="dep-note">🔗 Requires: Data Modeling, Cloud</div>
+                <div class="card-progress">
+                    <div class="card-prog-top"><span>Progress</span><span class="card-prog-pct" id="pct-warehouse">0%</span></div>
+                    <div class="card-track"><div class="card-fill" id="bar-warehouse" style="width:0%"></div></div>
+                </div>
+                <div class="card-arrow">🔒</div>
+            </a>
+
+        </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="phase-block p3" id="phase-3">
+        <div class="phase-head">
+            <div class="phase-num-badge">3</div>
+            <div class="phase-head-info">
+                <h2>Advanced + AI Era</h2>
+                <p>What separates a good DE from a great DE in 2026.</p>
+            </div>
+            <div class="phase-line"></div>
+            <div class="phase-pill" id="p3-pill">3 Skills · Locked until Phase 2</div>
+        </div>
+        <div class="skill-grid">
+
+            <a class="skill-card locked" href="spark-advanced.html" id="card-spark-adv">
+                <div class="card-top">
+                    <div class="skill-icon-wrap" style="background:rgba(34,211,238,0.1)">🔥</div>
+                    <div class="status-pill s-locked" id="badge-spark-adv"><div class="pill-dot"></div>Locked</div>
+                </div>
+                <div class="card-title">Spark Advanced</div>
+                <div class="card-desc">Deploy, optimize, and debug Spark at production scale on Azure.</div>
+                <div class="chip-row">
+                    <span class="chip">Partitioning</span><span class="chip">Join Optimization</span>
+                    <span class="chip">Databricks</span><span class="chip">Debugging</span>
+                </div>
+                <div class="dep-note">🔗 Requires: Spark Basics, Cloud</div>
+                <div class="card-progress">
+                    <div class="card-prog-top"><span>Progress</span><span class="card-prog-pct" id="pct-spark-adv">0%</span></div>
+                    <div class="card-track"><div class="card-fill" id="bar-spark-adv" style="width:0%"></div></div>
+                </div>
+                <div class="card-arrow">🔒</div>
+            </a>
+
+            <a class="skill-card locked" href="kafka.html" id="card-kafka">
+                <div class="card-top">
+                    <div class="skill-icon-wrap" style="background:rgba(245,158,11,0.1)">📡</div>
+                    <div class="status-pill s-locked" id="badge-kafka"><div class="pill-dot"></div>Locked</div>
+                </div>
+                <div class="card-title">Kafka / Streaming</div>
+                <div class="card-desc">Real-time data pipelines. Big in fintech and e-commerce India.</div>
+                <div class="chip-row">
+                    <span class="chip">Producers &amp; Consumers</span><span class="chip">Topics</span>
+                    <span class="chip">Exactly-once</span><span class="chip">Spark Streaming</span>
+                </div>
+                <div class="dep-note">🔗 Requires: ETL, Python, Cloud</div>
+                <div class="card-progress">
+                    <div class="card-prog-top"><span>Progress</span><span class="card-prog-pct" id="pct-kafka">0%</span></div>
+                    <div class="card-track"><div class="card-fill" id="bar-kafka" style="width:0%"></div></div>
+                </div>
+                <div class="card-arrow">🔒</div>
+            </a>
+
+            <a class="skill-card locked" href="ai-de.html" id="card-ai">
+                <div class="card-top">
+                    <div class="skill-icon-wrap" style="background:rgba(168,85,247,0.1)">🤖</div>
+                    <div class="status-pill s-locked" id="badge-ai"><div class="pill-dot"></div>Locked</div>
+                </div>
+                <div class="card-title">AI Era DE</div>
+                <div class="card-desc">Build pipelines for LLMs. Vector DBs, embeddings, AI infra.</div>
+                <div class="chip-row">
+                    <span class="chip">Vector Databases</span><span class="chip">Embedding Pipelines</span>
+                    <span class="chip">LLM Data Pipelines</span><span class="chip">Feature Stores</span>
+                </div>
+                <div class="dep-note">🔗 Requires: Python, Cloud, Warehouse</div>
+                <div class="card-progress">
+                    <div class="card-prog-top"><span>Progress</span><span class="card-prog-pct" id="pct-ai">0%</span></div>
+                    <div class="card-track"><div class="card-fill" id="bar-ai" style="width:0%"></div></div>
+                </div>
+                <div class="card-arrow">🔒</div>
+            </a>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- ─── JAVASCRIPT ───────────────────────────────────────────── -->
+<script>
+    // ── Theme ────────────────────────────────────────────────
+    function toggleTheme() {
+        const html = document.documentElement;
+        const current = html.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('de2026-theme', next);
+    }
+
+    (function initTheme() {
+        const saved = localStorage.getItem('de2026-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+    })();
+
+    // ── Skill registry ───────────────────────────────────────
+    const SKILLS = {
+        phase1: ['linux','git','sql','python'],
+        phase2: ['modeling','cloud','docker','etl','spark','airflow','dbt','warehouse'],
+        phase3: ['spark-adv','kafka','ai']
+    };
+    const ALL = [...SKILLS.phase1, ...SKILLS.phase2, ...SKILLS.phase3];
+
+    function getPct(skill) {
+        return parseInt(localStorage.getItem('de2026-pct-' + skill) || '0');
+    }
+
+    function getStatus(pct) {
+        if (pct === 0) return { cls: 's-new', label: 'Not Started' };
+        if (pct === 100) return { cls: 's-done', label: 'Completed' };
+        return { cls: 's-wip', label: 'In Progress' };
+    }
+
+    function renderProgress() {
+        let totalPct = 0, doneCount = 0;
+        let p1Total = 0, p2Total = 0, p3Total = 0;
+
+        ALL.forEach(s => {
+            const pct = getPct(s);
+            totalPct += pct;
+            if (pct === 100) doneCount++;
+
+            const bar = document.getElementById('bar-' + s);
+            const pctEl = document.getElementById('pct-' + s);
+            const badge = document.getElementById('badge-' + s);
+
+            if (bar) bar.style.width = pct + '%';
+            if (pctEl) pctEl.textContent = pct + '%';
+            if (badge) {
+                const st = getStatus(pct);
+                badge.className = 'status-pill ' + st.cls;
+                badge.innerHTML = '<div class="pill-dot"></div>' + st.label;
+            }
+        });
+
+        SKILLS.phase1.forEach(s => p1Total += getPct(s));
+        SKILLS.phase2.forEach(s => p2Total += getPct(s));
+        SKILLS.phase3.forEach(s => p3Total += getPct(s));
+
+        const p1Pct = Math.round(p1Total / SKILLS.phase1.length);
+        const p2Pct = Math.round(p2Total / SKILLS.phase2.length);
+        const p3Pct = Math.round(p3Total / SKILLS.phase3.length);
+        const overall = Math.round(totalPct / ALL.length);
+
+        document.getElementById('prog-pct').textContent = overall + '%';
+        document.getElementById('prog-fill').style.width = overall + '%';
+        document.getElementById('prog-meta').textContent = doneCount + ' of ' + ALL.length + ' skills completed';
+        document.getElementById('stat-done').textContent = doneCount;
+        document.getElementById('stat-progress').textContent = overall + '%';
+
+        document.getElementById('p1-pct').textContent = p1Pct + '%';
+        document.getElementById('p1-fill').style.width = p1Pct + '%';
+        document.getElementById('p2-pct').textContent = p2Pct + '%';
+        document.getElementById('p2-fill').style.width = p2Pct + '%';
+        document.getElementById('p3-pct').textContent = p3Pct + '%';
+        document.getElementById('p3-fill').style.width = p3Pct + '%';
+
+        // Unlock Phase 2 when Phase 1 done
+        const p1Done = SKILLS.phase1.every(s => getPct(s) === 100);
+        if (p1Done) {
+            SKILLS.phase2.forEach(s => {
+                const card = document.getElementById('card-' + s);
+                if (card) {
+                    card.classList.remove('locked');
+                    const arrow = card.querySelector('.card-arrow');
+                    if (arrow) arrow.textContent = '→';
+                    const badge = document.getElementById('badge-' + s);
+                    if (badge && badge.querySelector('.pill-dot + span')?.textContent === 'Locked') {
+                        badge.className = 'status-pill s-new';
+                        badge.innerHTML = '<div class="pill-dot"></div>Not Started';
+                    }
+                }
+            });
+            const pill = document.getElementById('p2-pill');
+            if (pill) pill.textContent = '8 Skills · Unlocked ✓';
+        }
+
+        // Unlock Phase 3 when Phase 2 done
+        const p2Done = SKILLS.phase2.every(s => getPct(s) === 100);
+        if (p2Done) {
+            SKILLS.phase3.forEach(s => {
+                const card = document.getElementById('card-' + s);
+                if (card) {
+                    card.classList.remove('locked');
+                    const arrow = card.querySelector('.card-arrow');
+                    if (arrow) arrow.textContent = '→';
+                }
+            });
+            const pill = document.getElementById('p3-pill');
+            if (pill) pill.textContent = '3 Skills · Unlocked ✓';
+        }
+    }
+
+    // ── Scroll animations ────────────────────────────────────
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => entry.target.classList.add('visible'), i * 80);
+                io.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.phase-block').forEach(el => io.observe(el));
+
+    // ── Init ─────────────────────────────────────────────────
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(renderProgress, 100);
+    });
+</script>
+</body>
+</html>

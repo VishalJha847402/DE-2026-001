@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Functions Practice Bank · Python T4 · DE-2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root[data-theme="dark"]{--bg-primary:#080D1A;--bg-secondary:#0F172A;--bg-card:#111827;--bg-surface:#1E293B;--bg-editor:#0D1117;--bg-editor-tab:#161B22;--border:rgba(255,255,255,0.06);--border-hover:rgba(99,102,241,0.4);--border-strong:rgba(255,255,255,0.10);--text-primary:#F1F5F9;--text-secondary:#94A3B8;--text-muted:#475569;--accent-blue:#6366F1;--accent-purple:#A855F7;--accent-cyan:#22D3EE;--accent-green:#10B981;--accent-orange:#F59E0B;--accent-red:#EF4444;--gradient-main:linear-gradient(135deg,#6366F1 0%,#A855F7 100%);--gradient-python:linear-gradient(135deg,#3776AB 0%,#FFD43B 100%);--glow-blue:0 0 30px rgba(99,102,241,0.25);--syn-keyword:#C586C0;--syn-string:#CE9178;--syn-number:#B5CEA8;--syn-comment:#6A9955;--syn-fn:#DCDCAA;--syn-var:#9CDCFE;--syn-type:#4EC9B0;--syn-builtin:#569CD6;--syn-op:#D4D4D4;}
+:root[data-theme="light"]{--bg-primary:#F0F4FF;--bg-secondary:#E8EDFF;--bg-card:#FFFFFF;--bg-surface:#EEF2FF;--bg-editor:#1E1E1E;--bg-editor-tab:#2D2D2D;--border:rgba(0,0,0,0.06);--border-hover:rgba(99,102,241,0.4);--border-strong:rgba(0,0,0,0.10);--text-primary:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;--accent-blue:#4F46E5;--accent-purple:#9333EA;--accent-cyan:#0891B2;--accent-green:#059669;--accent-orange:#D97706;--accent-red:#DC2626;--gradient-main:linear-gradient(135deg,#4F46E5 0%,#9333EA 100%);--gradient-python:linear-gradient(135deg,#3776AB 0%,#FFD43B 100%);--glow-blue:0 0 30px rgba(79,70,229,0.15);--syn-keyword:#C586C0;--syn-string:#CE9178;--syn-number:#B5CEA8;--syn-comment:#6A9955;--syn-fn:#DCDCAA;--syn-var:#9CDCFE;--syn-type:#4EC9B0;--syn-builtin:#569CD6;--syn-op:#D4D4D4;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg-primary);color:var(--text-primary);transition:background .4s,color .4s;min-height:100vh;line-height:1.65}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:var(--bg-secondary)}::-webkit-scrollbar-thumb{background:var(--accent-blue);border-radius:10px}
+code,pre,kbd{font-family:'JetBrains Mono',monospace}
+.bg-orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;animation:float 8s ease-in-out infinite}
+.bg-orb-1{width:500px;height:500px;background:radial-gradient(circle,rgba(99,102,241,0.10) 0%,transparent 70%);top:-100px;left:-100px}
+.bg-orb-2{width:600px;height:600px;background:radial-gradient(circle,rgba(168,85,247,0.07) 0%,transparent 70%);bottom:100px;right:-200px;animation-delay:-4s}
+@keyframes float{0%,100%{transform:translateY(0px) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+header{position:sticky;top:0;z-index:1000;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(8,13,26,0.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+[data-theme="light"] header{background:rgba(240,244,255,0.85)}
+.header-left{display:flex;align-items:center;gap:24px}
+.back-link{display:flex;align-items:center;gap:8px;color:var(--text-secondary);text-decoration:none;font-size:13px;font-weight:500;padding:7px 14px;border-radius:10px;border:1px solid var(--border);transition:all .2s}
+.back-link:hover{color:var(--text-primary);border-color:var(--border-hover);background:var(--bg-card)}
+.crumb{display:flex;align-items:center;gap:10px;font-size:14px}
+.crumb-icon{width:32px;height:32px;background:var(--gradient-python);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:var(--glow-blue)}
+.crumb-title{font-weight:800;font-size:15px}.crumb-sub{font-size:11px;color:var(--text-muted);font-weight:500}
+.header-right{display:flex;align-items:center;gap:16px}
+.bank-progress{display:flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--text-secondary)}
+.bank-progress b{color:var(--text-primary);font-weight:700}
+.theme-toggle-wrap{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.toggle-track{width:48px;height:26px;background:var(--bg-surface);border:1px solid var(--border);border-radius:13px;position:relative}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;background:var(--gradient-main);border-radius:50%;transition:transform .3s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(99,102,241,0.4)}
+[data-theme="light"] .toggle-thumb{transform:translateX(22px)}
+.page{max-width:none;width:100%;margin:0 auto;padding:48px 56px 100px;position:relative;z-index:1}
+.bank-hero{margin-bottom:40px}
+.bank-eyebrow{display:inline-flex;align-items:center;gap:10px;background:rgba(99,102,241,0.10);border:1px solid rgba(99,102,241,0.25);border-radius:20px;padding:6px 16px;font-size:11px;font-weight:700;color:var(--accent-blue);letter-spacing:.06em;text-transform:uppercase;margin-bottom:18px}
+.bank-title{font-size:clamp(32px,4vw,46px);font-weight:900;line-height:1.1;letter-spacing:-0.02em;margin-bottom:12px}
+.bank-title .grad{background:var(--gradient-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.bank-lead{font-size:16px;color:var(--text-secondary);max-width:1100px;margin-bottom:24px}
+.level-tabs{display:flex;gap:10px;margin-bottom:36px;flex-wrap:wrap}
+.level-tab{display:flex;align-items:center;gap:10px;padding:12px 22px;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;font-size:14px;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all .25s}
+.level-tab:hover{color:var(--text-primary);border-color:var(--border-hover)}
+.level-tab.active{background:var(--gradient-main);color:white;border-color:transparent;box-shadow:var(--glow-blue)}
+.level-tab .dot{width:9px;height:9px;border-radius:50%}.level-tab .dot.e{background:var(--accent-green)}.level-tab .dot.m{background:var(--accent-orange)}.level-tab .dot.h{background:var(--accent-red)}
+.level-tab .count{font-size:11px;color:var(--text-muted);background:var(--bg-surface);padding:2px 8px;border-radius:10px;font-weight:700}
+.level-tab.active .count{background:rgba(255,255,255,0.2);color:white}
+.level-panel{display:none}.level-panel.active{display:block}
+.q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:32px;margin-bottom:32px;position:relative;transition:border-color .2s}
+.q-card.solved{border-color:rgba(16,185,129,0.30)}
+.q-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:14px;flex-wrap:wrap}
+.q-num-row{display:flex;align-items:center;gap:12px}
+.q-num{width:36px;height:36px;background:var(--gradient-main);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:14px}
+.q-meta{display:flex;flex-direction:column}
+.q-tag{font-size:11px;font-weight:700;color:var(--accent-blue);text-transform:uppercase;letter-spacing:.06em}
+.q-type{font-size:11px;color:var(--text-muted);font-weight:600;margin-top:2px}
+.q-actions-row{display:flex;align-items:center;gap:8px}
+.q-status-pill{font-size:11px;font-weight:700;padding:5px 12px;border-radius:12px;background:var(--bg-surface);color:var(--text-muted)}
+.q-status-pill.solved{background:rgba(16,185,129,0.15);color:var(--accent-green)}
+.q-status-pill.attempted{background:rgba(245,158,11,0.15);color:var(--accent-orange)}
+.q-title{font-size:20px;font-weight:800;margin-bottom:12px;letter-spacing:-0.01em;line-height:1.3}
+.q-scenario{background:var(--bg-surface);border-left:3px solid var(--accent-cyan);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:14px;color:var(--text-secondary);line-height:1.65}
+.q-scenario b{color:var(--text-primary)}
+.q-task{font-size:14px;margin-bottom:18px;line-height:1.65}
+.q-task b{color:var(--text-primary)}
+.q-actions{display:flex;gap:10px;margin:14px 0;flex-wrap:wrap}
+.q-btn{background:var(--bg-surface);border:1px solid var(--border);color:var(--text-secondary);border-radius:9px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.q-btn:hover{border-color:var(--border-hover);color:var(--text-primary)}
+.q-btn.solved{background:rgba(16,185,129,0.10);border-color:rgba(16,185,129,0.30);color:var(--accent-green)}
+.q-reveal{display:none;margin-top:16px;padding:18px;background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.20);border-radius:12px}
+.q-reveal.open{display:block}
+.q-reveal h4{font-size:13px;font-weight:700;color:var(--accent-purple);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.q-reveal p{font-size:14px;line-height:1.65;color:var(--text-secondary);margin-bottom:10px}
+.q-reveal code{background:var(--bg-surface);padding:1px 6px;border-radius:4px;font-size:12.5px;color:var(--syn-var)}
+.q-hint{display:none;margin-top:12px;padding:14px 18px;background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.20);border-left:3px solid var(--accent-blue);border-radius:10px;font-size:13.5px;color:var(--text-secondary);line-height:1.65}
+.q-hint.open{display:block}
+.q-hint b{color:var(--accent-blue);text-transform:uppercase;font-size:11px;letter-spacing:.06em;display:block;margin-bottom:5px}
+.pg{background:var(--bg-editor);border:1px solid var(--border-strong);border-radius:12px;overflow:hidden;margin-top:14px}
+.pg-tabs{display:flex;align-items:center;background:var(--bg-editor-tab);padding:0 12px;height:36px;border-bottom:1px solid var(--border);justify-content:space-between}
+.pg-tab-name{font-size:12px;color:#E5E7EB}
+.pg-status{font-size:10.5px;color:var(--text-muted);font-family:'JetBrains Mono',monospace}
+.pg-status.ready{color:var(--accent-green)}
+.pg-ta{width:100%;background:transparent;color:#D4D4D4;border:none;outline:none;resize:vertical;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;padding:14px 18px;min-height:260px;tab-size:4}
+.pg-actions{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg-editor-tab);border-top:1px solid var(--border)}
+.pg-run-btn{background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:8px 18px;font-size:12px;font-weight:700;cursor:pointer;box-shadow:var(--glow-blue);transition:all .2s}
+.pg-run-btn:hover{transform:translateY(-1px)}
+.pg-run-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.pg-reset-btn{background:transparent;border:1px solid var(--border);color:var(--text-muted);border-radius:8px;padding:8px 14px;font-size:11.5px;font-weight:600;cursor:pointer}
+.pg-reset-btn:hover{color:var(--text-primary)}
+.pg-out{background:#0A0E16;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7;color:var(--accent-green);white-space:pre-wrap;min-height:46px;max-height:340px;overflow-y:auto;border-top:1px solid var(--border)}
+.pg-out.error{color:var(--accent-red)}
+.pg-out-empty{color:var(--text-muted);font-style:italic}
+.editor{background:var(--bg-editor);border:1px solid var(--border-strong);border-radius:10px;overflow:hidden;margin:10px 0}
+.editor-tabs-row{display:flex;align-items:center;background:var(--bg-editor-tab);height:32px;padding:0 12px}
+.editor-tab-name{font-size:11.5px;color:#E5E7EB}
+.editor-body{display:flex;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7}
+.editor-code{padding:12px 16px;color:#D4D4D4;white-space:pre;flex:1;overflow-x:auto;tab-size:4}
+.editor-code .kw{color:var(--syn-keyword)}.editor-code .str{color:var(--syn-string)}.editor-code .num{color:var(--syn-number)}.editor-code .com{color:var(--syn-comment);font-style:italic}.editor-code .fn{color:var(--syn-fn)}.editor-code .var{color:var(--syn-var)}.editor-code .type{color:var(--syn-type)}.editor-code .bi{color:var(--syn-builtin)}.editor-code .op{color:var(--syn-op)}
+.lvl-dots{display:flex;gap:8px;margin-bottom:24px}
+.lvl-dot{width:14px;height:14px;border-radius:50%;background:var(--bg-surface);border:2px solid var(--border)}
+.lvl-dot.attempted{background:var(--accent-orange);border-color:var(--accent-orange)}
+.lvl-dot.solved{background:var(--accent-green);border-color:var(--accent-green)}
+.summary-bar{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:18px 24px;margin-bottom:32px}
+.summary-bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.summary-bar-label{font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.summary-bar-num{font-size:22px;font-weight:800;background:var(--gradient-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.summary-bar-track{height:8px;background:var(--bg-surface);border-radius:4px;overflow:hidden}
+.summary-bar-fill{height:100%;background:var(--gradient-main);border-radius:4px;width:0%;transition:width 1s cubic-bezier(0.4,0,0.2,1)}
+@media (max-width:768px){.page{padding:24px 18px 80px}.q-card{padding:20px}}
+</style>
+</head>
+<body>
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<header>
+  <div class="header-left">
+    <a class="back-link" href="python.html#topic-4">← Back to Functions</a>
+    <div class="crumb"><div class="crumb-icon">🔧</div><div><div class="crumb-title">Functions — Practice Bank</div><div class="crumb-sub">Topic 4 · 15 Problems</div></div></div>
+  </div>
+  <div class="header-right">
+    <div class="bank-progress"><span>Solved</span><b id="bank-solved">0</b><span>of 15</span></div>
+    <div class="theme-toggle-wrap" onclick="toggleTheme()"><div class="toggle-track"><div class="toggle-thumb"></div></div></div>
+  </div>
+</header>
+
+<div class="page">
+  <div class="bank-hero">
+    <div class="bank-eyebrow">🎯 Practice Bank · Topic 4 · Functions</div>
+    <h1 class="bank-title">15 Real-World <span class="grad">DE Problems</span></h1>
+    <p class="bank-lead">Build retry decorators, write closures, master *args/**kwargs unpacking, parameterised decorators, lru_cache. Real DE engineering problems.</p>
+  </div>
+  <div class="summary-bar"><div class="summary-bar-top"><span class="summary-bar-label">Bank Progress</span><span class="summary-bar-num" id="bank-pct">0%</span></div><div class="summary-bar-track"><div class="summary-bar-fill" id="bank-fill"></div></div></div>
+  <div class="level-tabs">
+    <div class="level-tab active" data-level="easy" onclick="setLevel('easy')"><div class="dot e"></div>Easy <span class="count" id="cnt-easy">0/5</span></div>
+    <div class="level-tab" data-level="med" onclick="setLevel('med')"><div class="dot m"></div>Medium <span class="count" id="cnt-med">0/5</span></div>
+    <div class="level-tab" data-level="hard" onclick="setLevel('hard')"><div class="dot h"></div>Hard <span class="count" id="cnt-hard">0/5</span></div>
+  </div>
+
+  <!-- EASY -->
+  <div class="level-panel active" data-panel="easy">
+    <div class="lvl-dots" id="dots-easy"></div>
+
+    <div class="q-card" data-q="e1">
+      <div class="q-head"><div class="q-num-row"><div class="q-num">E1</div><div class="q-meta"><span class="q-tag">Easy · type hints</span><span class="q-type">DE Pipeline</span></div></div><div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div></div>
+      <div class="q-title">Typed function with default</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Apply GST with default 18%.</div>
+      <div class="q-task"><b>Task:</b> <code>apply_gst(amount: float, rate: float = 0.18) -> float</code>. Return <code>amount * (1 + rate)</code>.</div>
+      <div class="q-actions"><button class="q-btn" onclick="toggleHint(this)">💡 Hint</button><button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button><button class="q-btn" onclick="markSolved(this,'e1')">✓ Mark Solved</button></div>
+      <div class="q-hint"><b>Hint</b>Annotation: <code>name: type = default</code></div>
+      <div class="pg" data-pg="e1"><div class="pg-tabs"><div class="pg-tab-name">🐍 gst.py</div><div class="pg-status" data-status>loading…</div></div>
+        <textarea class="pg-ta" spellcheck="false"># Your function here
+
+
+print(apply_gst(1000))           # 1180.0
+print(apply_gst(1000, 0.28))     # 1280.0
+</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+      <div class="q-reveal"><h4>✨ Solution</h4><div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="kw">def</span> <span class="fn">apply_gst</span>(<span class="var">amount</span>: <span class="bi">float</span>, <span class="var">rate</span>: <span class="bi">float</span> <span class="op">=</span> <span class="num">0.18</span>) <span class="op">-&gt;</span> <span class="bi">float</span>:
+    <span class="kw">return</span> <span class="var">amount</span> <span class="op">*</span> (<span class="num">1</span> <span class="op">+</span> <span class="var">rate</span>)</div></div></div></div>
+    </div>
+
+    <div class="q-card" data-q="e2">
+      <div class="q-head"><div class="q-num-row"><div class="q-num">E2</div><div class="q-meta"><span class="q-tag">Easy · *args</span><span class="q-type">DE Pipeline</span></div></div><div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div></div>
+      <div class="q-title">Sum any number of values</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Variadic sum.</div>
+      <div class="q-task"><b>Task:</b> <code>total(*vals)</code> sums all positional arguments.</div>
+      <div class="q-actions"><button class="q-btn" onclick="toggleHint(this)">💡 Hint</button><button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button><button class="q-btn" onclick="markSolved(this,'e2')">✓ Mark Solved</button></div>
+      <div class="q-hint"><b>Hint</b><code>return sum(vals)</code></div>
+      <div class="pg" data-pg="e2"><div class="pg-tabs"><div class="pg-tab-name">🐍 total.py</div><div class="pg-status" data-status>loading…</div></div>
+        <textarea class="pg-ta" spellcheck="false"># Your function here
+
+
+print(total(1, 2, 3, 4))       # 10
+print(total())                 # 0
+</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+      <div class="q-reveal"><h4>✨ Solution</h4><div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="kw">def</span> <span class="fn">total</span>(<span class="op">*</span><span class="var">vals</span>): <span class="kw">return</span> <span class="bi">sum</span>(<span class="var">vals</span>)</div></div></div></div>
+    </div>
+
+    <div class="q-card" data-q="e3">
+      <div class="q-head"><div class="q-num-row"><div class="q-num">E3</div><div class="q-meta"><span class="q-tag">Easy · **kwargs</span><span class="q-type">DE Logging</span></div></div><div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div></div>
+      <div class="q-title">Pretty-print keyword args</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Logging-style helper.</div>
+      <div class="q-task"><b>Task:</b> <code>log(**fields)</code> prints each key=value on its own line.</div>
+      <div class="q-actions"><button class="q-btn" onclick="toggleHint(this)">💡 Hint</button><button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button><button class="q-btn" onclick="markSolved(this,'e3')">✓ Mark Solved</button></div>
+      <div class="q-hint"><b>Hint</b><code>for k, v in fields.items(): print(f"{k}={v}")</code></div>
+      <div class="pg" data-pg="e3"><div class="pg-tabs"><div class="pg-tab-name">🐍 log.py</div><div class="pg-status" data-status>loading…</div></div>
+        <textarea class="pg-ta" spellcheck="false"># Your function here
+
+
+log(event="login", user_id=42, ip="1.2.3.4")
+</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+      <div class="q-reveal"><h4>✨ Solution</h4><div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="kw">def</span> <span class="fn">log</span>(<span class="op">**</span><span class="var">fields</span>):
+    <span class="kw">for</span> <span class="var">k</span>, <span class="var">v</span> <span class="kw">in</span> <span class="var">fields</span>.<span class="fn">items</span>(): <span class="bi">print</span>(<span class="kw">f</span><span class="str">"{k}={v}"</span>)</div></div></div></div>
+    </div>
+
+    <div class="q-card" data-q="e4">
+      <div class="q-head"><div class="q-num-row"><div class="q-num">E4</div><div class="q-meta"><span class="q-tag">Easy · lambda sort</span><span class="q-type">E-commerce</span></div></div><div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div></div>
+      <div class="q-title">Sort orders by amount descending</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Show top sales first.</div>
+      <div class="q-task"><b>Task:</b> Use <code>sorted(orders, key=lambda ..., reverse=True)</code>.</div>
+      <div class="q-actions"><button class="q-btn" onclick="toggleHint(this)">💡 Hint</button><button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button><button class="q-btn" onclick="markSolved(this,'e4')">✓ Mark Solved</button></div>
+      <div class="q-hint"><b>Hint</b><code>key=lambda o: o["amount"]</code></div>
+      <div class="pg" data-pg="e4"><div class="pg-tabs"><div class="pg-tab-name">🐍 sort.py</div><div class="pg-status" data-status>loading…</div></div>
+        <textarea class="pg-ta" spellcheck="false">orders = [{"id": 3, "amount": 100}, {"id": 1, "amount": 500}, {"id": 2, "amount": 250}]
+# Your sort
+</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+      <div class="q-reveal"><h4>✨ Solution</h4><div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="bi">print</span>(<span class="bi">sorted</span>(<span class="var">orders</span>, <span class="var">key</span><span class="op">=</span><span class="kw">lambda</span> <span class="var">o</span>: <span class="var">o</span>[<span class="str">"amount"</span>], <span class="var">reverse</span><span class="op">=</span><span class="kw">True</span>))</div></div></div></div>
+    </div>
+
+    <div class="q-card" data-q="e5">
+      <div class="q-head"><div class="q-num-row"><div class="q-num">E5</div><div class="q-meta"><span class="q-tag">Easy · Predict</span><span class="q-type">Theory</span></div></div><div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div></div>
+      <div class="q-title">Predict — mutable default bug</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Classic Python interview trap.</div>
+      <div class="q-task"><b>Task:</b> Predict second call output.</div>
+      <div class="q-actions"><button class="q-btn" onclick="toggleHint(this)">💡 Hint</button><button class="q-btn" onclick="toggleReveal(this)">👁️ Answer</button><button class="q-btn" onclick="markSolved(this,'e5')">✓ Mark Solved</button></div>
+      <div class="q-hint"><b>Hint</b>Default list created once at def-time, shared by all calls.</div>
+      <div class="pg" data-pg="e5"><div class="pg-tabs"><div class="pg-tab-name">🐍 trap.py</div><div class="pg-status" data-status>loading…</div></div>
+        <textarea class="pg-ta" spellcheck="false">def add(item, bag=[]):
+    bag.append(item)
+    return bag
+
+print(add(1))
+print(add(2))
+</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+      <div class="q-reveal"><h4>✨ Answer</h4><p><code>[1]</code> then <code>[1, 2]</code>. The list is shared. Fix: use <code>bag=None</code> and check inside.</p></div>
+    </div>
+  </div>
+
+  <!-- MEDIUM -->
+  <div class="level-panel" data-panel="med">
+    <div class="lvl-dots" id="dots-med"></div>
+
+    <div class="q-card" data-q="m1">
+      <div class="q-head"><div class="q-num-row"><div class="q-num">M1</div><div class="q-meta"><span class="q-tag">Medium · closure</span><span class="q-type">DE State</span></div></div><div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div></div>
+      <div class="q-title">Build a counter via closure</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Closure that remembers count between calls.</div>
+      <div class="q-task"><b>Task:</b> <code>make_counter()</code> returns a function. Each call to it increments + returns. Use <code>nonlocal</code>.</div>
+      <div class="q-actions"><button class="q-btn" onclick="toggleHint(this)">💡 Hint</button><button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button><button class="q-btn" onclick="markSolved(this,'m1')">✓ Mark Solved</button></div>
+      <div class="q-hint"><b>Hint</b><code>nonlocal count</code> inside inner.</div>
+      <div class="pg" data-pg="m1"><div class="pg-tabs"><div class="pg-tab-name">🐍 counter.py</div><div class="pg-status" data-status>loading…</div></div>
+        <textarea class="pg-ta" spellcheck="false"># Your make_counter here
+
+
+c = make_counter()
+print(c(), c(), c())     # 1 2 3
+</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+      <div class="q-reveal"><h4>✨ Solution</h4><div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="kw">def</span> <span class="fn">make_counter</span>():
+    <span class="var">count</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">def</span> <span class="fn">inner</span>():
+        <span class="kw">nonlocal</span> <span class="var">count</span>
+        <span class="var">count</span> <span class="op">+=</span> <span class="num">1</span>
+        <span class="kw">return</span> <span class="var">count</span>
+    <span class="kw">return</span> <span class="var">inner</span></div></div></div></div>
+    </div>
+
+    <div class="q-card" data-q="m2">
+      <div class="q-head"><div class="q-num-row"><div class="q-num">M2</div><div class="q-meta"><span class="q-tag">Medium · simple decorator</span><span class="q-type">DE Logging</span></div></div><div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div></div>
+      <div class="q-title">Logging decorator</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Wrap a function to print before and after.</div>
+      <div class="q-task"><b>Task:</b> <code>@log</code> decorator prints "calling fn" + "done". Use <code>@functools.wraps</code>.</div>
+      <div class="q-actions"><button class="q-btn" onclick="toggleHint(this)">💡 Hint</button><button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button><button class="q-btn" onclick="markSolved(this,'m2')">✓ Mark Solved</button></div>
+      <div class="q-hint"><b>Hint</b>Wrapper accepts <code>*args, **kwargs</code>.</div>
+      <div class="pg" data-pg="m2"><div class="pg-tabs"><div class="pg-tab-name">🐍 log_dec.py</div><div class="pg-status" data-status>loading…</div></div>
+        <textarea class="pg-ta" spellcheck="false">import functools
+
+# Your @log decorator here
+
+
+@log
+def add(a, b): return a + b
+
+print(add(2, 3))
+</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+      <div class="q-reveal"><h4>✨ Solution</h4><div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="kw">def</span> <span class="fn">log</span>(<span class="var">fn</span>):
+    <span class="kw">@functools.wraps</span>(<span class="var">fn</span>)
+    <span class="kw">def</span> <span class="fn">wrapper</span>(<span class="op">*</span><span class="var">args</span>, <span class="op">**</span><span class="var">kwargs</span>):
+        <span class="bi">print</span>(<span class="kw">f</span><span class="str">"calling {fn.__name__}"</span>)
+        <span class="var">r</span> <span class="op">=</span> <span class="var">fn</span>(<span class="op">*</span><span class="var">args</span>, <span class="op">**</span><span class="var">kwargs</span>)
+        <span class="bi">print</span>(<span class="str">"done"</span>)
+        <span class="kw">return</span> <span class="var">r</span>
+    <span class="kw">return</span> <span class="var">wrapper</span></div></div></div></div>
+    </div>
+
+    <div class="q-card" data-q="m3">
+      <div class="q-head"><div class="q-num-row"><div class="q-num">M3</div><div class="q-meta"><span class="q-tag">Medium · lru_cache</span><span class="q-type">DE Performance</span></div></div><div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div></div>
+      <div class="q-title">Cache an expensive lookup</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> User lookup is expensive. Cache it.</div>
+      <div class="q-task"><b>Task:</b> Apply <code>@lru_cache(maxsize=128)</code> to <code>lookup(user_id)</code>. Call same id twice. Verify only one print.</div>
+      <div class="q-actions"><button class="q-btn" onclick="toggleHint(this)">💡 Hint</button><button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button><button class="q-btn" onclick="markSolved(this,'m3')">✓ Mark Solved</button></div>
+      <div class="q-hint"><b>Hint</b><code>from functools import lru_cache</code></div>
+      <div class="pg" data-pg="m3"><div class="pg-tabs"><div class="pg-tab-name">🐍 cache.py</div><div class="pg-status" data-status>loading…</div></div>
+        <textarea class="pg-ta" spellcheck="false">from functools import lru_cache
+
+# Add @lru_cache here
+def lookup(user_id):
+    print(f"DB hit for {user_id}")
+    return {"id": user_id}
+
+lookup(1); lookup(1); lookup(2); lookup(1)
+</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+      <div class="q-reveal"><h4>✨ Solution</h4><div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="kw">@lru_cache</span>(<span class="var">maxsize</span><span class="op">=</span><span class="num">128</span>)
+<span class="kw">def</span> <span class="fn">lookup</span>(<span class="var">user_id</span>): <span class="op">...</span></div></div></div></div>
+    </div>
+
+    <div class="q-card" data-q="m4">
+      <div class="q-head"><div class="q-num-row"><div class="q-num">M4</div><div class="q-meta"><span class="q-tag">Medium · partial</span><span class="q-type">DE Pipeline</span></div></div><div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div></div>
+      <div class="q-title">Pre-fill args with partial</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Build a "log to pipeline" helper.</div>
+      <div class="q-task"><b>Task:</b> Use <code>functools.partial(print, "[pipeline]")</code> to pre-fill the prefix.</div>
+      <div class="q-actions"><button class="q-btn" onclick="toggleHint(this)">💡 Hint</button><button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button><button class="q-btn" onclick="markSolved(this,'m4')">✓ Mark Solved</button></div>
+      <div class="q-hint"><b>Hint</b><code>from functools import partial</code></div>
+      <div class="pg" data-pg="m4"><div class="pg-tabs"><div class="pg-tab-name">🐍 partial.py</div><div class="pg-status" data-status>loading…</div></div>
+        <textarea class="pg-ta" spellcheck="false">from functools import partial
+
+# Your code
+plog = ...
+
+plog("starting")
+plog("done")
+</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+      <div class="q-reveal"><h4>✨ Solution</h4><div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="var">plog</span> <span class="op">=</span> <span class="fn">partial</span>(<span class="bi">print</span>, <span class="str">"[pipeline]"</span>)</div></div></div></div>
+    </div>
+
+    <div class="q-card" data-q="m5">
+      <div class="q-head"><div class="q-num-row"><div class="q-num">M5</div><div class="q-meta"><span class="q-tag">Medium · unpack</span><span class="q-type">DE API</span></div></div><div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div></div>
+      <div class="q-title">Call a function unpacking a dict</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Pass an API payload to a function as keyword args.</div>
+      <div class="q-task"><b>Task:</b> Define <code>send(event, user_id, ip)</code>. Call with <code>**payload</code>.</div>
+      <div class="q-actions"><button class="q-btn" onclick="toggleHint(this)">💡 Hint</button><button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button><button class="q-btn" onclick="markSolved(this,'m5')">✓ Mark Solved</button></div>
+      <div class="q-hint"><b>Hint</b><code>send(**payload)</code></div>
+      <div class="pg" data-pg="m5"><div class="pg-tabs"><div class="pg-tab-name">🐍 unpack.py</div><div class="pg-status" data-status>loading…</div></div>
+        <textarea class="pg-ta" spellcheck="false">def send(event, user_id, ip):
+    print(event, user_id, ip)
+
+payload = {"event": "login", "user_id": 42, "ip": "1.2.3.4"}
+# Your call
+</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+      <div class="q-reveal"><h4>✨ Solution</h4><div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="fn">send</span>(<span class="op">**</span><span class="var">payload</span>)</div></div></div></div>
+    </div>
+  </div>
+
+  <!-- HARD -->
+  <div class="level-panel" data-panel="hard">
+    <div class="lvl-dots" id="dots-hard"></div>
+
+    <div class="q-card" data-q="h1">
+      <div class="q-head"><div class="q-num-row"><div class="q-num">H1</div><div class="q-meta"><span class="q-tag">Hard · param decorator</span><span class="q-type">DE Production</span></div></div><div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div></div>
+      <div class="q-title">Parameterised <code>@repeat(n)</code> decorator</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Run a function N times.</div>
+      <div class="q-task"><b>Task:</b> Build <code>@repeat(n)</code> that runs the wrapped function n times.</div>
+      <div class="q-actions"><button class="q-btn" onclick="toggleHint(this)">💡 Hint</button><button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button><button class="q-btn" onclick="markSolved(this,'h1')">✓ Mark Solved</button></div>
+      <div class="q-hint"><b>Hint</b>3 levels: repeat(n) → decorator(fn) → wrapper(*a, **k).</div>
+      <div class="pg" data-pg="h1"><div class="pg-tabs"><div class="pg-tab-name">🐍 repeat.py</div><div class="pg-status" data-status>loading…</div></div>
+        <textarea class="pg-ta" spellcheck="false">import functools
+
+# Your @repeat(n) here
+
+
+@repeat(3)
+def hi(): print("hi")
+
+hi()
+</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+      <div class="q-reveal"><h4>✨ Solution</h4><div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="kw">def</span> <span class="fn">repeat</span>(<span class="var">n</span>):
+    <span class="kw">def</span> <span class="fn">decorator</span>(<span class="var">fn</span>):
+        <span class="kw">@functools.wraps</span>(<span class="var">fn</span>)
+        <span class="kw">def</span> <span class="fn">wrapper</span>(<span class="op">*</span><span class="var">a</span>, <span class="op">**</span><span class="var">k</span>):
+            <span class="kw">for</span> <span class="var">_</span> <span class="kw">in</span> <span class="bi">range</span>(<span class="var">n</span>): <span class="var">fn</span>(<span class="op">*</span><span class="var">a</span>, <span class="op">**</span><span class="var">k</span>)
+        <span class="kw">return</span> <span class="var">wrapper</span>
+    <span class="kw">return</span> <span class="var">decorator</span></div></div></div></div>
+    </div>
+
+    <div class="q-card" data-q="h2">
+      <div class="q-head"><div class="q-num-row"><div class="q-num">H2</div><div class="q-meta"><span class="q-tag">Hard · retry decorator</span><span class="q-type">DE Production</span></div></div><div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div></div>
+      <div class="q-title">Build retry decorator</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Retry function up to <code>times</code> on exception.</div>
+      <div class="q-task"><b>Task:</b> <code>@retry(times=3)</code> catches exceptions and retries.</div>
+      <div class="q-actions"><button class="q-btn" onclick="toggleHint(this)">💡 Hint</button><button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button><button class="q-btn" onclick="markSolved(this,'h2')">✓ Mark Solved</button></div>
+      <div class="q-hint"><b>Hint</b>Loop <code>range(times)</code>. Try/except inside.</div>
+      <div class="pg" data-pg="h2"><div class="pg-tabs"><div class="pg-tab-name">🐍 retry.py</div><div class="pg-status" data-status>loading…</div></div>
+        <textarea class="pg-ta" spellcheck="false">import functools, random
+
+# Your @retry(times) decorator
+
+
+@retry(times=5)
+def flaky():
+    if random.random() < 0.7: raise ValueError("fail")
+    return "ok"
+
+print(flaky())
+</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+      <div class="q-reveal"><h4>✨ Solution</h4><div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="kw">def</span> <span class="fn">retry</span>(<span class="var">times</span>):
+    <span class="kw">def</span> <span class="fn">dec</span>(<span class="var">fn</span>):
+        <span class="kw">@functools.wraps</span>(<span class="var">fn</span>)
+        <span class="kw">def</span> <span class="fn">wrap</span>(<span class="op">*</span><span class="var">a</span>, <span class="op">**</span><span class="var">k</span>):
+            <span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="bi">range</span>(<span class="var">times</span>):
+                <span class="kw">try</span>: <span class="kw">return</span> <span class="var">fn</span>(<span class="op">*</span><span class="var">a</span>, <span class="op">**</span><span class="var">k</span>)
+                <span class="kw">except</span> <span class="type">Exception</span> <span class="kw">as</span> <span class="var">e</span>:
+                    <span class="kw">if</span> <span class="var">i</span> <span class="op">==</span> <span class="var">times</span> <span class="op">-</span> <span class="num">1</span>: <span class="kw">raise</span>
+        <span class="kw">return</span> <span class="var">wrap</span>
+    <span class="kw">return</span> <span class="var">dec</span></div></div></div></div>
+    </div>
+
+    <div class="q-card" data-q="h3">
+      <div class="q-head"><div class="q-num-row"><div class="q-num">H3</div><div class="q-meta"><span class="q-tag">Hard · Fix late binding</span><span class="q-type">Theory</span></div></div><div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div></div>
+      <div class="q-title">Fix late binding in loop-created lambdas</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> All lambdas return same value. Fix.</div>
+      <div class="q-task"><b>Task:</b> Modify lambda so each captures its own <code>i</code>.</div>
+      <div class="q-actions"><button class="q-btn" onclick="toggleHint(this)">💡 Hint</button><button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button><button class="q-btn" onclick="markSolved(this,'h3')">✓ Mark Solved</button></div>
+      <div class="q-hint"><b>Hint</b>Default argument trick: <code>lambda i=i: i</code>.</div>
+      <div class="pg" data-pg="h3"><div class="pg-tabs"><div class="pg-tab-name">🐍 late_bind.py</div><div class="pg-status" data-status>loading…</div></div>
+        <textarea class="pg-ta" spellcheck="false"># BUG: all return 2
+funcs = [lambda: i for i in range(3)]
+print([f() for f in funcs])
+
+# Your fix here
+</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+      <div class="q-reveal"><h4>✨ Solution</h4><div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Fix</div></div><div class="editor-body"><div class="editor-code"><span class="var">funcs</span> <span class="op">=</span> [<span class="kw">lambda</span> <span class="var">i</span><span class="op">=</span><span class="var">i</span>: <span class="var">i</span> <span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="bi">range</span>(<span class="num">3</span>)]
+<span class="bi">print</span>([<span class="var">f</span>() <span class="kw">for</span> <span class="var">f</span> <span class="kw">in</span> <span class="var">funcs</span>])     <span class="com"># [0, 1, 2]</span></div></div></div></div>
+    </div>
+
+    <div class="q-card" data-q="h4">
+      <div class="q-head"><div class="q-num-row"><div class="q-num">H4</div><div class="q-meta"><span class="q-tag">Hard · Multiple decorators</span><span class="q-type">DE Production</span></div></div><div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div></div>
+      <div class="q-title">Stack decorators correctly</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Apply BOTH <code>@timed</code> and <code>@retry</code>.</div>
+      <div class="q-task"><b>Task:</b> Build both. Stack them. Predict execution order.</div>
+      <div class="q-actions"><button class="q-btn" onclick="toggleHint(this)">💡 Hint</button><button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button><button class="q-btn" onclick="markSolved(this,'h4')">✓ Mark Solved</button></div>
+      <div class="q-hint"><b>Hint</b>Decorators apply bottom-up. Top decorator is the outermost wrapper.</div>
+      <div class="pg" data-pg="h4"><div class="pg-tabs"><div class="pg-tab-name">🐍 stacked.py</div><div class="pg-status" data-status>loading…</div></div>
+        <textarea class="pg-ta" spellcheck="false">import functools, time
+
+def timed(fn):
+    @functools.wraps(fn)
+    def w(*a, **k):
+        s = time.time()
+        r = fn(*a, **k)
+        print(f"{fn.__name__} took {time.time()-s:.3f}s")
+        return r
+    return w
+
+def retry(times):
+    def d(fn):
+        @functools.wraps(fn)
+        def w(*a, **k):
+            for i in range(times):
+                try: return fn(*a, **k)
+                except: pass
+        return w
+    return d
+
+# Stack both — your code
+</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+      <div class="q-reveal"><h4>✨ Solution</h4><div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="kw">@timed</span>
+<span class="kw">@retry</span>(<span class="num">3</span>)
+<span class="kw">def</span> <span class="fn">work</span>(): <span class="kw">return</span> <span class="str">"done"</span>
+
+<span class="fn">work</span>()</div></div><p>@timed wraps the @retry wrapper. So timing measures all retries together.</p></div>
+    </div>
+
+    <div class="q-card" data-q="h5">
+      <div class="q-head"><div class="q-num-row"><div class="q-num">H5</div><div class="q-meta"><span class="q-tag">Hard · Senior interview</span><span class="q-type">DE Production</span></div></div><div class="q-actions-row"><span class="q-status-pill">Not attempted</span></div></div>
+      <div class="q-title">Pipeline-stage decorator with state</div>
+      <div class="q-scenario">🎯 <b>Scenario:</b> Senior interview. Build a decorator that records each stage's runs in a registry dict.</div>
+      <div class="q-task"><b>Task:</b> <code>STAGES</code> dict at module scope. <code>@stage("name")</code> registers function. Calling registered function increments call count.</div>
+      <div class="q-actions"><button class="q-btn" onclick="toggleHint(this)">💡 Hint</button><button class="q-btn" onclick="toggleReveal(this)">👁️ Solution</button><button class="q-btn" onclick="markSolved(this,'h5')">✓ Mark Solved</button></div>
+      <div class="q-hint"><b>Hint</b>Use a defaultdict(int). Increment in wrapper.</div>
+      <div class="pg" data-pg="h5"><div class="pg-tabs"><div class="pg-tab-name">🐍 stage.py</div><div class="pg-status" data-status>loading…</div></div>
+        <textarea class="pg-ta" spellcheck="false">from collections import defaultdict
+import functools
+
+STAGES = defaultdict(int)
+
+# Your @stage("name") decorator
+
+
+@stage("extract")
+def extract(): pass
+
+@stage("transform")
+def transform(): pass
+
+extract(); extract(); transform()
+print(dict(STAGES))    # {"extract": 2, "transform": 1}
+</textarea>
+        <div class="pg-actions"><button class="pg-run-btn" data-run disabled>▶ Run</button><button class="pg-reset-btn" data-reset>↺ Reset</button></div>
+        <div class="pg-out pg-out-empty" data-output>Output will appear here…</div>
+      </div>
+      <div class="q-reveal"><h4>✨ Solution</h4><div class="editor"><div class="editor-tabs-row"><div class="editor-tab-name">Solution</div></div><div class="editor-body"><div class="editor-code"><span class="kw">def</span> <span class="fn">stage</span>(<span class="var">name</span>):
+    <span class="kw">def</span> <span class="fn">dec</span>(<span class="var">fn</span>):
+        <span class="kw">@functools.wraps</span>(<span class="var">fn</span>)
+        <span class="kw">def</span> <span class="fn">wrap</span>(<span class="op">*</span><span class="var">a</span>, <span class="op">**</span><span class="var">k</span>):
+            <span class="var">STAGES</span>[<span class="var">name</span>] <span class="op">+=</span> <span class="num">1</span>
+            <span class="kw">return</span> <span class="var">fn</span>(<span class="op">*</span><span class="var">a</span>, <span class="op">**</span><span class="var">k</span>)
+        <span class="kw">return</span> <span class="var">wrap</span>
+    <span class="kw">return</span> <span class="var">dec</span></div></div></div></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+<script>
+function toggleTheme(){const h=document.documentElement;const n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('de2026-theme',n);}
+(function(){document.documentElement.setAttribute('data-theme',localStorage.getItem('de2026-theme')||'dark');})();
+function setLevel(lvl){document.querySelectorAll('.level-tab').forEach(t=>t.classList.toggle('active',t.dataset.level===lvl));document.querySelectorAll('.level-panel').forEach(p=>p.classList.toggle('active',p.dataset.panel===lvl));}
+function toggleHint(b){b.closest('.q-card').querySelector('.q-hint').classList.toggle('open');}
+function toggleReveal(b){b.closest('.q-card').querySelector('.q-reveal').classList.toggle('open');}
+const BK='de2026-py-t4-bank';
+function gB(){return JSON.parse(localStorage.getItem(BK)||'{}');}
+function sB(b){localStorage.setItem(BK,JSON.stringify(b));}
+function markSolved(b,q){const k=gB();k[q]=k[q]==='solved'?'attempted':'solved';sB(k);refreshUI();}
+function refreshUI(){const k=gB();const all=['e1','e2','e3','e4','e5','m1','m2','m3','m4','m5','h1','h2','h3','h4','h5'];let ts=0,es=0,ms=0,hs=0;
+  all.forEach(q=>{const c=document.querySelector('.q-card[data-q="'+q+'"]');if(!c)return;const p=c.querySelector('.q-status-pill');const mb=Array.from(c.querySelectorAll('.q-btn')).find(b=>b.textContent.includes('Mark')||b.textContent.includes('Solved'));const s=k[q];p.classList.remove('solved','attempted');c.classList.remove('solved');
+    if(s==='solved'){p.classList.add('solved');p.textContent='Solved ✓';c.classList.add('solved');if(mb){mb.classList.add('solved');mb.innerHTML='✓ Solved';}ts++;if(q.startsWith('e'))es++;if(q.startsWith('m'))ms++;if(q.startsWith('h'))hs++;}
+    else if(s==='attempted'){p.classList.add('attempted');p.textContent='Attempted';if(mb){mb.classList.remove('solved');mb.innerHTML='✓ Mark Solved';}}
+    else{p.textContent='Not attempted';if(mb){mb.classList.remove('solved');mb.innerHTML='✓ Mark Solved';}}});
+  document.getElementById('bank-solved').textContent=ts;const pct=Math.round((ts/15)*100);document.getElementById('bank-pct').textContent=pct+'%';document.getElementById('bank-fill').style.width=pct+'%';
+  document.getElementById('cnt-easy').textContent=es+'/5';document.getElementById('cnt-med').textContent=ms+'/5';document.getElementById('cnt-hard').textContent=hs+'/5';
+  buildDots('easy',['e1','e2','e3','e4','e5'],k);buildDots('med',['m1','m2','m3','m4','m5'],k);buildDots('hard',['h1','h2','h3','h4','h5'],k);
+}
+function buildDots(lv,qs,k){const c=document.getElementById('dots-'+lv);if(!c)return;c.innerHTML='';qs.forEach(q=>{const d=document.createElement('div');d.className='lvl-dot';if(k[q]==='solved')d.classList.add('solved');else if(k[q]==='attempted')d.classList.add('attempted');c.appendChild(d);});}
+let py=null,pyR=false;
+async function initPy(){try{py=await loadPyodide();pyR=true;document.querySelectorAll('[data-status]').forEach(e=>{e.textContent='ready';e.classList.add('ready');});document.querySelectorAll('[data-run]').forEach(b=>b.disabled=false);}catch(e){document.querySelectorAll('[data-status]').forEach(el=>el.textContent='load failed');}}
+initPy();
+document.querySelectorAll('.pg').forEach(pg=>{const ta=pg.querySelector('.pg-ta');pg.dataset.original=ta.value;
+  pg.querySelector('[data-run]').addEventListener('click',async()=>{if(!pyR)return;const c=pg.closest('.q-card');const q=c?c.dataset.q:null;if(q){const k=gB();if(!k[q])k[q]='attempted';sB(k);refreshUI();}
+    const o=pg.querySelector('[data-output]');o.classList.remove('error','pg-out-empty');o.textContent='running…';
+    try{py.runPython(`\nimport io, sys\n_stdout=sys.stdout\nsys.stdout=io.StringIO()\n      `);
+      try{py.runPython(ta.value);}catch(err){const cap=py.runPython('sys.stdout.getvalue()');o.classList.add('error');o.textContent=(cap?cap+'\n':'')+err.message;py.runPython('sys.stdout=_stdout');return;}
+      const cap=py.runPython('sys.stdout.getvalue()');py.runPython('sys.stdout=_stdout');o.textContent=cap||'(no output)';
+    }catch(e){o.classList.add('error');o.textContent=String(e);}});
+  pg.querySelector('[data-reset]').addEventListener('click',()=>{ta.value=pg.dataset.original;const o=pg.querySelector('[data-output]');o.classList.add('pg-out-empty');o.classList.remove('error');o.textContent='Output will appear here…';});});
+refreshUI();
+</script>
+</body>
+</html>
