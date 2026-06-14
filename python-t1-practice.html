@@ -30,7 +30,7 @@
   --accent-orange:#D97706;--accent-red:#DC2626;
   --gradient-main:linear-gradient(135deg,#4F46E5 0%,#9333EA 100%);
   --gradient-python:linear-gradient(135deg,#3776AB 0%,#FFD43B 100%);
-  --glow-blue:0 0 30px rgba(79,70,229,0.15);
+  --glow-blue:0 0 30px rgba(79,70,229,0.20);
   --syn-keyword:#C586C0;--syn-string:#CE9178;--syn-number:#B5CEA8;--syn-comment:#6A9955;
   --syn-fn:#DCDCAA;--syn-var:#9CDCFE;--syn-type:#4EC9B0;--syn-builtin:#569CD6;--syn-op:#D4D4D4;
 }
@@ -168,6 +168,13 @@ header{position:sticky;top:0;z-index:1000;height:68px;display:flex;align-items:c
 .summary-bar-track{height:8px;background:var(--bg-surface);border-radius:4px;overflow:hidden}
 .summary-bar-fill{height:100%;background:var(--gradient-main);border-radius:4px;width:0%;transition:width 1s cubic-bezier(0.4,0,0.2,1)}
 @media (max-width:768px){.page{padding:24px 18px 80px}.q-card{padding:20px}}
+
+[data-theme="light"] header{background:rgba(255,255,255,0.92) !important;border-bottom-color:rgba(15,23,42,0.10) !important}
+[data-theme="light"] .q-card{box-shadow:0 1px 3px rgba(15,23,42,0.05),0 4px 16px rgba(15,23,42,0.07)}
+[data-theme="light"] .level-tab{box-shadow:0 1px 2px rgba(15,23,42,0.04)}
+[data-theme="light"] .summary-bar{box-shadow:0 1px 3px rgba(15,23,42,0.05)}
+[data-theme="light"] .pg{box-shadow:0 4px 16px rgba(15,23,42,0.10)}
+[data-theme="light"] .editor{box-shadow:0 4px 16px rgba(15,23,42,0.10)}
 </style>
 </head>
 <body>
