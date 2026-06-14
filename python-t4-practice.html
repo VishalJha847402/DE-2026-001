@@ -562,7 +562,17 @@ function refreshUI(){const k=gB();const all=['e1','e2','e3','e4','e5','m1','m2',
 }
 function buildDots(lv,qs,k){const c=document.getElementById('dots-'+lv);if(!c)return;c.innerHTML='';qs.forEach(q=>{const d=document.createElement('div');d.className='lvl-dot';if(k[q]==='solved')d.classList.add('solved');else if(k[q]==='attempted')d.classList.add('attempted');c.appendChild(d);});}
 let py=null,pyR=false;
-async function initPy(){try{py=await loadPyodide();pyR=true;document.querySelectorAll('[data-status]').forEach(e=>{e.textContent='ready';e.classList.add('ready');});document.querySelectorAll('[data-run]').forEach(b=>b.disabled=false);}catch(e){document.querySelectorAll('[data-status]').forEach(el=>el.textContent='load failed');}}
+async function initPy(){
+  document.querySelectorAll('[data-status]').forEach(e=>e.textContent='loading Python runtime…');
+  try{
+    py=await loadPyodide({indexURL:'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/'});
+    pyR=true;
+    document.querySelectorAll('[data-status]').forEach(e=>{e.textContent='✓ ready';e.classList.add('ready');});
+    document.querySelectorAll('[data-run]').forEach(b=>b.disabled=false);
+  }catch(e){
+    document.querySelectorAll('[data-status]').forEach(el=>el.textContent='✗ load failed — refresh');
+  }
+}
 initPy();
 document.querySelectorAll('.pg').forEach(pg=>{const ta=pg.querySelector('.pg-ta');pg.dataset.original=ta.value;
   pg.querySelector('[data-run]').addEventListener('click',async()=>{if(!pyR)return;const c=pg.closest('.q-card');const q=c?c.dataset.q:null;if(q){const k=gB();if(!k[q])k[q]='attempted';sB(k);refreshUI();}

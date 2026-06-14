@@ -1244,7 +1244,64 @@
 </div>
 
 <!-- ─── JAVASCRIPT ───────────────────────────────────────────── -->
+<!-- ONBOARDING MODAL -->
+<div id="onboardOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:9999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:24px;padding:36px;max-width:560px;width:100%;box-shadow:var(--shadow-hover)">
+    <div style="font-size:42px;margin-bottom:8px">👋</div>
+    <h2 style="font-size:24px;font-weight:800;margin-bottom:10px;background:var(--gradient-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Welcome to DE-2026</h2>
+    <p style="font-size:15px;color:var(--text-secondary);line-height:1.7;margin-bottom:22px">Your interactive Data Engineering learning platform — designed for the Indian 2026 DE job market.</p>
+    <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:24px">
+      <div style="font-size:12.5px;color:var(--accent-blue);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">How to use</div>
+      <div style="font-size:14px;line-height:1.8;color:var(--text-primary)">
+        <div>📚 <strong>Click any unlocked skill card</strong> to start learning</div>
+        <div>🎯 <strong>Each topic has a Practice Bank</strong> with 15 real DE problems</div>
+        <div>✓ <strong>Tick 4 Gates per topic</strong> to mark complete</div>
+        <div>🔥 <strong>Visit daily</strong> to build a streak</div>
+      </div>
+    </div>
+    <button onclick="closeOnboard()" style="width:100%;background:var(--gradient-main);color:white;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;box-shadow:var(--glow-blue)">Start Learning →</button>
+  </div>
+</div>
+
 <script>
+    // ── Onboarding ──────────────────────────────────
+    function closeOnboard(){
+      document.getElementById('onboardOverlay').style.display='none';
+      localStorage.setItem('de2026-onboarded','1');
+    }
+    (function(){
+      if(!localStorage.getItem('de2026-onboarded')){
+        document.getElementById('onboardOverlay').style.display='flex';
+      }
+    })();
+
+    // ── Daily streak ────────────────────────────────
+    (function(){
+      const today=new Date().toDateString();
+      const last=localStorage.getItem('de2026-last-visit');
+      let streak=parseInt(localStorage.getItem('de2026-streak')||'0');
+      if(last!==today){
+        if(last){
+          const lastDate=new Date(last); const t=new Date(today);
+          const diff=Math.round((t-lastDate)/86400000);
+          if(diff===1)streak++;
+          else if(diff>1)streak=1;
+          else streak=streak||1;
+        }else streak=1;
+        localStorage.setItem('de2026-streak',streak);
+        localStorage.setItem('de2026-last-visit',today);
+      }
+      // Show streak chip if header has space — add to .india-flag area
+      const flagEl=document.querySelector('.india-flag');
+      if(flagEl){
+        const chip=document.createElement('div');
+        chip.className='india-flag';
+        chip.style.cssText='background:linear-gradient(135deg,rgba(245,158,11,0.15) 0%,rgba(239,68,68,0.15) 100%);border-color:rgba(245,158,11,0.35);color:#FBBF24';
+        chip.innerHTML='🔥 <span style="font-weight:700;color:#fff;margin-left:4px">'+streak+'</span><span style="margin-left:4px;font-size:11px">day streak</span>';
+        flagEl.parentNode.insertBefore(chip,flagEl);
+      }
+    })();
+
     // ── Theme ────────────────────────────────────────────────
     function toggleTheme() {
         const html = document.documentElement;
