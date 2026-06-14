@@ -579,6 +579,44 @@ document.querySelectorAll('.pg').forEach(pg=>{const ta=pg.querySelector('.pg-ta'
       const cap=py.runPython('sys.stdout.getvalue()');py.runPython('sys.stdout=_stdout');o.textContent=cap||'(no output)';
     }catch(e){o.classList.add('error');o.textContent=String(e);}});
   pg.querySelector('[data-reset]').addEventListener('click',()=>{ta.value=pg.dataset.original;const o=pg.querySelector('[data-output]');o.classList.add('pg-out-empty');o.classList.remove('error');o.textContent='Output will appear here…';});});
+
+// ==== UX ENHANCEMENTS ====
+// 1. Tab key inserts 4 spaces in code textareas
+document.querySelectorAll('.pg-ta').forEach(ta=>{
+  ta.addEventListener('keydown',e=>{
+    if(e.key==='Tab'){
+      e.preventDefault();
+      const s=ta.selectionStart,en=ta.selectionEnd;
+      ta.value=ta.value.substring(0,s)+'    '+ta.value.substring(en);
+      ta.selectionStart=ta.selectionEnd=s+4;
+    }
+  });
+});
+
+// 2. Copy buttons on solution .editor blocks
+document.querySelectorAll('.editor').forEach(ed=>{
+  if(ed.querySelector('.copy-btn'))return;
+  const codeEl=ed.querySelector('.editor-code');
+  if(!codeEl)return;
+  const btn=document.createElement('button');
+  btn.className='copy-btn';
+  btn.title='Copy code';
+  btn.innerHTML='⎘';
+  btn.style.cssText='position:absolute;top:6px;right:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.10);color:#cbd5e1;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;z-index:10;font-family:inherit';
+  btn.addEventListener('click',async()=>{
+    try{await navigator.clipboard.writeText(codeEl.innerText);btn.innerHTML='✓';btn.style.color='#10B981';setTimeout(()=>{btn.innerHTML='⎘';btn.style.color='#cbd5e1';},1500);}catch(e){btn.innerHTML='✗';setTimeout(()=>btn.innerHTML='⎘',1500);}
+  });
+  ed.style.position='relative';
+  ed.appendChild(btn);
+});
+
+// 3. Hamburger menu for mobile (header right area)
+(function(){
+  const hdr=document.querySelector('header');
+  if(!hdr||window.innerWidth>900)return;
+  // simple back-button already exists; just ensure header doesn't overflow
+})();
+
 refreshUI();
 </script>
 </body>

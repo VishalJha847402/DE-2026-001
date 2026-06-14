@@ -83,7 +83,48 @@ header{position:sticky;top:0;z-index:1000;height:68px;display:flex;align-items:c
 [data-theme="light"] .toggle-thumb{transform:translateX(22px)}
 
 /* ===== LAYOUT ===== */
-.layout{display:grid;grid-template-columns:280px 1fr;max-width:1800px;margin:0 auto;position:relative;z-index:1}
+.layout{display:grid;grid-template-columns:280px 1fr 240px;max-width:1900px;margin:0 auto;position:relative;z-index:1}
+
+/* ===== MOBILE HAMBURGER ===== */
+.mobile-menu-btn{display:none;background:transparent;border:1px solid var(--border);color:var(--text-primary);
+  width:36px;height:36px;border-radius:9px;align-items:center;justify-content:center;cursor:pointer;font-size:18px}
+.mobile-menu-btn:hover{border-color:var(--border-hover)}
+.mobile-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;backdrop-filter:blur(4px)}
+.mobile-overlay.open{display:block}
+
+/* ===== WITHIN-TOPIC TOC ===== */
+.topic-toc{position:sticky;top:88px;align-self:start;height:calc(100vh - 108px);overflow-y:auto;
+  padding:22px 18px;border-left:1px solid var(--border);font-size:12.5px}
+.topic-toc-title{font-size:10.5px;color:var(--text-muted);font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;margin-bottom:14px}
+.topic-toc-link{display:block;padding:6px 10px;color:var(--text-secondary);text-decoration:none;
+  border-radius:7px;margin-bottom:2px;border-left:2px solid transparent;line-height:1.4;transition:all .15s}
+.topic-toc-link:hover{color:var(--text-primary);background:var(--bg-card)}
+.topic-toc-link.active{color:var(--text-primary);background:linear-gradient(90deg,rgba(99,102,241,0.10) 0%,transparent 100%);
+  border-left-color:var(--accent-blue);font-weight:600}
+
+/* ===== COPY BUTTON ===== */
+.copy-btn{position:absolute;top:8px;right:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.10);
+  color:#cbd5e1;width:30px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:13px;transition:all .15s;z-index:10}
+.copy-btn:hover{background:rgba(99,102,241,0.20);color:#fff;border-color:rgba(99,102,241,0.4)}
+.copy-btn.copied{background:rgba(16,185,129,0.20);color:#10B981;border-color:rgba(16,185,129,0.4)}
+.editor{position:relative}
+
+/* ===== RESPONSIVE — MOBILE ===== */
+@media (max-width:1280px){
+  .layout{grid-template-columns:280px 1fr}
+  .topic-toc{display:none}
+}
+@media (max-width:900px){
+  .mobile-menu-btn{display:flex}
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:fixed;top:0;left:-300px;width:280px;height:100vh;z-index:1100;
+    background:var(--bg-primary);border-right:1px solid var(--border);transition:left .25s;padding-top:80px}
+  .sidebar.open{left:0}
+  .main{padding:24px 18px 80px}
+  .topic-toc{display:none}
+}
 
 /* ===== SIDEBAR ===== */
 .sidebar{position:sticky;top:68px;height:calc(100vh - 68px);padding:28px 20px;
@@ -413,8 +454,10 @@ header{position:sticky;top:0;z-index:1000;height:68px;display:flex;align-items:c
 <div class="bg-orb bg-orb-1"></div>
 <div class="bg-orb bg-orb-2"></div>
 
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
 <header>
   <div class="header-left">
+    <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
     <a class="back-link" href="index.html">← Roadmap</a>
     <div class="crumb">
       <div class="crumb-icon">🐍</div>
@@ -6478,6 +6521,11 @@ data from api/orders</span></div>
 
    </div>
   </main>
+
+  <aside class="topic-toc" id="topicToc">
+    <div class="topic-toc-title">On This Topic</div>
+    <div id="tocLinks"></div>
+  </aside>
 </div>
 
 <!-- Pyodide -->
@@ -6625,6 +6673,76 @@ function updateProgress(){
   localStorage.setItem('de2026-pct-python',Math.round((t1Pct+t2Pct+t5Pct+t6Pct)/14));
 }
 
+// ===== Mobile sidebar toggle =====
+function toggleSidebar(){
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.getElementById('mobileOverlay').classList.toggle('open');
+}
+
+// ===== Copy buttons on every .editor =====
+function injectCopyButtons(){
+  document.querySelectorAll('.editor').forEach(ed=>{
+    if(ed.querySelector('.copy-btn'))return;
+    const codeEl=ed.querySelector('.editor-code');
+    if(!codeEl)return;
+    const btn=document.createElement('button');
+    btn.className='copy-btn';
+    btn.title='Copy code';
+    btn.innerHTML='⎘';
+    btn.addEventListener('click',async(e)=>{
+      e.stopPropagation();
+      const text=codeEl.innerText;
+      try{await navigator.clipboard.writeText(text);btn.innerHTML='✓';btn.classList.add('copied');
+        setTimeout(()=>{btn.innerHTML='⎘';btn.classList.remove('copied');},1500);
+      }catch(err){btn.innerHTML='✗';setTimeout(()=>btn.innerHTML='⎘',1500);}
+    });
+    ed.appendChild(btn);
+  });
+}
+
+// ===== Within-topic TOC + scrollspy =====
+function buildTOC(topicId){
+  const tocLinks=document.getElementById('tocLinks');
+  if(!tocLinks)return;
+  tocLinks.innerHTML='';
+  const topic=document.getElementById(topicId);
+  if(!topic){document.getElementById('topicToc').style.display='none';return;}
+  document.getElementById('topicToc').style.display='';
+  const sections=topic.querySelectorAll('.section h2');
+  sections.forEach((h,i)=>{
+    const id=topicId+'-sec-'+i;
+    const section=h.closest('.section');
+    if(section)section.id=id;
+    const link=document.createElement('a');
+    link.href='#'+id;
+    link.className='topic-toc-link';
+    link.dataset.target=id;
+    link.textContent=h.textContent.replace(/`/g,'').substring(0,55);
+    link.addEventListener('click',e=>{
+      e.preventDefault();
+      document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+    });
+    tocLinks.appendChild(link);
+  });
+}
+
+function setupScrollspy(){
+  const links=document.querySelectorAll('.topic-toc-link');
+  if(!links.length)return;
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){
+        links.forEach(l=>l.classList.remove('active'));
+        const l=document.querySelector('.topic-toc-link[data-target="'+en.target.id+'"]');
+        if(l)l.classList.add('active');
+      }
+    });
+  },{rootMargin:'-30% 0px -60% 0px'});
+  document.querySelectorAll('.topic-page.active .section').forEach(s=>{
+    if(s.id)obs.observe(s);
+  });
+}
+
 // ===== SPA Navigation — only one topic visible at a time =====
 function showTopic(topicId){
   // Hide all topic-pages
@@ -6646,6 +6764,17 @@ function showTopic(topicId){
   const num=topicId.replace('topic-','');
   const topicNumEl=document.querySelector('.topic-progress-mini b');
   if(topicNumEl)topicNumEl.textContent=num;
+  // Build TOC + scrollspy + copy buttons for this topic
+  setTimeout(()=>{
+    buildTOC(topicId);
+    setupScrollspy();
+    injectCopyButtons();
+    // Save last visited topic
+    localStorage.setItem('de2026-last-topic',topicId);
+    // Close mobile sidebar if open
+    const sb=document.querySelector('.sidebar');
+    if(sb&&sb.classList.contains('open')){sb.classList.remove('open');document.getElementById('mobileOverlay').classList.remove('open');}
+  },50);
 }
 
 // Intercept sidebar clicks
@@ -6657,11 +6786,14 @@ document.querySelectorAll('.topic-item[href^="#topic-"]').forEach(link=>{
   });
 });
 
-// On load: show topic from hash, default to topic-1
+// On load: hash > last-visited > topic-1
 (function(){
   const hash=window.location.hash.replace('#','');
-  const valid=hash&&document.getElementById(hash)&&document.getElementById(hash).classList.contains('topic-page');
-  showTopic(valid?hash:'topic-1');
+  const last=localStorage.getItem('de2026-last-topic');
+  const valid=(id)=>id&&document.getElementById(id)&&document.getElementById(id).classList.contains('topic-page');
+  if(valid(hash)){showTopic(hash);}
+  else if(valid(last)){showTopic(last);}
+  else{showTopic('topic-1');}
 })();
 
 (function(){
