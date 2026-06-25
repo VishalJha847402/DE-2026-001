@@ -157,4 +157,171 @@ Because Scale Out has real costs that hurt small data:
 
 ---
 
-*More topics will be added here as we progress through the series.*
+### Topic 2 — HDFS: How Files Are Stored Across Many Machines
+
+#### 🟢 Easy
+
+**E1. What are the two types of nodes in HDFS? What does each one do?**
+
+<details>
+<summary>▶ Answer</summary>
+
+**NameNode (1 machine):** Stores the metadata — the map of which file is split into which blocks and which DataNode holds each block. Does NOT store actual data.
+
+**DataNodes (many machines):** Actually store the data blocks on their local disks. Send heartbeats to the NameNode every few seconds to confirm they’re alive.
+
+</details>
+
+---
+
+**E2. What is a block in HDFS? What is the default block size?**
+
+<details>
+<summary>▶ Answer</summary>
+
+A block is a fixed-size chunk of a file. HDFS cuts every file into blocks before storing them. Default block size = **128 MB**.
+
+A 5 TB file becomes ~39,000 blocks of 128 MB each, distributed across many DataNodes.
+
+</details>
+
+---
+
+**E3. What is replication in HDFS and why does it exist?**
+
+<details>
+<summary>▶ Answer</summary>
+
+Replication means every block is copied and stored on multiple DataNodes. Default replication factor = **3** — each block exists on 3 different machines.
+
+It exists for **fault tolerance** — if a DataNode crashes, the data is not lost because 2 more copies exist. HDFS automatically detects the lost copy and creates a new replica on a healthy DataNode.
+
+</details>
+
+---
+
+#### 🟡 Medium
+
+**M1. A Spark job needs to process a 1 TB log file in HDFS. Walk through exactly what happens step by step.**
+
+<details>
+<summary>▶ Answer</summary>
+
+1. Spark asks the **NameNode**: “Where are all the blocks of /logs/app.log?”
+2. NameNode returns the **block map**: Block 001 → DataNode 3, Block 002 → DataNode 7 … (~8,000 blocks total).
+3. Spark assigns each **Executor** to read specific blocks from the DataNodes holding them.
+4. Each Executor reads its blocks **locally** (data locality — code goes to data, not data to code).
+5. Each Executor processes its blocks **in parallel**.
+6. Results are **combined** and returned.
+
+No single machine ever holds the full 1 TB.
+
+</details>
+
+---
+
+**M2. Your HDFS cluster has 10 DataNodes. One crashes. Replication factor = 3. What happens to your data?**
+
+<details>
+<summary>▶ Answer</summary>
+
+**Data is safe.** Every block on the crashed DataNode has 2 more copies on other DataNodes.
+
+NameNode detects the death (missed heartbeats), identifies blocks now at only 2 copies, instructs healthy DataNodes to re-replicate them back to 3. Fully automatic, zero data loss.
+
+</details>
+
+---
+
+**M3. Why does HDFS use 128 MB blocks instead of 1 MB blocks? What breaks with tiny blocks?**
+
+<details>
+<summary>▶ Answer</summary>
+
+A 5 TB file at 1 MB blocks = **5,000,000 blocks** vs 39,000 at 128 MB.
+
+Problems with tiny blocks:
+1. **NameNode RAM overload:** Metadata for 5M blocks fills NameNode memory — it becomes the bottleneck.
+2. **Too many disk seeks:** Millions of tiny reads are far slower than thousands of large reads.
+3. **Coordination overhead:** 5M block assignments between Spark and NameNode vs 39,000 — massive extra work.
+
+128 MB balances metadata size, disk efficiency, and parallelism.
+
+</details>
+
+---
+
+**M4. Spark has 50 Executors. HDFS file has 200 blocks. How many blocks per Executor? What if only 10 Executors?**
+
+<details>
+<summary>▶ Answer</summary>
+
+**50 Executors:** 200 ÷ 50 = **4 blocks each**. All 50 run in parallel. Total time ≈ time to process 4 blocks.
+
+**10 Executors:** 200 ÷ 10 = **20 blocks each**. Each processes 20 sequentially. Total time ≈ 5x longer.
+
+More Executors = more parallelism = faster. This is why cluster sizing matters.
+
+</details>
+
+---
+
+#### 🔴 Hard
+
+**H1. HDFS has only ONE NameNode — a single point of failure. If it crashes, the whole cluster is inaccessible even if all DataNodes are healthy. How does modern HDFS solve this?**
+
+<details>
+<summary>▶ Answer</summary>
+
+HDFS 2.x+ solves this with **NameNode High Availability (HA)**:
+
+- Two NameNodes run simultaneously: one **Active**, one **Standby**.
+- Both share the same metadata via a **shared edit log** (stored on separate JournalNodes).
+- DataNodes send heartbeats to **both** NameNodes.
+- If Active crashes, Standby automatically promotes itself in seconds. Zero downtime for users.
+
+Cloud storage (S3, Azure Blob) solves it differently — metadata is fully managed by the cloud provider with built-in redundancy. No NameNode HA to manage.
+
+</details>
+
+---
+
+**H2. The machine holding Block 001 is busy with 5 other tasks. Spark can't achieve data locality. What does Spark do? What's the cost?**
+
+<details>
+<summary>▶ Answer</summary>
+
+Spark falls through a **locality preference hierarchy**:
+
+1. **PROCESS_LOCAL** — data in same JVM (best, in-memory)
+2. **NODE_LOCAL** — same machine, different process (fast, local disk)
+3. **RACK_LOCAL** — different machine, same network rack (fast, short hop)
+4. **ANY** — anywhere in cluster (slowest, full network transfer)
+
+Spark **waits briefly** (~3 seconds by default) for the ideal machine to free up. If it doesn't, it fetches the block from a replica on another machine via network.
+
+**Cost:** Full 128 MB network transfer adds latency. In undersized clusters with frequent locality misses, this is a major performance bottleneck.
+
+</details>
+
+---
+
+**H3. Most Spark jobs on Databricks use S3 / Azure Blob / GCS instead of HDFS. Does data locality still apply? Is cloud storage Spark slower?**
+
+<details>
+<summary>▶ Answer</summary>
+
+**Data locality mostly does NOT apply.** With cloud storage, data lives in a separate service (S3, Blob) independent of the compute cluster. Every block read is a network call.
+
+**Is it slower?** It depends:
+- Cloud network bandwidth is very high (10–25 Gbps within same region) — 128 MB reads are fast.
+- Databricks/EMR use **local SSD caching layers** (Delta Cache) to bring hot data close to Executors.
+- **Decoupling compute and storage is actually an advantage** — scale each independently, pay for what you use.
+
+**Verdict:** Slightly slower on raw read throughput vs perfect HDFS data locality, but the operational simplicity and cost efficiency make cloud storage the dominant pattern in 2026.
+
+</details>
+
+---
+
+*More topics added as we progress.*
