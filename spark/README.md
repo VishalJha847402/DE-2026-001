@@ -13,7 +13,7 @@
 | Phase 4 | Performance & Production | ⏳ Pending |
 | Phase 5 | Streaming & AI-Era | ⏳ Pending |
 
-**Progress: 7 of 39 lessons done.**
+**Progress: 8 of 39 lessons done.**
 
 ---
 
@@ -40,19 +40,19 @@
 | 2 | [SparkSession & SparkContext](./phase-1-spark-core-architecture/topic-2-sparksession-sparkcontext/) | ✅ Done |
 | 3 | Client vs Cluster Deploy Mode | ⏳ Pending |
 
-### Topic 3 · RDD & The Programming Model
+### Topic 3 · RDD & The Programming Model ✅
 
 | # | Lesson | Status |
 |---|--------|--------|
 | 1 | [RDD — Partitions, Immutability & Lineage](./phase-1-spark-core-architecture/topic-3-rdd-partitions-immutability-lineage/) | ✅ Done |
 | 2 | [Transformations vs Actions & Lazy Evaluation](./phase-1-spark-core-architecture/topic-3b-transformations-actions-lazy-eval/) | ✅ Done |
-| 3 | Narrow vs Wide Transformations | 🟡 Next |
+| 3 | [Narrow vs Wide Transformations](./phase-1-spark-core-architecture/topic-3c-narrow-vs-wide-transformations/) | ✅ Done |
 
 ### Topic 4 · How Spark Actually Runs a Job
 
 | # | Lesson | Status |
 |---|--------|--------|
-| 1 | The Shuffle — Deep Dive | ⏳ Pending |
+| 1 | The Shuffle — Deep Dive | 🟡 Next |
 | 2 | DAG → Jobs → Stages → Tasks | ⏳ Pending |
 | 3 | Fault Tolerance — Lineage Recompute | ⏳ Pending |
 
@@ -71,7 +71,7 @@
 | Phase | Big Topics | Lessons |
 |-------|-----------|---------|
 | Phase 0 · Foundations | 1 Topic | 3 lessons ✅ |
-| Phase 1 · Core Architecture | 4 Topics (2–5) | 12 lessons |
+| Phase 1 · Core Architecture | 4 Topics (2–5) | 12 lessons (5 done) |
 | Phase 2 · Spark SQL & Optimizer | 2 Topics (6–7) | 5 lessons |
 | Phase 3 · PySpark Hands-On | 3 Topics (8–10) | 9 lessons |
 | Phase 4 · Performance & Production | 3 Topics (11–13) | 7 lessons |
