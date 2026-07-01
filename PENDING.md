@@ -1,63 +1,51 @@
 # PENDING — All Parked / Pending Tasks
 
 > Read before deciding what to do next (CLAUDE.md Core Working Rule #2).
-> Finish a task → remove it + update CLAUDE.md Section 11. New task → add here.
+> Finish a task → remove it + update CLAUDE.md §11. New task → add here.
 > Last updated: this session.
 
 ---
 
-## 🎉 Status: ALL PLANNING COMPLETE ✅ (15 series + project + practice + dataset + teaching rules — all locked)
+## 🎉 Status: PLANNING COMPLETE ✅ — building phase next
 
-Only work now = **build the dataset tooling, then write lessons + practice sets**.
+Locked systems: Practice §6 · 3-step examples §2B · Dataset (wide+long e-commerce) §9C · Environments §9 · **Build-in-Public Content System → `content-system.md`** (authoritative).
 
 ```
-Systems locked: Practice §6 · 3-step examples §2B · Dataset (wide+long e-commerce) §9C · Environments §9
+15 series roadmaps · OrderIQ project · practice · dataset · content — all locked.
 ```
 
 ---
 
-## 🛠️ 1. Dataset Tooling — BUILD FIRST (locked, §9C + §9C-i)
-- ⬜ **WIDE + LONG e-commerce generator** — enriched schema (core tables + price_history, shipments, returns, campaigns, clickstream_events) with varied column types (numeric, text/reviews, timestamps, geo, JSON/nested, PII, deliberate messiness, changing attributes for SCD2). Scalable ~100k → 20–100M rows.
-- ⬜ **DuckDB seed** — 2-minute load of the ~100k-row dataset for SQL/Python/modeling practice.
-- ⬜ (later) NYC Taxi loader — Spark Phase-4 big-data lessons only.
-
-**Why first:** hands-on practice (§6) isn't real until the wide+long data is runnable.
-
----
-
-## 📚 2. Next Lessons to Write (each ships with `practice.md` on the e-commerce dataset)
-- **Python** — Phase 0 T3: Data Structures Deep (first code-heavy lesson, §2A + §2B)
-- **Spark** — Phase 1 T4b: DAG → Jobs → Stages → Tasks
-- All other 13 series — Phase 0 T1.
+## ⚡ 0. Token / Efficiency Convention (NEW)
+- **Big new rules go in their OWN small file** (like `content-system.md`), NOT crammed into CLAUDE.md — keeps CLAUDE.md lean and updates cheap.
+- **Batch CLAUDE.md updates** — don't rewrite it for every micro-decision.
+- **Use a FRESH session for lesson-writing** — a new session reads CLAUDE.md + PENDING.md (+ referenced rule files) and has full context cheaply. Long sessions re-process everything = token drain.
+- Authoritative files chain: **CLAUDE.md + PENDING.md + referenced rule files** (`content-system.md`, future `/rules/*`).
 
 ---
 
-## 🔧 3. Plain-Language Retrofit (B-lite) — IN PROGRESS
-- ✅ The Shuffle (Spark) — DONE
-- ⬜ Narrow vs Wide (Spark) · ⬜ RDD (Spark) · ⬜ How Python Runs (Python) · ⬜ Variables & Memory (Python)
+## 🛠️ 1. Dataset Tooling — BUILD FIRST (locked, §9C)
+- ⬜ WIDE + LONG e-commerce generator (enriched schema, ~100k → 20–100M rows).
+- ⬜ DuckDB seed (2-min load).
+- ⬜ (later) NYC Taxi loader — Spark Phase-4 only.
 
-**Status: 1 of 5 done. 4 remaining.**
+## 📚 2. Next Lessons (each ships with `practice.md` on the e-commerce dataset)
+- Python — Phase 0 T3: Data Structures Deep · Spark — Phase 1 T4b: DAG→Stages→Tasks · all other 13 series — Phase 0 T1.
 
----
+## 📣 3. Content — build a "Content Pack" per lesson (`content-system.md`)
+- Start LinkedIn + X. Claude drafts pack; Vishal adds real touch + posts.
 
-## 🔁 4. Revision — Pending Confirm
-- **Phase-wise revision** (cumulative, after each phase) instead of every-6-lessons — agreed better, **awaiting Vishal's explicit "update"** to change CLAUDE.md §5 + restructure existing Spark revision.
-- Fix Self-Score Tracker → clickable `- [ ]` task-list (not table) + Google Sheet as durable tracker.
+## 🔧 4. Plain-Language Retrofit (B-lite) — 1/5 done
+- ✅ Shuffle · ⬜ Narrow vs Wide · ⬜ RDD · ⬜ How Python Runs · ⬜ Variables & Memory.
 
----
+## 🔁 5. Revision — Pending Confirm
+- Phase-wise revision (cumulative) instead of every-6-lessons — awaiting Vishal's "update". Fix Self-Score Tracker → clickable `- [ ]` + Google Sheet.
 
-## 🏗️ 5. Flagship Project — blueprint DONE (`projects/README.md`)
-OrderIQ (e-commerce, wide+long), 3 stages: P1 (after SQL Ph0–2 + Data Modeling Ph0–2 + Python) → P2 (after Spark+Azure) → P3 (after Airflow/dbt/Kafka + AI-Era). Same dataset as all practice.
+## 🏗️ 6. Flagship Project — blueprint done (`projects/README.md`)
+OrderIQ P1 (after SQL Ph0–2 + Data Modeling Ph0–2 + Python) → P2 (Spark+Azure) → P3 (Airflow/dbt/Kafka+AI). Same dataset as practice.
 
----
+## 🗺️ 7. Optional Later
+- Master `DE-ROADMAP.md` · cross-series overlap dedupe · sharper JD grounding (paste 20–30 JDs) · (optional) refactor CLAUDE.md into lean index + `/rules/*` modules.
 
-## 🗺️ 6. Optional Later Work
-- ⬜ Sharper market grounding: paste 20–30 real JDs → precise skill tally.
-- ⬜ Master `DE-ROADMAP.md` — top-level map of all 15 series + project.
-- ⬜ Cross-series overlap review (Delta/medallion appear in multiple series).
-
----
-
-## 🧭 7. Open Decisions
-- **Pace/signal protocol** — "done / unclear / too easy|too hard / paste-solution".
-- **AI-era DE definition** — A/B/C "replace vs assist vs own" framing to lock into a lesson.
+## 🧭 8. Open Decisions
+- Pace/signal protocol · AI-era DE A/B/C framing to lock into a lesson.
