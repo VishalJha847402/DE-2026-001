@@ -1,4 +1,4 @@
-# DE-2026 — Teaching Rules (10 series + flagship project)
+# DE-2026 — Teaching Rules (15 series + flagship project)
 
 > **Single source of truth for how Claude teaches Vishal.** Replaces all previous rules. Follow exactly.
 > Last updated: this session.
@@ -22,25 +22,24 @@
 
 Vishal is learning **Data Engineering** for the **2026 India job market**, pillar by pillar, as **markdown (`.md`) lesson files on GitHub** — NOT in chat, NOT in HTML. Vishal studies on GitHub in his own time.
 
-**ALL roadmaps built — planning complete. 10 series + flagship project:**
+**ALL roadmaps built — planning complete. 15 series + flagship project:**
 
-*Core pillars (7):*
-- 🐍 Python — `python/` · 🔥 Spark — `spark/` · 🗄️ SQL — `sql/`
-- 📐 Data Modeling — `data-modeling/` · ☁️ Azure Cloud — `azure-cloud/`
-- 🔀 Airflow+dbt — `airflow-dbt/` · 🏔️ Warehouses+Streaming — `warehouses-streaming/`
+*Core pillars (7):* Python `python/` · Spark `spark/` · SQL `sql/` · Data Modeling `data-modeling/` · Azure Cloud `azure-cloud/` · Airflow+dbt `airflow-dbt/` · Warehouses+Streaming `warehouses-streaming/`
 
-*Supporting tools (3):*
-- 🐧 Linux & Shell — `linux-shell/` · 🌿 Git — `git/` · 🐳 Docker — `docker/`
+*Supporting tools (3):* Linux `linux-shell/` · Git `git/` · Docker `docker/`
 
-*Project:* 🏗️ OrderIQ e-commerce lakehouse — `projects/`
+*Tier 3 — senior differentiators (5):* DataOps CI/CD+IaC `dataops-cicd-iac/` · Kubernetes `kubernetes/` · Governance & Security `data-governance-security/` · System Design `system-design/` · AI-Era DE `ai-era-de/`
+
+*Project:* OrderIQ e-commerce lakehouse — `projects/`
 
 **Repo:** `VishalJha847402/DE-2026-001` · **Work branch:** `claude/new-session-gmnma2`.
 
-### 🧭 Skill Sequence
+### 🧭 Learning Order
 ```
-Core: Python · Spark · SQL · Data Modeling · Azure Cloud · Airflow+dbt · Warehouses+Streaming
-Supporting (alongside): Linux · Git · Docker
-Project: OrderIQ P1→P2→P3 at milestones
+Core pillars first (Python→Spark→SQL→Data Modeling→Azure→Airflow+dbt→Warehouses+Streaming)
+Supporting tools alongside (Linux · Git · Docker)
+Tier 3 senior differentiators after core (DataOps · K8s · Governance · System Design · AI-Era DE)
+Project OrderIQ P1→P2→P3 at milestones
 ```
 All roadmaps done. **Phase now = writing the actual lessons.**
 
@@ -52,8 +51,7 @@ All roadmaps done. **Phase now = writing the actual lessons.**
 CLAUDE.md      ← teaching rules (this file) — read before every action
 PENDING.md     ← all pending / parked tasks — read before deciding next step
 
-python/ · spark/ · sql/ · data-modeling/ · azure-cloud/ · airflow-dbt/ ·
-warehouses-streaming/ · linux-shell/ · git/ · docker/   ← one folder per series:
+<series>/      ← one folder per series (15 total), each with:
   README.md · QUESTIONS.md · revision/ · phase-X/topic-Y/README.md
 projects/      ← flagship project blueprint (OrderIQ)
 ```
@@ -108,12 +106,13 @@ Depth-first · WHY first · Simple English (short sentences, simple words, never
 
 Core: Python ~34 · Spark ~39 · SQL ~26 · Data Modeling ~21 · Azure ~24 · Airflow+dbt ~21 · Warehouses+Streaming ~20.
 Supporting: Linux ~10 · Git ~9 · Docker ~10.
-Project: OrderIQ (P1→P2→P3). **Total ≈ 214 lessons across 10 series.**
+Tier 3: DataOps(CI/CD+IaC) ~11 · Kubernetes ~9 · Governance & Security ~10 · System Design ~10 · AI-Era DE ~11.
+Project: OrderIQ (P1→P2→P3). **Total ≈ 265 lessons across 15 series.**
 
 ---
 
 ## 8. Practice Environments
-Python — local/notebooks · Spark — Databricks Community · SQL — PostgreSQL + DuckDB · Data Modeling — dbdiagram.io → PostgreSQL/DuckDB → dbt · Azure — Azure free account + Fabric trial · Airflow+dbt — dbt Core+DuckDB + Airflow via Docker · Warehouses+Streaming — Snowflake trial + Kafka via Docker · Linux — terminal/WSL · Git — GitHub · Docker — Docker Desktop.
+Per series README. Python — notebooks · Spark/Azure — Databricks Community · SQL/Data Modeling — PostgreSQL/DuckDB · Airflow+dbt/Warehouses+Streaming — Docker + Snowflake trial · Linux — terminal/WSL · Git — GitHub · Docker/K8s — Docker Desktop + minikube · DataOps — GitHub Actions + Terraform · Governance — cloud RBAC/Key Vault · AI-Era — LLM API + Chroma.
 
 ---
 
@@ -124,11 +123,11 @@ Commit + push every lesson to `claude/new-session-gmnma2`. Clear messages. GitHu
 
 ## 10. Current Progress (update every session)
 
-**Roadmaps: all 10 built ✅ + flagship project ✅. Planning complete — now writing lessons.**
+**Roadmaps: all 15 built ✅ + flagship project ✅. Planning complete — now writing lessons.**
 
 **Python — 2 done:** How Python Runs ✅ · Variables/Memory ✅. Next: Data Structures Deep.
 **Spark — 9 done:** Phase 0 ✅ (3) · Phase 1: Driver ✅ · SparkSession ✅ · RDD ✅ · Transformations/Lazy ✅ · Narrow vs Wide ✅ · Shuffle ✅. Next: DAG→Stages→Tasks.
-**SQL · Data Modeling · Azure · Airflow+dbt · Warehouses+Streaming · Linux · Git · Docker — 0 done each.** Each next = Phase 0 Topic 1 (see each README).
+**All other 13 series — 0 lessons done.** Each next = Phase 0 Topic 1 (see each README).
 **Revision:** `spark/revision/revision-1-foundations-and-core.md` (Spark 1–9) ✅.
 
 ---
