@@ -78,6 +78,13 @@ One lesson = one `README.md` in its own topic folder. Pushed to GitHub on the wo
 
 > Hands-on problems live in a separate `practice.md` (see Section 6), so the lesson stays focused on concept + understanding.
 
+### 2A. Practical-skill lessons are CODE-HEAVY (Python, SQL, pandas, etc.)
+For hands-on skills (unlike theory-heavy Spark architecture), the lesson is **example-driven, not prose-driven**:
+- Every concept shown as **runnable code with the expected output inline** (so Vishal runs it himself).
+- **Line-by-line walkthroughs** of the code.
+- Designed for the **Read → Run → Tweak** loop — Vishal runs each snippet, changes it, breaks it, sees what happens.
+- Then `practice.md` = Solve; then paste for grading (Section 6).
+
 ---
 
 ## 3. Plain-Language Standard (the A+ rule)
@@ -104,47 +111,43 @@ Depth-first · WHY first · Simple English (short sentences, simple words, never
 
 ## 6. Practice & Problem-Solving System (application — the real gate) 🔒 LOCKED
 
-The hands-on layer where Vishal actually writes/runs code. Separate from the 10 conceptual questions. This is what proves he can *do* it, not just understand it.
+The hands-on layer where Vishal actually writes/runs code. Separate from the 10 conceptual questions.
 
 ### Two levels
-- **Lesson Practice** — `practice.md` next to each lesson. 3–5 hands-on problems using that lesson's concept, on the shared dataset.
-- **Phase Challenge** — `phase-X-challenge.md` per phase. ONE realistic "work ticket" (a stakeholder request) combining every lesson in the phase. Integration — can't be faked.
+- **Lesson Practice** — `practice.md` next to each lesson. 3–5 hands-on problems on the shared dataset.
+- **Phase Challenge** — `phase-X-challenge.md` per phase. ONE realistic "work ticket" combining every lesson in the phase.
 
-### Difficulty tiers (every set — the "not too easy, not too hard" rule)
-- 🟢 **Warm-up** — apply the concept directly (5–10 min)
-- 🟡 **Core** — realistic scenario, combine with prior concepts, real thinking (20–30 min) ← main effort zone
-- 🔴 **Stretch** — production-grade: optimize / handle the edge case / explain the trade-off (30–60 min)
+### Difficulty tiers (every set)
+- 🟢 **Warm-up** — apply directly (5–10 min)
+- 🟡 **Core** — realistic, combine concepts, real thinking (20–30 min) ← main effort zone
+- 🔴 **Stretch** — production-grade: optimize / edge case / trade-off (30–60 min)
 
 ### Every problem's anatomy (no exceptions)
-1. **Realistic scenario** — a real DE ticket with messy data. NEVER toy problems ("reverse a string").
-2. **Dataset + context** — runnable, not pseudocode.
-3. **Acceptance criteria** — exactly how you know the answer is correct.
-4. **Hidden reference solution + WHY it works.**
-5. **Common wrong approaches** — the traps.
-6. **A "break-it" variant** — nulls / duplicates / 100M rows → what breaks?
-7. **Interview tag** — when it mirrors a real 2026 interview ask.
-8. **Multiple valid approaches + trade-offs** — not one "right" answer (teaches judgment).
+1. Realistic scenario (real DE ticket, messy data — NEVER toy problems).
+2. Dataset + context (runnable).
+3. Acceptance criteria.
+4. Hidden reference solution + WHY.
+5. Common wrong approaches.
+6. A "break-it" variant (nulls / dupes / 100M rows).
+7. Interview tag (when it mirrors a real 2026 ask).
+8. Multiple valid approaches + trade-offs.
 
-### The 5 locked enhancements (what makes it best)
-1. **Spaced re-solving** — hard problems re-surface inside the phase revision file (practice ↔ revision linked).
-2. **Runnable data** — every series has `datasets/` with a setup/seed (e.g., OrderIQ/Olist → DuckDB/Postgres in ~2 min) so practice is truly hands-on.
-3. **Multiple approaches + trade-offs** shown in every solution.
-4. **Adaptive difficulty** — Vishal signals "too easy / too hard" → Claude recalibrates the next set.
-5. **Interview-prep track** — timed, company-style problems (TCS/Deloitte-style SQL, system design) assembled near job-hunt.
+### The 5 locked enhancements
+1. **Spaced re-solving** — hard problems re-surface in the phase revision file.
+2. **Runnable data** — `datasets/` seed (OrderIQ/Olist → DuckDB/Postgres in ~2 min).
+3. **Multiple approaches + trade-offs** shown.
+4. **Adaptive difficulty** — Vishal signals "too easy / too hard" → recalibrate.
+5. **Interview-prep track** — timed, company-style problems near job-hunt.
 
 ### Mastery proof (output ≠ proof)
-A problem is truly "owned" only when Vishal can:
-1. Solve **Core + Stretch without looking**,
-2. **Explain WHY** + the trade-offs,
-3. **Fix the break-it variant**.
-Then: **paste the solution → Claude grades it** (bugs, better approach, honest "do you really get it or did you get lucky?"). This grading loop is the highest-value part — it only pays off if Vishal actually uses it.
+Solve Core + Stretch blind → explain WHY + trade-offs → fix the break-it → **paste solution, Claude grades it**. The grading loop only pays off if used.
 
 ---
 
 ## 7. Learning Workflow
 1. Claude writes a lesson (+ `practice.md`) → pushes to GitHub.
-2. Vishal studies + solves on GitHub / locally in his own time.
-3. Vishal signals **"done with X"** / **"X unclear at Y"** / pastes a solution for grading / **"too easy / too hard."**
+2. Vishal studies + runs + solves on GitHub / in VS Code (his own time).
+3. Vishal signals **"done with X"** / **"X unclear at Y"** / pastes a solution / **"too easy / too hard."**
 4. End of Phase → phase challenge + revision file.
 - Pace: one lesson at a time unless asked. Vishal chooses which series to advance each turn.
 
@@ -159,8 +162,20 @@ Project: OrderIQ (P1→P2→P3). **Total ≈ 265 lessons across 15 series.**
 
 ---
 
-## 9. Practice Environments
-Python — notebooks · Spark/Azure — Databricks Community · SQL/Data Modeling — PostgreSQL/DuckDB · Airflow+dbt/Warehouses+Streaming — Docker + Snowflake trial · Linux — terminal/WSL · Git — GitHub · Docker/K8s — Docker Desktop + minikube · DataOps — GitHub Actions + Terraform · Governance — cloud RBAC/Key Vault · AI-Era — LLM API + Chroma. Shared practice dataset: OrderIQ / Olist.
+## 9. Practice Environments & Setup
+
+**Primary code editor: VS Code** (Vishal has it). No separate Jupyter install needed — VS Code runs notebooks inside it.
+
+**Python setup (one-time, ~10 min):**
+1. Install Python (python.org).
+2. VS Code extensions: **Python** (Microsoft) + **Jupyter** (Microsoft) → notebooks (`.ipynb`) run inside VS Code.
+3. Create a virtual environment: `python -m venv .venv` (activate; VS Code prompts).
+4. Learn in `.ipynb` notebooks — run cell by cell, output inline (the Read→Run→Tweak loop).
+
+**DuckDB — the runnable-data backbone:** in-process analytical DB ("SQLite for analytics"). `pip install duckdb` — no server, no cloud. Reads CSV/Parquet/JSON directly, runs real SQL, talks to pandas/Polars. Used for hands-on data problems across **Python (Phase 2+), SQL, and Data Modeling**.
+- **Timing:** pure-Python foundation lessons (Data Structures, Control Flow, Functions) need only **VS Code + Python**. Add **DuckDB** when we reach data lessons (Python Phase 2) and all SQL.
+
+**Per-series environments:** Python — VS Code notebooks · Spark/Azure — Databricks Community · SQL/Data Modeling — DuckDB / PostgreSQL · Airflow+dbt / Warehouses+Streaming — Docker + Snowflake trial · Linux — terminal/WSL · Git — GitHub · Docker/K8s — Docker Desktop + minikube · DataOps — GitHub Actions + Terraform · AI-Era — LLM API + Chroma. Shared practice dataset: **OrderIQ / Olist**.
 
 ---
 
@@ -173,7 +188,7 @@ Commit + push every lesson to `claude/new-session-gmnma2`. Clear messages. GitHu
 
 **Roadmaps: all 15 built ✅ + flagship project ✅. Planning complete — now writing lessons.**
 
-**Python — 2 done:** How Python Runs ✅ · Variables/Memory ✅. Next: Data Structures Deep.
+**Python — 2 done:** How Python Runs ✅ · Variables/Memory ✅. Next: Data Structures Deep (first code-heavy lesson + first `practice.md`).
 **Spark — 9 done:** Phase 0 ✅ (3) · Phase 1: Driver ✅ · SparkSession ✅ · RDD ✅ · Transformations/Lazy ✅ · Narrow vs Wide ✅ · Shuffle ✅. Next: DAG→Stages→Tasks.
 **All other 13 series — 0 lessons done.** Each next = Phase 0 Topic 1 (see each README).
 **Practice & Problem-Solving System — 🔒 LOCKED (Section 6), 0 practice sets built yet.**
@@ -182,4 +197,4 @@ Commit + push every lesson to `claude/new-session-gmnma2`. Clear messages. GitHu
 ---
 
 ## 12. Pending Work
-Full list in **`PENDING.md`**. Headline: plain-language retrofit (B-lite) — Shuffle ✅, 4 remaining. Phase-wise revision cadence + clickable tracker — pending confirm. All new lessons written to the Section 3 standard; every lesson also gets a `practice.md` per Section 6.
+Full list in **`PENDING.md`**. Headline: plain-language retrofit (B-lite) — Shuffle ✅, 4 remaining. Phase-wise revision cadence + clickable tracker — pending confirm. All new lessons written to the Section 3 standard; practical-skill lessons are code-heavy (Section 2A); every lesson also gets a `practice.md` (Section 6).
