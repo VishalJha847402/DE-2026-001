@@ -76,14 +76,10 @@ One lesson = one `README.md` in its own topic folder. Pushed to GitHub on the wo
 6. **Practice Questions** — exactly **10** (3 Easy · 4 Medium · 3 Hard), answers hidden behind `<details><summary>▶ Answer</summary>…</details>`.
 7. **"Next:"** link.
 
-> Hands-on problems live in a separate `practice.md` (see Section 6), so the lesson stays focused on concept + understanding.
+> Hands-on problems live in a separate `practice.md` (see Section 6).
 
 ### 2A. Practical-skill lessons are CODE-HEAVY (Python, SQL, pandas, etc.)
-For hands-on skills (unlike theory-heavy Spark architecture), the lesson is **example-driven, not prose-driven**:
-- Every concept shown as **runnable code with the expected output inline** (so Vishal runs it himself).
-- **Line-by-line walkthroughs** of the code.
-- Designed for the **Read → Run → Tweak** loop — Vishal runs each snippet, changes it, breaks it, sees what happens.
-- Then `practice.md` = Solve; then paste for grading (Section 6).
+For hands-on skills, the lesson is **example-driven, not prose-driven**: every concept shown as **runnable code with expected output inline**; **line-by-line walkthroughs**; designed for the **Read → Run → Tweak** loop. Then `practice.md` = Solve; then paste for grading (Section 6).
 
 ---
 
@@ -104,49 +100,25 @@ Depth-first · WHY first · Simple English (short sentences, simple words, never
 
 ## 5. Questions & Revision System (understanding)
 - **QUESTIONS.md** — index hub linking to each lesson's 10 questions (never duplicate).
-- **revision/** — spaced-repetition recall files: ⚡ Flash Recall · 🧠 Concept Recall · 🔀 Interleaved Hard Mix · 🏆 Boss Fight + Self-Score Tracker. Revisit +1 day / +1 week / +1 month, recall before revealing.
-  - (Cadence — phase-wise vs every-6-lessons — pending Vishal's final confirm; see `PENDING.md`.)
+- **revision/** — spaced-repetition recall files: ⚡ Flash Recall · 🧠 Concept Recall · 🔀 Interleaved Hard Mix · 🏆 Boss Fight + Self-Score Tracker. Revisit +1 day / +1 week / +1 month, recall before revealing. (Cadence phase-wise vs every-6-lessons — pending confirm; see `PENDING.md`.)
 
 ---
 
 ## 6. Practice & Problem-Solving System (application — the real gate) 🔒 LOCKED
 
-The hands-on layer where Vishal actually writes/runs code. Separate from the 10 conceptual questions.
+Hands-on layer where Vishal writes/runs code. Separate from the 10 conceptual questions.
 
-### Two levels
-- **Lesson Practice** — `practice.md` next to each lesson. 3–5 hands-on problems on the shared dataset.
-- **Phase Challenge** — `phase-X-challenge.md` per phase. ONE realistic "work ticket" combining every lesson in the phase.
-
-### Difficulty tiers (every set)
-- 🟢 **Warm-up** — apply directly (5–10 min)
-- 🟡 **Core** — realistic, combine concepts, real thinking (20–30 min) ← main effort zone
-- 🔴 **Stretch** — production-grade: optimize / edge case / trade-off (30–60 min)
-
-### Every problem's anatomy (no exceptions)
-1. Realistic scenario (real DE ticket, messy data — NEVER toy problems).
-2. Dataset + context (runnable).
-3. Acceptance criteria.
-4. Hidden reference solution + WHY.
-5. Common wrong approaches.
-6. A "break-it" variant (nulls / dupes / 100M rows).
-7. Interview tag (when it mirrors a real 2026 ask).
-8. Multiple valid approaches + trade-offs.
-
-### The 5 locked enhancements
-1. **Spaced re-solving** — hard problems re-surface in the phase revision file.
-2. **Runnable data** — `datasets/` seed (OrderIQ/Olist → DuckDB/Postgres in ~2 min).
-3. **Multiple approaches + trade-offs** shown.
-4. **Adaptive difficulty** — Vishal signals "too easy / too hard" → recalibrate.
-5. **Interview-prep track** — timed, company-style problems near job-hunt.
-
-### Mastery proof (output ≠ proof)
-Solve Core + Stretch blind → explain WHY + trade-offs → fix the break-it → **paste solution, Claude grades it**. The grading loop only pays off if used.
+- **Two levels:** `practice.md` per lesson (3–5 problems) + `phase-X-challenge.md` per phase (integrated work ticket).
+- **Difficulty tiers:** 🟢 Warm-up (5–10 min) · 🟡 Core (20–30 min, main effort zone) · 🔴 Stretch (production-grade, 30–60 min).
+- **Every problem's anatomy:** realistic scenario (messy data, never toy) · runnable dataset · acceptance criteria · hidden solution + WHY · common wrong approaches · a "break-it" variant · interview tag · multiple approaches + trade-offs.
+- **5 locked enhancements:** spaced re-solving (into phase revision) · runnable data (`datasets/` seed) · multiple approaches shown · adaptive difficulty ("too easy/too hard" → recalibrate) · interview-prep track near job-hunt.
+- **Mastery proof (output ≠ proof):** solve Core+Stretch blind → explain WHY + trade-offs → fix the break-it → **paste solution, Claude grades it**. Only pays off if used.
 
 ---
 
 ## 7. Learning Workflow
 1. Claude writes a lesson (+ `practice.md`) → pushes to GitHub.
-2. Vishal studies + runs + solves on GitHub / in VS Code (his own time).
+2. Vishal studies + runs + solves in VS Code (his own time).
 3. Vishal signals **"done with X"** / **"X unclear at Y"** / pastes a solution / **"too easy / too hard."**
 4. End of Phase → phase challenge + revision file.
 - Pace: one lesson at a time unless asked. Vishal chooses which series to advance each turn.
@@ -162,20 +134,36 @@ Project: OrderIQ (P1→P2→P3). **Total ≈ 265 lessons across 15 series.**
 
 ---
 
-## 9. Practice Environments & Setup
+## 9. Environment, Tooling & Dataset Strategy
 
-**Primary code editor: VS Code** (Vishal has it). No separate Jupyter install needed — VS Code runs notebooks inside it.
+### 9A. Where Vishal codes each skill
+| Skill | Where you code |
+|-------|----------------|
+| Python | VS Code + Jupyter (`.ipynb`) + venv |
+| SQL | DuckDB → PostgreSQL → Snowflake |
+| Data Modeling | dbdiagram.io + DuckDB/Postgres + dbt |
+| Spark / PySpark | Databricks Community (free cloud notebooks) |
+| Airflow · dbt · Kafka | Docker Desktop (local) |
+| Azure | Azure free account (ADF · Databricks · Fabric) |
+| Warehouses | Snowflake free trial |
+| Docker · K8s | Docker Desktop · minikube |
+| Git · Linux | VS Code + GitHub · terminal/WSL |
+| DataOps | GitHub Actions + Terraform CLI |
+| AI-Era | Python + Chroma + LLM API |
 
-**Python setup (one-time, ~10 min):**
-1. Install Python (python.org).
-2. VS Code extensions: **Python** (Microsoft) + **Jupyter** (Microsoft) → notebooks (`.ipynb`) run inside VS Code.
-3. Create a virtual environment: `python -m venv .venv` (activate; VS Code prompts).
-4. Learn in `.ipynb` notebooks — run cell by cell, output inline (the Read→Run→Tweak loop).
+### 9B. Python setup (one-time, ~10 min)
+1. Install Python (python.org). 2. VS Code + extensions **Python** + **Jupyter** (notebooks run inside VS Code — no separate Jupyter install). 3. `python -m venv .venv` (activate). 4. Learn in `.ipynb` notebooks — Read → Run → Tweak.
 
-**DuckDB — the runnable-data backbone:** in-process analytical DB ("SQLite for analytics"). `pip install duckdb` — no server, no cloud. Reads CSV/Parquet/JSON directly, runs real SQL, talks to pandas/Polars. Used for hands-on data problems across **Python (Phase 2+), SQL, and Data Modeling**.
-- **Timing:** pure-Python foundation lessons (Data Structures, Control Flow, Functions) need only **VS Code + Python**. Add **DuckDB** when we reach data lessons (Python Phase 2) and all SQL.
+### 9C. 🔒 LOCKED — Dataset Strategy: ONE e-commerce spine, scaled by volume
+- **ONE dataset across everything: E-commerce (OrderIQ).** Same schema powers Python, SQL, DuckDB, Data Modeling, dbt, AND the P1→P2→P3 project. One mental model; the same data flows through the whole stack (this IS real DE).
+- **Source:** **Olist** e-commerce dataset (real, messy, ~100k orders) for the story + laptop practice.
+- **Scaled by a generator** (to build): produces the same schema at any size — ~100k rows (laptop/DuckDB) for SQL/Python/modeling; **20–100M rows** for Spark/cloud (enough to trigger shuffles/skew/partitioning on Databricks Community; real-TB is a paid-job thing, not needed to *learn*).
+- **DuckDB** is the runnable-data backbone (`pip install duckdb`) — added at Python Phase 2 + all SQL. Pure-Python Phase-0 lessons need only VS Code + Python.
+- **Spark big-data cameo:** **NYC Taxi** bolted on for 1–2 Spark Phase-4 performance lessons only (real massive dataset). Spine stays e-commerce.
 
-**Per-series environments:** Python — VS Code notebooks · Spark/Azure — Databricks Community · SQL/Data Modeling — DuckDB / PostgreSQL · Airflow+dbt / Warehouses+Streaming — Docker + Snowflake trial · Linux — terminal/WSL · Git — GitHub · Docker/K8s — Docker Desktop + minikube · DataOps — GitHub Actions + Terraform · AI-Era — LLM API + Chroma. Shared practice dataset: **OrderIQ / Olist**.
+### 9D. Why e-commerce (locked rationale)
+Universally understood by interviewers (keeps focus on *your engineering*, not the domain) · exercises **every** DE skill (joins, facts/dims, **SCD2**, streaming order events, clear metrics) · matches India's biggest hiring sector (Flipkart/Amazon/Meesho/Swiggy/Zomato) · scales small→huge.
+**Career note:** the domain is *common* — the edge is **engineering depth + the P3 AI-era layer + being able to explain every decision.** Project value = depth × explanation.
 
 ---
 
@@ -186,15 +174,15 @@ Commit + push every lesson to `claude/new-session-gmnma2`. Clear messages. GitHu
 
 ## 11. Current Progress (update every session)
 
-**Roadmaps: all 15 built ✅ + flagship project ✅. Planning complete — now writing lessons.**
+**Roadmaps: all 15 built ✅ + flagship project ✅ + dataset strategy 🔒 locked. Now writing lessons.**
 
 **Python — 2 done:** How Python Runs ✅ · Variables/Memory ✅. Next: Data Structures Deep (first code-heavy lesson + first `practice.md`).
 **Spark — 9 done:** Phase 0 ✅ (3) · Phase 1: Driver ✅ · SparkSession ✅ · RDD ✅ · Transformations/Lazy ✅ · Narrow vs Wide ✅ · Shuffle ✅. Next: DAG→Stages→Tasks.
-**All other 13 series — 0 lessons done.** Each next = Phase 0 Topic 1 (see each README).
-**Practice & Problem-Solving System — 🔒 LOCKED (Section 6), 0 practice sets built yet.**
+**All other 13 series — 0 lessons done.**
+**Practice system — 🔒 locked (§6), 0 sets built. Dataset — 🔒 locked (§9C), generator + DuckDB seed to build.**
 **Revision:** `spark/revision/revision-1-foundations-and-core.md` (Spark 1–9) ✅.
 
 ---
 
 ## 12. Pending Work
-Full list in **`PENDING.md`**. Headline: plain-language retrofit (B-lite) — Shuffle ✅, 4 remaining. Phase-wise revision cadence + clickable tracker — pending confirm. All new lessons written to the Section 3 standard; practical-skill lessons are code-heavy (Section 2A); every lesson also gets a `practice.md` (Section 6).
+Full list in **`PENDING.md`**. Headline: build the e-commerce generator + DuckDB seed; plain-language retrofit (B-lite, 4 left); phase-wise revision + clickable tracker (pending confirm). All new lessons: Section 3 standard + code-heavy (§2A) + a `practice.md` (§6) on the e-commerce dataset (§9C).
