@@ -29,7 +29,7 @@ This roadmap is built to cover exactly that — foundations → analytical SQL �
 | Phase 4 | Performance & Internals (the differentiator) | ⏳ Pending |
 | Phase 5 | Modern · Warehouse · AI-Era SQL | ⏳ Pending |
 
-**Progress: 0 of ~26 lessons done.**
+**Progress: 1 of ~26 lessons done.**
 
 > You know SQL at a "functional" level (you write queries to fetch data). Per our teaching rule, we run the **full cycle even on topics you know** — functional SQL hides holes (execution order, why a query is slow, indexes). Speed-read the easy parts; slow down on the WHY, the internals, and optimization.
 
@@ -41,8 +41,8 @@ This roadmap is built to cover exactly that — foundations → analytical SQL �
 
 | # | Lesson | Status |
 |---|--------|--------|
-| 1 | What SQL Is + The Relational Model (tables, keys, relationships) | 🟡 Next |
-| 2 | How a Query Actually Executes — the logical order of operations ⭐ | ⏳ Pending |
+| 1 | [What SQL Is + The Relational Model (tables, keys, relationships)](./phase-0-foundations/topic-1-relational-model/) | ✅ Done |
+| 2 | How a Query Actually Executes — the logical order of operations ⭐ | 🟡 Next |
 | 3 | SELECT · WHERE · filtering · operators · NULL basics | ⏳ Pending |
 | 4 | Sorting · DISTINCT · LIMIT · pagination | ⏳ Pending |
 
