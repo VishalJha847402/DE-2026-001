@@ -11,7 +11,8 @@
 ```
 ✅ Python · ✅ Spark · ✅ SQL · ✅ Data Modeling · ✅ Azure Cloud (roadmaps done)
 → 🔀 Airflow + dbt → 🏔️ Warehouses (Snowflake/Delta/Iceberg) + Kafka (streaming)
-   (Linux · Git · Docker alongside · Projects P1–P3 at phase ends)
+   (Linux · Git · Docker alongside)
+🏗️ Flagship project (`projects/README.md`) — ONE system, built P1→P2→P3 as skills are learned
 ```
 
 ---
@@ -31,36 +32,43 @@ Apply CLAUDE.md Section 3 plain-language standard to the 5 densest existing less
 
 ## 📚 2. Next Lessons to Write (roadmaps all built — just write lessons)
 
-- **Azure Cloud** — 🟡 Phase 0 T1: Why Cloud for Data Engineering → Phases 0–5 (`azure-cloud/README.md`)
-- **Data Modeling** — 🟡 Phase 0 T1: What Data Modeling Is + Why It Matters → Phases 0–4 (`data-modeling/README.md`)
-- **SQL** — 🟡 Phase 0 T1: What SQL Is + The Relational Model → Phases 0–5 (`sql/README.md`)
-- **Python** — 🟡 Phase 0 T3: Data Structures Deep → (`python/README.md`)
-- **Spark** — 🟡 Phase 1 T4b: DAG → Jobs → Stages → Tasks → (`spark/README.md`)
+- **Azure Cloud** — 🟡 Phase 0 T1: Why Cloud for Data Engineering → Phases 0–5
+- **Data Modeling** — 🟡 Phase 0 T1: What Data Modeling Is + Why It Matters → Phases 0–4
+- **SQL** — 🟡 Phase 0 T1: What SQL Is + The Relational Model → Phases 0–5
+- **Python** — 🟡 Phase 0 T3: Data Structures Deep
+- **Spark** — 🟡 Phase 1 T4b: DAG → Jobs → Stages → Tasks
 
 ---
 
-## 🔁 3. Revision Files (spaced repetition)
+## 🏗️ 3. Flagship Project — spec DONE (`projects/README.md`)
+
+ONE end-to-end India e-commerce lakehouse, built in 3 stages as skills land:
+- **P1 — Batch Analytics Core** — build after SQL Phase 0–2 + Data Modeling Phase 0–2 (+ Python). ← first buildable milestone
+- **P2 — Cloud Lakehouse** — build after Spark + Azure Cloud.
+- **P3 — Production + Streaming + AI** — build after Airflow + dbt + Kafka.
+
+**Right now:** not buildable yet (mid-foundations). Keep learning; start P1 when its prerequisites are done. Do NOT build separate throwaway projects — grow ONE.
+
+---
+
+## 🔁 4. Revision Files (spaced repetition)
 - ✅ `spark/revision/revision-1-foundations-and-core.md` (Spark 1–9)
 - ⬜ New revision file per series after ~6 lessons in that series.
 
 ---
 
-## 📊 4. Optional — Sharper Market Grounding
+## 📊 5. Optional — Sharper Market Grounding
 Roadmaps grounded in 2026 India research (blogs + job-board titles/counts + interview banks). Could not scrape raw Naukri/LinkedIn JD text (bots blocked, 403). **If Vishal wants exact numbers:** paste 20–30 real JDs → precise skill-frequency tally. Parked until requested.
 
 ---
 
-## 🏗️ 5. Future Series (build later, same format)
-- 🔀 Airflow + dbt (orchestration + transformation)
-- 🏔️ Snowflake / Delta / Iceberg (warehouses) + Kafka (streaming)
-- 🐧 Linux · Git · Docker (supporting tools, alongside)
-- 🏗️ Projects P1 (SQL analytics) · P2 (end-to-end pipeline) · P3 (AI-era pipeline)
-
+## 🏗️ 6. Future Series (build later, same format)
+- 🔀 Airflow + dbt · 🏔️ Snowflake / Delta / Iceberg + Kafka · 🐧 Linux · Git · Docker.
 Do NOT start until the core pillars are well underway.
 
 ---
 
-## 🧭 6. Open Decisions (not yet locked)
+## 🧭 7. Open Decisions (not yet locked)
 - **Pace/signal protocol** — current = "done with X" / "X unclear at Y".
 - **AI-era DE definition** — which tasks AI replaces vs assists vs Vishal owns deeply. Drafted, not locked.
 - **Master `DE-ROADMAP.md`** — top-level file mapping all pillars (offered, not yet created).
