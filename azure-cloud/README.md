@@ -34,7 +34,7 @@
 | Phase 4 | Warehouse & Serving — Synapse + Microsoft Fabric | ⏳ Pending |
 | Phase 5 | Production · Security · Cost · Certification | ⏳ Pending |
 
-**Progress: 0 of ~24 lessons done.**
+**Progress: 1 of ~24 lessons done.**
 
 > This is a **hands-on** skill (unlike Data Modeling). Lessons teach the concept + the WHY + the click-path, but real mastery needs you running it in an Azure account. Portfolio project is built across the phases.
 
@@ -44,8 +44,8 @@
 
 | # | Lesson | Status |
 |---|--------|--------|
-| 1 | Why Cloud for Data Engineering (compute/storage separation, elasticity, on-prem vs cloud) | 🟡 Next |
-| 2 | Azure Basics — subscriptions, resource groups, regions, portal, the cost model | ⏳ Pending |
+| 1 | [Why Cloud for Data Engineering (compute/storage separation, elasticity, on-prem vs cloud)](./phase-0-fundamentals/topic-1-why-cloud/) | ✅ Done |
+| 2 | Azure Basics — subscriptions, resource groups, regions, portal, the cost model | 🟡 Next |
 | 3 | Identity & Security — Entra ID (Azure AD), RBAC, Managed Identities, Key Vault | ⏳ Pending |
 | 4 | The Azure Data Stack Map — how ADLS / ADF / Databricks / Synapse / Fabric fit together | ⏳ Pending |
 
@@ -124,6 +124,6 @@
 
 ---
 
-*Each lesson folder has: `README.md` (full lesson + diagram + revision + 10 practice questions)*
+*Each lesson folder has: `README.md` (full lesson + diagram + revision + 10 practice questions) + `practice.md` (setup + reasoning drills)*
 *Spaced-repetition recall files live in [`revision/`](./revision/)*
 *Sister series: [Spark](../spark/) · [Python](../python/) · [SQL](../sql/) · [Data Modeling](../data-modeling/)*
