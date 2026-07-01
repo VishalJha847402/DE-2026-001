@@ -1,4 +1,4 @@
-# DE-2026 — Teaching Rules (7 series + flagship project)
+# DE-2026 — Teaching Rules (10 series + flagship project)
 
 > **Single source of truth for how Claude teaches Vishal.** Replaces all previous rules. Follow exactly.
 > Last updated: this session.
@@ -22,22 +22,25 @@
 
 Vishal is learning **Data Engineering** for the **2026 India job market**, pillar by pillar, as **markdown (`.md`) lesson files on GitHub** — NOT in chat, NOT in HTML. Vishal studies on GitHub in his own time.
 
-**All 7 series roadmaps built (planning complete):**
-- 🐍 **Python for DE** — `python/`
-- 🔥 **Spark & PySpark** — `spark/`
-- 🗄️ **SQL for DE** — `sql/`
-- 📐 **Data Modeling for DE** — `data-modeling/`
-- ☁️ **Azure Cloud for DE** — `azure-cloud/`
-- 🔀 **Airflow + dbt** — `airflow-dbt/`
-- 🏔️ **Warehouses + Streaming** (Snowflake · table formats · Kafka) — `warehouses-streaming/`
-- 🏗️ **Flagship project (OrderIQ)** — `projects/`
+**ALL roadmaps built — planning complete. 10 series + flagship project:**
+
+*Core pillars (7):*
+- 🐍 Python — `python/` · 🔥 Spark — `spark/` · 🗄️ SQL — `sql/`
+- 📐 Data Modeling — `data-modeling/` · ☁️ Azure Cloud — `azure-cloud/`
+- 🔀 Airflow+dbt — `airflow-dbt/` · 🏔️ Warehouses+Streaming — `warehouses-streaming/`
+
+*Supporting tools (3):*
+- 🐧 Linux & Shell — `linux-shell/` · 🌿 Git — `git/` · 🐳 Docker — `docker/`
+
+*Project:* 🏗️ OrderIQ e-commerce lakehouse — `projects/`
 
 **Repo:** `VishalJha847402/DE-2026-001` · **Work branch:** `claude/new-session-gmnma2`.
 
-### 🧭 Confirmed Skill Sequence
+### 🧭 Skill Sequence
 ```
-Python · Spark · SQL · Data Modeling · Azure Cloud · Airflow+dbt · Warehouses+Streaming
-(Linux · Git · Docker alongside · Flagship project OrderIQ P1→P2→P3 at milestones)
+Core: Python · Spark · SQL · Data Modeling · Azure Cloud · Airflow+dbt · Warehouses+Streaming
+Supporting (alongside): Linux · Git · Docker
+Project: OrderIQ P1→P2→P3 at milestones
 ```
 All roadmaps done. **Phase now = writing the actual lessons.**
 
@@ -49,7 +52,8 @@ All roadmaps done. **Phase now = writing the actual lessons.**
 CLAUDE.md      ← teaching rules (this file) — read before every action
 PENDING.md     ← all pending / parked tasks — read before deciding next step
 
-python/ · spark/ · sql/ · data-modeling/ · azure-cloud/ · airflow-dbt/ · warehouses-streaming/
+python/ · spark/ · sql/ · data-modeling/ · azure-cloud/ · airflow-dbt/ ·
+warehouses-streaming/ · linux-shell/ · git/ · docker/   ← one folder per series:
   README.md · QUESTIONS.md · revision/ · phase-X/topic-Y/README.md
 projects/      ← flagship project blueprint (OrderIQ)
 ```
@@ -100,23 +104,16 @@ Depth-first · WHY first · Simple English (short sentences, simple words, never
 
 ---
 
-## 7. The Roadmaps (each series README tracks its own progress)
+## 7. The Roadmaps (each series README tracks its own progress + lesson counts)
 
-- **Python** (`python/`) — ~34 lessons.
-- **Spark** (`spark/`) — ~39 lessons, 15 Topics.
-- **SQL** (`sql/`) — ~26 lessons.
-- **Data Modeling** (`data-modeling/`) — ~21 lessons.
-- **Azure Cloud** (`azure-cloud/`) — ~24 lessons.
-- **Airflow + dbt** (`airflow-dbt/`) — ~21 lessons.
-- **Warehouses + Streaming** (`warehouses-streaming/`) — ~20 lessons (Snowflake, micro-partitions, Snowpipe, Streams/Tasks, Time Travel; Delta/Iceberg/Hudi lakehouse; Kafka topics/partitions/consumer groups; Spark Structured Streaming, exactly-once, watermarks). Practice: Snowflake trial · Kafka via Docker · Databricks Community.
-- **Flagship project** (`projects/`) — OrderIQ e-commerce lakehouse, staged P1→P2→P3.
-
-**Optional lighter series later:** Linux · Git · Docker. See `PENDING.md`.
+Core: Python ~34 · Spark ~39 · SQL ~26 · Data Modeling ~21 · Azure ~24 · Airflow+dbt ~21 · Warehouses+Streaming ~20.
+Supporting: Linux ~10 · Git ~9 · Docker ~10.
+Project: OrderIQ (P1→P2→P3). **Total ≈ 214 lessons across 10 series.**
 
 ---
 
 ## 8. Practice Environments
-Python — local/notebooks · Spark — Databricks Community · SQL — PostgreSQL + DuckDB · Data Modeling — dbdiagram.io → PostgreSQL/DuckDB → dbt · Azure — Azure free account + Fabric trial + Databricks Community · Airflow+dbt — dbt Core+DuckDB, Airflow via Docker · Warehouses+Streaming — Snowflake trial, Kafka via Docker, Databricks Community.
+Python — local/notebooks · Spark — Databricks Community · SQL — PostgreSQL + DuckDB · Data Modeling — dbdiagram.io → PostgreSQL/DuckDB → dbt · Azure — Azure free account + Fabric trial · Airflow+dbt — dbt Core+DuckDB + Airflow via Docker · Warehouses+Streaming — Snowflake trial + Kafka via Docker · Linux — terminal/WSL · Git — GitHub · Docker — Docker Desktop.
 
 ---
 
@@ -127,15 +124,11 @@ Commit + push every lesson to `claude/new-session-gmnma2`. Clear messages. GitHu
 
 ## 10. Current Progress (update every session)
 
-**Roadmaps: all 7 built ✅ + flagship project blueprint ✅. Planning complete — now writing lessons.**
+**Roadmaps: all 10 built ✅ + flagship project ✅. Planning complete — now writing lessons.**
 
 **Python — 2 done:** How Python Runs ✅ · Variables/Memory ✅. Next: Data Structures Deep.
 **Spark — 9 done:** Phase 0 ✅ (3) · Phase 1: Driver ✅ · SparkSession ✅ · RDD ✅ · Transformations/Lazy ✅ · Narrow vs Wide ✅ · Shuffle ✅. Next: DAG→Stages→Tasks.
-**SQL — 0 done.** Next: Phase 0 T1.
-**Data Modeling — 0 done.** Next: Phase 0 T1.
-**Azure Cloud — 0 done.** Next: Phase 0 T1.
-**Airflow + dbt — 0 done.** Next: Phase 0 T1.
-**Warehouses + Streaming — 0 done.** Next: Phase 0 T1.
+**SQL · Data Modeling · Azure · Airflow+dbt · Warehouses+Streaming · Linux · Git · Docker — 0 done each.** Each next = Phase 0 Topic 1 (see each README).
 **Revision:** `spark/revision/revision-1-foundations-and-core.md` (Spark 1–9) ✅.
 
 ---
