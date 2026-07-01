@@ -5,6 +5,24 @@
 
 ---
 
+## 🎯 THE FIRST PRINCIPLE (everything serves this)
+
+> **You don't truly know a topic until you can BUILD it, BREAK it, and EXPLAIN it — on real data, the way the job demands.**
+
+The goal is NOT to finish lessons or pass quizzes. It is to become a **hireable Data Engineer who can defend every decision** — in the interview and on the job.
+
+Everything derives from this:
+- **Understand, don't memorize** → WHY-first teaching, plain-language depth (§3, §4)
+- **On real data** → ONE wide + long e-commerce dataset everywhere (§9C)
+- **Build it** → hands-on `practice.md` + Claude grades the code (§6)
+- **Break it** → the "break-it" variant in every problem (§6)
+- **Explain it** → explain-back, trade-off reasoning, interview talking points
+- **The way the job demands** → market-researched roadmaps + the OrderIQ project (the job made real)
+
+**The test for anything we add:** does it move Vishal toward *build it, break it, explain it, on real data*? If not, it doesn't belong.
+
+---
+
 ## 🔴 Core Working Rules (READ FIRST — apply every turn)
 
 1. **ALWAYS read `CLAUDE.md` (this file) before writing any content or answering anything.**
@@ -41,7 +59,6 @@ Supporting tools alongside (Linux · Git · Docker)
 Tier 3 after core (DataOps · K8s · Governance · System Design · AI-Era DE)
 Project OrderIQ P1→P2→P3 at milestones
 ```
-All roadmaps done. **Phase now = writing the actual lessons.**
 
 ---
 
@@ -79,11 +96,7 @@ One lesson = one `README.md`. Pushed to GitHub on the work branch. Never in chat
 Example-driven, not prose-driven: every concept as **runnable code with expected output inline**; line-by-line walkthroughs; built for the **Read → Run → Tweak** loop.
 
 ### 2B. 🔒 The 3-Step Example Rule (clarity + real-world grounding)
-For each concept, examples follow **3 steps**:
-1. **Mechanic first** — the *simplest possible* example (often a tiny/toy one) so the concept is crystal clear. Do NOT bury a new mechanic inside dataset complexity.
-2. **Apply to e-commerce** — immediately show the same concept on the shared OrderIQ dataset (a real scenario).
-3. **Practice = always e-commerce** — every `practice.md` problem uses the shared dataset.
-Rule of thumb: **variety in teaching examples (e-commerce as the anchor), 100% consistency in practice + project.** Foundational topics lean more on tiny examples; pandas/SQL/Spark/modeling lean almost entirely on e-commerce.
+For each concept: **(1) Mechanic first** — simplest possible example (often tiny) so the concept is crystal clear (never bury a new mechanic in dataset complexity); **(2) Apply to e-commerce** — same concept on the shared OrderIQ dataset; **(3) Practice = always e-commerce** — every `practice.md` uses the shared dataset. Rule: variety in teaching examples (e-commerce anchor), 100% consistency in practice + project.
 
 ---
 
@@ -131,23 +144,22 @@ Core: Python ~34 · Spark ~39 · SQL ~26 · Data Modeling ~21 · Azure ~24 · Ai
 Python — VS Code + Jupyter (`.ipynb`) + venv · SQL — DuckDB→PostgreSQL→Snowflake · Data Modeling — dbdiagram.io + DuckDB/dbt · Spark — Databricks Community · Airflow/dbt/Kafka — Docker · Azure — Azure free (ADF/Databricks/Fabric) · Warehouses — Snowflake trial · Docker/K8s — Docker Desktop/minikube · Git/Linux — VS Code+GitHub / WSL · DataOps — GitHub Actions+Terraform · AI-Era — Python+Chroma+LLM API.
 
 ### 9B. Python setup (one-time, ~10 min)
-Install Python → VS Code + **Python** + **Jupyter** extensions (notebooks inside VS Code) → `python -m venv .venv` → learn in `.ipynb` (Read→Run→Tweak). **DuckDB** (`pip install duckdb`) added at Python Phase 2 + all SQL.
+Install Python → VS Code + **Python** + **Jupyter** extensions (notebooks inside VS Code) → `python -m venv .venv` → learn in `.ipynb`. **DuckDB** (`pip install duckdb`) added at Python Phase 2 + all SQL.
 
 ### 9C. 🔒 LOCKED — Dataset Strategy: ONE e-commerce spine, WIDE **and** LONG, scaled by volume
 - **ONE dataset across everything: E-commerce (OrderIQ).** Same schema powers Python, SQL, DuckDB, Data Modeling, dbt, and the P1→P2→P3 project.
-- **WIDE (many tables + varied column types) AND LONG (scalable rows).** Must be wide enough to teach *every* concept, not just long.
-- **Source:** **Olist** e-commerce (real, messy) for the story + laptop practice.
-- **Generator (to build):** produces the enriched schema at any size — ~100k rows (laptop/DuckDB) → **20–100M rows** (Spark/cloud). Real-TB not needed to learn.
-- **Spark big-data cameo:** **NYC Taxi** for 1–2 Spark Phase-4 performance lessons only.
+- **WIDE (many tables + varied column types) AND LONG (scalable rows)** — wide enough to teach *every* concept, not just long.
+- **Source:** **Olist** e-commerce (real, messy) for story + laptop practice. **Generator (to build):** enriched schema at any size — ~100k rows (laptop/DuckDB) → 20–100M rows (Spark/cloud).
+- **Spark cameo:** **NYC Taxi** for 1–2 Spark Phase-4 performance lessons only.
 
-### 9C-i. Enriched WIDE schema (the generator must produce this — each width unlocks skills)
-- **Core tables:** customers · products · sellers · orders · order_items · payments · reviews · geolocation · categories.
-- **Enrichments:** price_history (SCD2/time-travel) · shipments (delivery dates) · returns/refunds (edge cases) · marketing_campaigns (attribution) · **clickstream_events** (JSON payloads, high-volume → streaming/Kafka/Spark scale).
-- **Column-type coverage:** numeric · **text** (review comments → NLP/embeddings/AI-era) · **timestamps** (→ windows/time-series/timezones) · categorical · **geo** (lat/long) · **JSON/nested** (product attributes, event payloads → nested-parsing) · boolean · **PII** (name/address → governance/masking) · **deliberate messiness** (nulls/dupes/bad rows → data quality/dead-letter) · **changing attributes** (customer city change → SCD2).
-- **Result:** ONE dataset teaches joins/windows/CTEs (SQL), pandas/regex/JSON/dates (Python), star+snowflake+SCD2 (modeling), big-volume shuffles (Spark), streaming events (Kafka), embeddings (AI-era), and PII/masking (governance).
+### 9C-i. Enriched WIDE schema (the generator must produce this)
+- **Core:** customers · products · sellers · orders · order_items · payments · reviews · geolocation · categories.
+- **Enrichments:** price_history (SCD2) · shipments · returns · marketing_campaigns · **clickstream_events** (JSON, high-volume → streaming/Spark scale).
+- **Column-type coverage:** numeric · **text** (reviews→NLP/embeddings) · **timestamps** (windows/time-series/tz) · categorical · **geo** (lat/long) · **JSON/nested** · boolean · **PII** (governance) · **deliberate messiness** (data quality) · **changing attributes** (SCD2).
+- **Covers:** SQL joins/windows/CTEs · Python pandas/regex/JSON/dates · modeling star+snowflake+SCD2 · Spark big-volume · Kafka streaming · AI-era embeddings · governance PII/masking.
 
-### 9D. Why e-commerce (locked rationale)
-Universally understood (keeps focus on your engineering) · exercises every DE skill · matches India's biggest hiring sector (Flipkart/Amazon/Meesho/Swiggy/Zomato) · scales. **Career note:** domain is common — the edge is **engineering depth + P3 AI layer + explaining every decision.** Project value = depth × explanation.
+### 9D. Why e-commerce
+Universally understood (keeps focus on your engineering) · exercises every DE skill · India's biggest hiring sector · scales. **Career note:** domain is common — the edge is depth + P3 AI layer + explaining every decision. Project value = depth × explanation.
 
 ---
 
@@ -158,7 +170,8 @@ Commit + push every lesson to `claude/new-session-gmnma2`. Clear messages. GitHu
 
 ## 11. Current Progress (update every session)
 
-**Roadmaps all 15 ✅ · project ✅ · practice system 🔒 · dataset strategy (wide+long) 🔒. Now: build dataset tooling + write lessons.**
+**Roadmaps all 15 ✅ · project ✅ · practice 🔒 · dataset (wide+long) 🔒 · First Principle 🔒.**
+**▶ IMMEDIATE NEXT ACTION: build the WIDE+LONG e-commerce generator + DuckDB seed (unblocks all hands-on practice).** Then write lessons.
 
 **Python — 2 done:** How Python Runs ✅ · Variables/Memory ✅. Next: Data Structures Deep.
 **Spark — 9 done:** Phase 0 ✅ + Phase 1 (Driver, SparkSession, RDD, Transformations/Lazy, Narrow/Wide, Shuffle) ✅. Next: DAG→Stages→Tasks.
