@@ -12,6 +12,29 @@ Across ALL profile names — Data Engineer · Big Data Engineer · Azure Data En
 
 This roadmap is built to cover exactly that. (Spark, Airflow, dbt, cloud, warehouses = their own series — this one is the **Python** pillar + its DE glue.)
 
+---
+
+## 🛠️ Getting Started (one-time setup, ~10 min)
+
+Python is learned by **running code**, not just reading. Set this up before Lesson 3:
+
+1. **Install Python** — from [python.org](https://python.org). Check: `python --version`.
+2. **Use VS Code** (no separate Jupyter install needed). Add two extensions:
+   - **Python** (Microsoft) · **Jupyter** (Microsoft) → notebooks (`.ipynb`) run *inside* VS Code.
+3. **Virtual environment** (isolated package space):
+   ```bash
+   python -m venv .venv
+   # activate it — VS Code will prompt "use this environment", say yes
+   ```
+4. **Learn in `.ipynb` notebooks** — run each cell, see output inline, tweak it. This is the **Read → Run → Tweak** loop.
+
+**DuckDB — the runnable-data backbone (add at Phase 2, not yet):**
+`pip install duckdb` — a database inside Python ("SQLite for analytics"). No server, no cloud. Reads CSV/Parquet/JSON directly and runs real SQL. You'll use it for the hands-on data problems from **Phase 2 onward** (and all of SQL). Pure-Python foundation lessons (Phase 0) need only **VS Code + Python**.
+
+**How each lesson works:** deep concept (code-heavy, runnable examples with output) → Mermaid diagram → revision → 10 hidden questions → **`practice.md`** with tiered hands-on problems 🟢🟡🔴 → paste your solution, I grade it.
+
+---
+
 ## Roadmap
 
 | Phase | Topic | Status |
@@ -23,7 +46,7 @@ This roadmap is built to cover exactly that. (Spark, Airflow, dbt, cloud, wareho
 | Phase 4 | Performance & Concurrency | ⏳ Pending |
 | Phase 5 | AI-Era & Orchestration Glue | ⏳ Pending |
 
-**Progress: 1 of ~35 lessons done.**
+**Progress: 2 of ~34 lessons done.**
 
 > You know Python at a "moderate" level. Per DE-2026 Rule #15, we run the **full cycle even on topics you know** — functional knowledge hides holes. Speed-read the easy parts; slow down on the WHY and the traps.
 
@@ -31,13 +54,11 @@ This roadmap is built to cover exactly that. (Spark, Airflow, dbt, cloud, wareho
 
 ## Phase 0 — Foundations Re-grounded 🟡
 
-> Fix the hidden holes in what you already "know." This is where DA→DE engineers leak.
-
 | # | Lesson | Status |
 |---|--------|--------|
 | 1 | [How Python Actually Runs (interpreter, bytecode, the GIL)](./phase-0-foundations/topic-1-how-python-runs/) | ✅ Done |
-| 2 | Variables, Memory & the Mutable/Immutable Trap | 🟡 Next |
-| 3 | Data Structures Deep — list / dict / set / tuple + `collections` | ⏳ Pending |
+| 2 | [Variables, Memory & the Mutable/Immutable Trap](./phase-0-foundations/topic-2-variables-memory-mutability/) | ✅ Done |
+| 3 | Data Structures Deep — list / dict / set / tuple + `collections` | 🟡 Next |
 | 4 | Control Flow & Comprehensions (the Pythonic way) | ⏳ Pending |
 | 5 | Functions — args, *args/**kwargs, scope, closures | ⏳ Pending |
 
@@ -48,7 +69,7 @@ This roadmap is built to cover exactly that. (Spark, Airflow, dbt, cloud, wareho
 | # | Lesson |
 |---|--------|
 | 1 | Iterators & Generators (lazy data — critical for DE) |
-| 2 | `itertools` & `functools` (memory-efficient iteration) ⭐ *added from research* |
+| 2 | `itertools` & `functools` (memory-efficient iteration) |
 | 3 | Decorators |
 | 4 | Context Managers (`with` — files, DB connections) |
 | 5 | Error Handling & Exceptions (+ retries/backoff for pipelines) |
@@ -60,12 +81,12 @@ This roadmap is built to cover exactly that. (Spark, Airflow, dbt, cloud, wareho
 
 | # | Lesson |
 |---|--------|
-| 1 | Files & the Filesystem — `pathlib`, `os`, `subprocess`, env vars ⭐ *added* |
-| 2 | File Formats & I/O — CSV, JSON, Parquet, **PyArrow** (the Arrow backbone) |
-| 3 | Regex + Nested / Semi-structured JSON parsing ⭐ *added* |
-| 4 | **NumPy** Essentials *(now before pandas — pandas is built on it)* |
+| 1 | Files & the Filesystem — `pathlib`, `os`, `subprocess`, env vars |
+| 2 | File Formats & I/O — CSV, JSON, Parquet, **PyArrow** |
+| 3 | Regex + Nested / Semi-structured JSON parsing |
+| 4 | **NumPy** Essentials *(before pandas — pandas is built on it)* |
 | 5 | **pandas** Deep — the DA→DE bridge |
-| 6 | **Polars & DuckDB** — the 2026 modern stack ⭐⭐ *heavily demanded in research* |
+| 6 | **Polars & DuckDB** — the 2026 modern stack |
 | 7 | APIs — `requests`/`httpx`, REST, pagination, auth, retries |
 | 8 | Databases from Python — SQLAlchemy, connection pooling |
 | 9 | Dates, Times & Timezones (the silent data killer) |
@@ -78,7 +99,7 @@ This roadmap is built to cover exactly that. (Spark, Airflow, dbt, cloud, wareho
 |---|--------|
 | 1 | Type Hints & mypy |
 | 2 | **Pydantic** — Data Validation *(now the industry standard)* |
-| 3 | Testing with pytest + **data-quality testing** ⭐ *added* |
+| 3 | Testing with pytest + **data-quality testing** |
 | 4 | Logging (not `print`) |
 | 5 | Packaging, virtualenvs, dependency management (uv/poetry) |
 | 6 | Project Structure & Config/Secrets |
@@ -90,7 +111,7 @@ This roadmap is built to cover exactly that. (Spark, Airflow, dbt, cloud, wareho
 | # | Lesson |
 |---|--------|
 | 1 | Profiling & Memory |
-| 2 | The GIL Deep · threading vs multiprocessing · `concurrent.futures` ⭐ *made explicit* |
+| 2 | The GIL Deep · threading vs multiprocessing · `concurrent.futures` |
 | 3 | async / asyncio + httpx (I/O-bound DE — thousands of API calls) |
 | 4 | Memory-Efficient Processing (chunking, generators, streaming) |
 
@@ -102,7 +123,7 @@ This roadmap is built to cover exactly that. (Spark, Airflow, dbt, cloud, wareho
 |---|--------|
 | 1 | Working with LLM APIs / SDKs |
 | 2 | Pydantic for Structured LLM Outputs |
-| 3 | Python in **Airflow & dbt** — how Python glues orchestration ⭐ *added* |
+| 3 | Python in **Airflow & dbt** — how Python glues orchestration |
 | 4 | FastAPI for Data Services |
 
 ---
@@ -119,10 +140,8 @@ This roadmap is built to cover exactly that. (Spark, Airflow, dbt, cloud, wareho
 | Phase 5 · AI-Era & Glue | 4 |
 | **Total** | **~34 lessons** |
 
-⭐ = added/reordered after Jun 2026 India job-market research (Polars/DuckDB, itertools/functools, pathlib, regex/JSON, concurrent.futures, data-quality testing, Airflow/dbt glue).
-
 ---
 
-*Each lesson folder has: `README.md` (full lesson + diagram + revision + 10 practice questions)*
+*Each lesson folder has: `README.md` (full lesson + diagram + revision + 10 questions) + `practice.md` (hands-on problems)*
 *Spaced-repetition recall files live in [`revision/`](./revision/)*
-*Sister series: [Apache Spark & PySpark](../spark/)*
+*Sister series: [Apache Spark & PySpark](../spark/) · [SQL](../sql/) · [Data Modeling](../data-modeling/)*
