@@ -1,16 +1,24 @@
 # PENDING — All Parked / Pending Tasks
 
-> Read this before deciding what to do next (per CLAUDE.md Core Working Rule #2).
-> When a task is finished, remove it and update CLAUDE.md Section 10. When a new task is agreed, add it here.
->
+> Read before deciding what to do next (CLAUDE.md Core Working Rule #2).
+> Finish a task → remove it here + update CLAUDE.md Section 10. New task → add here.
 > Last updated: this session.
+
+---
+
+## 🧭 Confirmed Skill Sequence
+
+```
+✅ Python · ✅ Spark · ✅ SQL (roadmap) · 👉 Data Modeling (roadmap done)
+→ ☁️ Azure Cloud → 🔀 Airflow + dbt → 🏔️ Warehouses (Snowflake/Delta/Iceberg) + Kafka
+   (Linux · Git · Docker alongside · Projects P1–P3 at phase ends)
+```
 
 ---
 
 ## 🔧 1. Plain-Language Retrofit (B-lite) — IN PROGRESS
 
-Apply the CLAUDE.md Section 3 plain-language standard to the 5 densest existing lessons:
-
+Apply CLAUDE.md Section 3 plain-language standard to the 5 densest existing lessons:
 - ✅ The Shuffle (Spark) — DONE
 - ⬜ Narrow vs Wide (Spark)
 - ⬜ RDD (Spark)
@@ -23,54 +31,47 @@ Apply the CLAUDE.md Section 3 plain-language standard to the 5 densest existing 
 
 ## 📚 2. Next Lessons to Write
 
-**SQL (roadmap ✅ done, market-grounded):**
-- 🟡 Phase 0 Topic 1 — What SQL Is + The Relational Model
-- Phase 0 Topic 2 — How a Query Actually Executes (logical order)
-- … then Phases 0→5 (see `sql/README.md`)
+**Data Modeling (roadmap ✅, market-grounded):**
+- 🟡 Phase 0 T1 — What Data Modeling Is + Why It Matters
+- Phase 0 T2 — 3 Levels (Conceptual→Logical→Physical) … → Phases 0–4 (see `data-modeling/README.md`)
+
+**SQL (roadmap ✅, market-grounded):**
+- 🟡 Phase 0 T1 — What SQL Is + The Relational Model … → Phases 0–5 (see `sql/README.md`)
 
 **Python:**
-- 🟡 Phase 0 Topic 3 — Data Structures Deep (list/dict/set/tuple + collections)
-- … then Phase 0 Topic 4 (Control Flow), Topic 5 (Functions) → Phase 1 onward (see `python/README.md`)
+- 🟡 Phase 0 T3 — Data Structures Deep … → (see `python/README.md`)
 
 **Spark:**
-- 🟡 Phase 1 Topic 4b — DAG → Jobs → Stages → Tasks
-- … then 4c (Fault Tolerance), Topic 5 (Partitioning/Memory/Cache) → Phase 2 onward (see `spark/README.md`)
+- 🟡 Phase 1 T4b — DAG → Jobs → Stages → Tasks … → (see `spark/README.md`)
 
 ---
 
 ## 🔁 3. Revision Files (spaced repetition)
-
 - ✅ `spark/revision/revision-1-foundations-and-core.md` (Spark 1–9)
-- ⬜ Python revision #1 — due after ~6 Python lessons (have 2)
-- ⬜ SQL revision #1 — due after ~6 SQL lessons (have 0)
-- ⬜ Spark revision #2 — due after Phase 1 completes
+- ⬜ Python revision #1 — after ~6 Python lessons (have 2)
+- ⬜ SQL revision #1 — after ~6 SQL lessons (have 0)
+- ⬜ Data Modeling revision #1 — after ~6 lessons (have 0)
+- ⬜ Spark revision #2 — after Phase 1 completes
 
 ---
 
 ## 📊 4. Optional — Sharper Market Grounding
-
-- Roadmaps grounded in 2026 India research (blogs + job-board titles/counts + interview banks).
-- Could not scrape raw Naukri/LinkedIn JD text (they block bots, 403).
-- **If Vishal wants exact numbers:** he pastes 20–30 real JDs → Claude does a precise skill-frequency tally. Parked until requested.
+Roadmaps grounded in 2026 India research (blogs + job-board titles/counts + interview banks). Could not scrape raw Naukri/LinkedIn JD text (bots blocked, 403). **If Vishal wants exact numbers:** paste 20–30 real JDs → Claude does a precise skill-frequency tally. Parked until requested.
 
 ---
 
-## 🏗️ 5. Future Series (after Python + Spark + SQL mature)
+## 🏗️ 5. Future Series (build later, same format)
+- ☁️ Azure Cloud (ADF · Databricks · Synapse · Fabric)
+- 🔀 Airflow + dbt (orchestration + transformation)
+- 🏔️ Snowflake / Delta / Iceberg (warehouses) + Kafka (streaming)
+- 🐧 Linux · Git · Docker (supporting tools, alongside)
+- 🏗️ Projects P1 (SQL analytics) · P2 (end-to-end pipeline) · P3 (AI-era pipeline)
 
-Depth-first — build as their own `.md` series later, same format:
-- Data Modeling (star/snowflake, SCD, dimensional) — deeper than the SQL Phase 3 intro
-- Azure Cloud (ADF, Databricks, Synapse, Fabric)
-- Airflow + dbt (orchestration)
-- Snowflake / Delta / Iceberg (warehouses) + Kafka (streaming)
-- Linux · Git · Docker (supporting tools, picked up alongside)
-- Projects P1 (SQL analytics), P2 (end-to-end pipeline), P3 (AI-era pipeline)
-
-Do NOT start these until the core pillars are well underway.
+Do NOT start until the core pillars (Python/Spark/SQL/Data Modeling) are well underway.
 
 ---
 
 ## 🧭 6. Open Decisions (not yet locked)
-
-- **Pace/signal protocol** — current signal = "done with X" / "X unclear at Y". Could formalize later.
+- **Pace/signal protocol** — current signal = "done with X" / "X unclear at Y".
 - **AI-era DE definition** — which DE tasks AI replaces vs assists vs Vishal owns deeply. Drafted in chat, not locked.
-- **Master `DE-ROADMAP.md`** — a top-level file mapping all pillars (offered, not yet created).
+- **Master `DE-ROADMAP.md`** — top-level file mapping all pillars (offered, not yet created).
