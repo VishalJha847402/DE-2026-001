@@ -1,7 +1,6 @@
-# DE-2026 — Teaching Rules (Spark · Python · SQL · Data Modeling)
+# DE-2026 — Teaching Rules (Python · Spark · SQL · Data Modeling · Azure Cloud)
 
-> **Single source of truth for how Claude teaches Vishal.**
-> These rules replace all previous rules. Follow them exactly.
+> **Single source of truth for how Claude teaches Vishal.** Replaces all previous rules. Follow exactly.
 > Last updated: this session.
 
 ---
@@ -10,9 +9,9 @@
 
 1. **ALWAYS read `CLAUDE.md` (this file) before writing any content or answering anything.**
 2. **ALWAYS read `PENDING.md` before deciding what to do next.**
-3. **After writing or changing content, UPDATE this file** (Section 10 progress; add new decisions/rules here).
+3. **After writing or changing content, UPDATE this file** (Section 10 progress; add new decisions/rules).
 4. **After finishing or adding a task, UPDATE `PENDING.md`.**
-5. If this file and reality disagree, fix the file to match what we actually did.
+5. If this file and reality disagree, fix the file to match reality.
 6. **Before writing any roadmap or lesson, research the 2026 India / AI-era market — data-backed, no assumptions — and ask "is this the best?" If not, make it the best.**
 
 > Never skipped. This file + `PENDING.md` are how context survives between sessions.
@@ -23,34 +22,35 @@
 
 Vishal is learning **Data Engineering** for the **2026 India job market**, pillar by pillar, as **markdown (`.md`) lesson files on GitHub** — NOT in chat, NOT in HTML. Vishal studies on GitHub in his own time.
 
-Series so far:
+Series so far (roadmaps built):
 - 🐍 **Python for DE** — `python/`
 - 🔥 **Spark & PySpark** — `spark/`
 - 🗄️ **SQL for DE** — `sql/`
 - 📐 **Data Modeling for DE** — `data-modeling/`
+- ☁️ **Azure Cloud for DE** — `azure-cloud/`
 
 **Repo:** `VishalJha847402/DE-2026-001` · **Work branch:** `claude/new-session-gmnma2`.
 
 ### 🧭 Confirmed Skill Sequence
 ```
-✅ Python · ✅ Spark · ✅ SQL (roadmap) · 👉 Data Modeling (roadmap done, lessons next)
-→ ☁️ Azure Cloud → 🔀 Airflow + dbt → 🏔️ Warehouses (Snowflake/Delta/Iceberg) + Kafka
+✅ Python · ✅ Spark · ✅ SQL · ✅ Data Modeling · ✅ Azure Cloud (roadmaps done)
+→ 🔀 Airflow + dbt → 🏔️ Warehouses (Snowflake/Delta/Iceberg) + Kafka (streaming)
    (Linux · Git · Docker alongside · Projects P1–P3 at phase ends)
 ```
-Rationale: Data Modeling before Cloud — it builds on SQL and is the conceptual foundation Cloud/warehouse/dbt work assumes.
+Order rationale: SQL → Data Modeling (builds on SQL) → Azure Cloud (where it all runs) → orchestration → warehouses/streaming.
 
 ---
 
 ## 1. Where Content Lives — Folder Structure
 
 ```
-CLAUDE.md                       ← teaching rules (this file) — read before every action
-PENDING.md                      ← all pending / parked tasks — read before deciding next step
+CLAUDE.md      ← teaching rules (this file) — read before every action
+PENDING.md     ← all pending / parked tasks — read before deciding next step
 
-python/ · spark/ · sql/ · data-modeling/   ← one folder per series, each with:
-  README.md                     ← roadmap + progress
-  QUESTIONS.md                  ← index hub linking to every lesson's questions
-  revision/                     ← spaced-repetition recall files
+python/ · spark/ · sql/ · data-modeling/ · azure-cloud/   ← one folder per series, each with:
+  README.md                 ← roadmap + progress
+  QUESTIONS.md              ← index hub linking to every lesson's questions
+  revision/                 ← spaced-repetition recall files
   phase-X-name/topic-Y-name/README.md   ← the lesson
 ```
 
@@ -76,7 +76,7 @@ Simple plain language so **anybody can understand — without lowering depth.**
 - **"🗣️ In plain words:"** one-liner under each tricky concept.
 - Every hard word gets a **3-word plain meaning inline**, first time.
 - Short sentences, especially in Hard answers. Each Hard answer opens with a one-line plain-words summary.
-- Never trade technical accuracy for simplicity — wrap depth in simple words.
+- Never trade technical accuracy for simplicity.
 
 ---
 
@@ -94,25 +94,26 @@ Depth-first · WHY first · Simple English (short sentences, simple words, never
 ## 6. Learning Workflow
 1. Claude writes a lesson → pushes to GitHub.
 2. Vishal studies on GitHub in his own time.
-3. Vishal signals **"done with X"** / **"X unclear at Y"** — the pace signal.
+3. Vishal signals **"done with X"** / **"X unclear at Y"**.
 4. ~Every 6 lessons → revision file. End of Phase → gate-check / boss-fight.
-- Pace: one lesson at a time unless asked for more. Vishal chooses which series to advance each turn.
+- Pace: one lesson at a time unless asked. Vishal chooses which series to advance each turn.
 
 ---
 
 ## 7. The Roadmaps (each series README tracks its own progress)
 
-- **Python** (`python/README.md`) — ~34 lessons, market-grounded (Polars/DuckDB, pydantic, itertools, pathlib, concurrent.futures, Airflow/dbt glue).
+- **Python** (`python/README.md`) — ~34 lessons.
 - **Spark** (`spark/README.md`) — ~39 lessons, 15 Topics.
-- **SQL** (`sql/README.md`) — ~26 lessons, market-grounded (window functions, CTEs, execution plans/optimization, AI-era SQL). Dialect: PostgreSQL + warehouse notes.
-- **Data Modeling** (`data-modeling/README.md`) — ~21 lessons, market-grounded (Kimball/star, grain, SCD Type 2, medallion, Data Vault 2.0, OBT, "design a schema" interview, AI-era). Practice: dbdiagram.io → PostgreSQL/DuckDB → dbt.
+- **SQL** (`sql/README.md`) — ~26 lessons. Dialect: PostgreSQL + warehouse notes.
+- **Data Modeling** (`data-modeling/README.md`) — ~21 lessons (Kimball, grain, SCD, medallion, Data Vault, OBT).
+- **Azure Cloud** (`azure-cloud/README.md`) — ~24 lessons (ADLS, Databricks, ADF, Synapse, Fabric, DP-700/DP-750). Practice: Azure free account + Fabric trial + Databricks Community.
 
-**Future series (build later, same format):** Azure Cloud · Airflow + dbt · Warehouses + Kafka · Linux/Git/Docker · Projects P1–P3. See `PENDING.md`.
+**Future series (build later, same format):** Airflow + dbt · Warehouses + Kafka · Linux/Git/Docker · Projects P1–P3. See `PENDING.md`.
 
 ---
 
 ## 8. Practice Environments
-- **Python** — local / notebooks.  **Spark** — Databricks Community.  **SQL** — PostgreSQL + DuckDB.  **Data Modeling** — dbdiagram.io / paper → PostgreSQL/DuckDB → dbt.
+Python — local/notebooks · Spark — Databricks Community · SQL — PostgreSQL + DuckDB · Data Modeling — dbdiagram.io → PostgreSQL/DuckDB → dbt · Azure Cloud — Azure free account + Fabric trial + Databricks Community.
 
 ---
 
@@ -127,6 +128,7 @@ Commit + push every lesson to `claude/new-session-gmnma2`. Clear messages. GitHu
 **Spark — 9 done:** Phase 0 ✅ (3) · Phase 1: Driver ✅ · SparkSession ✅ · RDD ✅ · Transformations/Lazy ✅ · Narrow vs Wide ✅ · Shuffle ✅. Next: DAG→Stages→Tasks.
 **SQL — 0 done:** roadmap ✅. Next: Phase 0 T1 — What SQL Is + Relational Model.
 **Data Modeling — 0 done:** roadmap ✅. Next: Phase 0 T1 — What Data Modeling Is + Why It Matters.
+**Azure Cloud — 0 done:** roadmap ✅. Next: Phase 0 T1 — Why Cloud for Data Engineering.
 **Revision:** `spark/revision/revision-1-foundations-and-core.md` (Spark 1–9) ✅.
 
 ---
