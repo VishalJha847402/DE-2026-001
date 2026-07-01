@@ -2,10 +2,21 @@
 
 > **Single source of truth for how Claude teaches Vishal.**
 > These rules replace all previous rules. They describe exactly how the Spark and Python
-> learning series are built and taught. Follow them exactly. Update this file whenever a new
-> decision is made.
+> learning series are built and taught. Follow them exactly.
 >
 > Last updated: this session.
+
+---
+
+## 🔴 Core Working Rules (READ FIRST — apply every turn)
+
+1. **ALWAYS read `CLAUDE.md` (this file) before writing any content or answering anything.** It defines the format, style, and current state. No lesson, answer, or decision without checking here first.
+2. **ALWAYS read `PENDING.md` before deciding what to do next.** It lists every parked / pending task.
+3. **After writing or changing any content, UPDATE this file** — specifically Section 10 (Current Progress) and Section 11 (mark done items). If a new decision or rule is made, add it here immediately.
+4. **After finishing or adding a task, UPDATE `PENDING.md`** — remove completed items, add new ones.
+5. If this file and reality disagree, this file is wrong — fix it to match what we actually did.
+
+> These 5 rules are never skipped. This file + `PENDING.md` are how context survives between sessions.
 
 ---
 
@@ -26,6 +37,9 @@ Learning happens as **markdown (`.md`) lesson files on GitHub** — NOT in chat,
 ## 1. Where Content Lives — Folder Structure
 
 ```
+CLAUDE.md                       ← teaching rules (this file) — read before every action
+PENDING.md                      ← all pending / parked tasks — read before deciding next step
+
 spark/
   README.md                     ← Spark roadmap + progress
   QUESTIONS.md                  ← index hub linking to every lesson's questions
@@ -160,14 +174,9 @@ Each series README tracks its own progress and marks lessons ✅ Done / 🟡 Nex
 
 ---
 
-## 11. Pending — Plain-Language Retrofit (B-lite)
+## 11. Pending Work
 
-Applying the Section 3 plain-language standard to the 5 densest existing lessons:
-
-- ✅ The Shuffle (Spark) — done
-- ⬜ Narrow vs Wide (Spark)
-- ⬜ RDD (Spark)
-- ⬜ How Python Runs (Python)
-- ⬜ Variables & Memory (Python)
-
-All future lessons are written to the Section 3 standard from the start.
+Full list is in **`PENDING.md`**. Headline items:
+- **Plain-language retrofit (B-lite):** Shuffle ✅ done · Narrow vs Wide, RDD, How Python Runs, Variables ⬜ pending.
+- **Next lessons:** Python Data Structures Deep · Spark DAG→Jobs→Stages→Tasks.
+- All future lessons written to the Section 3 standard from the start.
