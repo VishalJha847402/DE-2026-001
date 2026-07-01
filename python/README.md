@@ -39,28 +39,30 @@ Python is learned by **running code**, not just reading. Set this up before Less
 
 | Phase | Topic | Status |
 |-------|-------|--------|
-| **Phase 0** | Foundations Re-grounded | 🟡 In Progress |
-| Phase 1 | Pythonic & Intermediate | ⏳ Pending |
+| **Phase 0** | Foundations Re-grounded | ✅ Complete |
+| Phase 1 | Pythonic & Intermediate | 🟡 Next |
 | Phase 2 | Python for Data Engineering (the DE core) | ⏳ Pending |
 | Phase 3 | Production-Grade Python | ⏳ Pending |
 | Phase 4 | Performance & Concurrency | ⏳ Pending |
 | Phase 5 | AI-Era & Orchestration Glue | ⏳ Pending |
 
-**Progress: 2 of ~34 lessons done.**
+**Progress: 5 of ~34 lessons done. → Phase 0 complete; do the Phase-0 revision + challenge next.**
 
 > You know Python at a "moderate" level. Per DE-2026 Rule #15, we run the **full cycle even on topics you know** — functional knowledge hides holes. Speed-read the easy parts; slow down on the WHY and the traps.
 
 ---
 
-## Phase 0 — Foundations Re-grounded 🟡
+## Phase 0 — Foundations Re-grounded ✅
 
 | # | Lesson | Status |
 |---|--------|--------|
 | 1 | [How Python Actually Runs (interpreter, bytecode, the GIL)](./phase-0-foundations/topic-1-how-python-runs/) | ✅ Done |
 | 2 | [Variables, Memory & the Mutable/Immutable Trap](./phase-0-foundations/topic-2-variables-memory-mutability/) | ✅ Done |
-| 3 | Data Structures Deep — list / dict / set / tuple + `collections` | 🟡 Next |
-| 4 | Control Flow & Comprehensions (the Pythonic way) | ⏳ Pending |
-| 5 | Functions — args, *args/**kwargs, scope, closures | ⏳ Pending |
+| 3 | [Data Structures Deep — list / dict / set / tuple + `collections`](./phase-0-foundations/topic-3-data-structures-deep/) | ✅ Done |
+| 4 | [Control Flow & Comprehensions (the Pythonic way)](./phase-0-foundations/topic-4-control-flow-comprehensions/) | ✅ Done |
+| 5 | [Functions — args, *args/**kwargs, scope, closures](./phase-0-foundations/topic-5-functions/) | ✅ Done |
+
+➡️ **Phase 0 complete.** Next: **Phase-0 Revision + Challenge** (all 5 topics combined on the e-commerce dataset) before starting Phase 1.
 
 ---
 
