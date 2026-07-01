@@ -1,8 +1,7 @@
 # PENDING — All Parked / Pending Tasks
 
 > Read this before deciding what to do next (per CLAUDE.md Core Working Rule #2).
-> When a task is finished, remove it from here and update CLAUDE.md Section 10.
-> When a new task is agreed, add it here.
+> When a task is finished, remove it and update CLAUDE.md Section 10. When a new task is agreed, add it here.
 >
 > Last updated: this session.
 
@@ -24,51 +23,54 @@ Apply the CLAUDE.md Section 3 plain-language standard to the 5 densest existing 
 
 ## 📚 2. Next Lessons to Write
 
-**Python (primary track):**
-- 🟡 Phase 0 Topic 3 — Data Structures Deep (list/dict/set/tuple + collections)
-- Phase 0 Topic 4 — Control Flow & Comprehensions
-- Phase 0 Topic 5 — Functions (args, *args/**kwargs, scope, closures)
-- … then Phase 1 onward (see `python/README.md`)
+**SQL (roadmap ✅ done, market-grounded):**
+- 🟡 Phase 0 Topic 1 — What SQL Is + The Relational Model
+- Phase 0 Topic 2 — How a Query Actually Executes (logical order)
+- … then Phases 0→5 (see `sql/README.md`)
 
-**Spark (secondary track):**
+**Python:**
+- 🟡 Phase 0 Topic 3 — Data Structures Deep (list/dict/set/tuple + collections)
+- … then Phase 0 Topic 4 (Control Flow), Topic 5 (Functions) → Phase 1 onward (see `python/README.md`)
+
+**Spark:**
 - 🟡 Phase 1 Topic 4b — DAG → Jobs → Stages → Tasks
-- Phase 1 Topic 4c — Fault Tolerance (Lineage Recompute)
-- Phase 1 Topic 5 — Partitioning · Memory Model · Cache & Persist
-- … then Phase 2 onward (see `spark/README.md`)
+- … then 4c (Fault Tolerance), Topic 5 (Partitioning/Memory/Cache) → Phase 2 onward (see `spark/README.md`)
 
 ---
 
 ## 🔁 3. Revision Files (spaced repetition)
 
-- ✅ `spark/revision/revision-1-foundations-and-core.md` (Spark Lessons 1–9)
-- ⬜ Python revision file #1 — due after ~6 Python lessons (have 2 so far)
-- ⬜ Spark revision file #2 — due after Phase 1 completes
+- ✅ `spark/revision/revision-1-foundations-and-core.md` (Spark 1–9)
+- ⬜ Python revision #1 — due after ~6 Python lessons (have 2)
+- ⬜ SQL revision #1 — due after ~6 SQL lessons (have 0)
+- ⬜ Spark revision #2 — due after Phase 1 completes
 
 ---
 
 ## 📊 4. Optional — Sharper Market Grounding
 
-- The Python roadmap is grounded in 2026 India DE research (blogs + job-board titles/counts).
+- Roadmaps grounded in 2026 India research (blogs + job-board titles/counts + interview banks).
 - Could not scrape raw Naukri/LinkedIn JD text (they block bots, 403).
-- **If Vishal wants exact numbers:** he pastes 20–30 real JDs → Claude does a precise skill-frequency tally and fine-tunes the roadmap. Parked until requested.
+- **If Vishal wants exact numbers:** he pastes 20–30 real JDs → Claude does a precise skill-frequency tally. Parked until requested.
 
 ---
 
-## 🏗️ 5. Future Series (after Python + Spark mature)
+## 🏗️ 5. Future Series (after Python + Spark + SQL mature)
 
-Depth-first — build these as their own `.md` series later, same format:
-- SQL deepening (internals, optimization)
-- Data modeling (star / snowflake schema)
-- Azure cloud (ADF, Databricks, Synapse, Fabric)
+Depth-first — build as their own `.md` series later, same format:
+- Data Modeling (star/snowflake, SCD, dimensional) — deeper than the SQL Phase 3 intro
+- Azure Cloud (ADF, Databricks, Synapse, Fabric)
 - Airflow + dbt (orchestration)
 - Snowflake / Delta / Iceberg (warehouses) + Kafka (streaming)
+- Linux · Git · Docker (supporting tools, picked up alongside)
 - Projects P1 (SQL analytics), P2 (end-to-end pipeline), P3 (AI-era pipeline)
 
-Do NOT start these until Python + Spark are well underway.
+Do NOT start these until the core pillars are well underway.
 
 ---
 
 ## 🧭 6. Open Decisions (not yet locked)
 
-- **Pace/signal protocol** — how Vishal signals "too fast / too slow" mid-lesson. Current signal = "done with X" / "X unclear at Y". Could formalize later.
-- **AI-era DE definition** — which DE tasks AI replaces vs assists vs Vishal owns deeply. Drafted in chat earlier, not locked.
+- **Pace/signal protocol** — current signal = "done with X" / "X unclear at Y". Could formalize later.
+- **AI-era DE definition** — which DE tasks AI replaces vs assists vs Vishal owns deeply. Drafted in chat, not locked.
+- **Master `DE-ROADMAP.md`** — a top-level file mapping all pillars (offered, not yet created).
