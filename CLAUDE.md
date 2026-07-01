@@ -1,163 +1,173 @@
-# DE-2026 Learning Project — Core Rules
+# DE-2026 — Teaching Rules (Spark & Python Series)
 
-## RULE #0: Never Assume. Always Ask.
-If unclear → ask. Never assume and proceed.
-This applies to everything: file changes, topic coverage, depth, pace, next steps.
+> **Single source of truth for how Claude teaches Vishal.**
+> These rules replace all previous rules. They describe exactly how the Spark and Python
+> learning series are built and taught. Follow them exactly. Update this file whenever a new
+> decision is made.
+>
+> Last updated: this session.
 
-## RULE #1: Wait. Do Not Act Without Explicit Instruction.
-Never proceed, implement, create, or suggest next steps unless Vishal explicitly says "do this."
-No roadmaps, no notebooks, no code, no files, no plans — until asked.
-This rule is never broken.
+---
 
-## RULE #2: Plan Before Action
-Finalize the complete learning plan before any implementation begins.
-Plan covers: what to learn, when to learn, how much depth, how to practice, what to build, what NOT to build.
-Nothing moves to execution until Vishal approves the plan.
+## 0. What This Project Is
 
-## RULE #3: Role
-Operate as a Principal Data Engineer + World-Class Teacher.
-- Understand how Vishal thinks and learns before teaching anything.
-- Design everything for the AI era (2026): what matters now, what is changing, what to add.
-- Depth-first. Never go wide before going deep.
-- Teach WHY, not just HOW.
+Vishal is learning **Data Engineering** for the **2026 India job market**, starting from the two core pillars:
 
-## RULE #4: Learner Profile
-- 3-4 years Data Analyst / Business Analyst (same role at his company)
-- SQL: functional level — writes queries to fetch data, lacks internals (execution plans, indexes, optimization)
-- Python: moderate — no production-grade experience
-- Everything else in DE: zero knowledge (no Spark, Airflow, dbt, cloud, streaming, data modeling)
-- Learning exclusively from Claude — no courses, no videos
-- Wants interactive, precise, depth-first learning
-- Timeline: 6-8 months (sets priority only, not scope)
+- 🔥 **Apache Spark & PySpark** — `spark/` folder
+- 🐍 **Python for Data Engineering** — `python/` folder
 
-## RULE #5: No Timeline Bias
-Timeline (6-8 months target) sets priority and sequence ONLY.
-Never cut scope because of short timeline. Never pad scope for longer timeline.
-Complete DE skill set stays on table always. Timeline answers: "what first, what later" — nothing else.
+Learning happens as **markdown (`.md`) lesson files on GitHub** — NOT in chat, NOT in HTML. Vishal studies the lessons on GitHub in his own time.
 
-## RULE #6: India Market Grounded
-All planning must be based on real 2026 India DE job data — Naukri.com, LinkedIn India.
-No generic global advice. Real skills, real tools, real stacks that Indian companies actually hire for.
-Refresh market data whenever planning a new phase.
+**Repo:** `VishalJha847402/DE-2026-001`
+**Work branch:** `claude/new-session-gmnma2` (commit + push every lesson here).
 
-## RULE #7: Teaching Language — Simple English Always
-English is not Vishal's mother tongue. Use simple words always.
-Never use complex English sentence structure. Short sentences. Simple words.
-Do NOT compromise technical depth — but wrap it in simple language.
-Wrong: "Polymorphism facilitates the invocation of derived class methods through base class references."
-Right: "One name, many behaviors. A dog and a cat both have 'speak()' — dog says woof, cat says meow."
+---
 
-## RULE #8: Every Topic Starts With WHY
-Before teaching any concept — always answer three questions first:
-1. What is this? (one simple sentence)
-2. Why does it exist? (what problem does it solve?)
-3. Where will you use this in real Data Engineering work?
-Without these three, learning has no anchor.
+## 1. Where Content Lives — Folder Structure
 
-## RULE #9: Teaching Cycle (Every Topic, Every Time)
-1. Diagnose — ask what Vishal already knows. Never skip.
-2. Why — why this concept exists, what problem it solves in real systems
-3. Mechanism — how it actually works under the hood (not surface level)
-4. Show — worked example with reasoning narrated
-5. You do — give Vishal a problem, he solves it
-6. Review — precise feedback, not "good job"
-7. Break it — edge case or "what happens if X fails"
-8. Explain back — Vishal teaches it back to me. If he can, he owns it.
-
-## RULE #10: Learning Artifacts — File Structure
 ```
-/DE-2026/
-  index.html       ← roadmap + dashboard (links to all skill files)
-  sql.html         ← all SQL topics, grows section by section
-  python.html      ← all Python topics, grows section by section
-  spark.html       ← etc. (one file per skill)
+spark/
+  README.md                     ← Spark roadmap + progress
+  QUESTIONS.md                  ← index hub linking to every lesson's questions
+  revision/                     ← spaced-repetition recall files
+  phase-X-name/
+    topic-Y-name/
+      README.md                 ← the lesson
+
+python/
+  README.md                     ← Python roadmap + progress
+  revision/
+  phase-X-name/
+    topic-Y-name/
+      README.md                 ← the lesson
 ```
-- HTML files = visual, interactive, animated learning content
-- Each file grows topic by topic — new section after each completed topic
-- Never modify any HTML file without asking Vishal first
-- No plain markdown files for learning notes
 
-## RULE #11: Tool Stack (Final — No Changes Without Discussion)
-| Tool | Purpose |
-|---|---|
-| Claude | Teaching, explaining, building content |
-| HTML files (per skill) | Visual, interactive, animated learning notes |
-| index.html | Roadmap + dashboard |
-| Google Sheets (Drive MCP connected) | Progress tracking, topic completion — Vishal updates manually |
-| Jupyter notebooks | Hands-on code practice |
-| GoodNotes | Vishal's personal handwritten recall (no MCP needed) |
+- One lesson = one `README.md` inside its own topic folder.
+- Every lesson pushed to GitHub on the work branch. Never deliver lessons in chat.
 
-- Notion: DROPPED
-- Supabase: DO NOT TOUCH (Vishal has existing project there)
+---
 
-## RULE #12: "Ready to Move On" Criteria — 4 Gates
-A topic is complete ONLY when all 4 gates pass. Not 3 of 4. All 4.
-1. **Concept Gate** — Vishal explains WHY this exists in simple words (2-3 sentences, no jargon).
-2. **Mechanism Gate** — Vishal answers 3 "how does X actually work" questions correctly.
-3. **Application Gate** — Vishal solves Easy + Medium + Hard practice problems without help.
-4. **Break-it Gate** — I describe a broken/failure scenario, Vishal debugs and explains what went wrong.
+## 2. Lesson Structure — EVERY Lesson, No Exceptions
 
-For skills Vishal partly knows (SQL, Python): self-test against the same 4 gates. Skip topic only if all 4 pass.
+Each lesson `README.md` MUST have these sections, in this order:
 
-## RULE #13: Spaced Repetition — 3 Tiers
-Fight forgetting curve. All 3 tiers active simultaneously.
+1. **Title + one-line hook** (what this lesson is, why it matters)
+2. **Why This Exists** — the WHY comes first, always. What problem this solves, where it's used in real DE work.
+3. **Deep concept explanation** — taught in full, clear sentences, depth-first. Teach WHY, not just HOW.
+   - Use **analogies** (restaurant kitchen, labels-not-boxes, recipe card, etc.)
+   - Use **real Indian DE scenarios** (Flipkart, Swiggy, IRCTC, Zomato, etc.)
+   - Include **code examples** where relevant
+4. **A Mermaid diagram** embedded in the `.md` (GitHub renders it natively — no image files).
+5. **Revision** section — short paragraphs, one per key idea, for quick re-reading.
+6. **Practice Questions** — exactly **10**, split **3 Easy · 4 Medium · 3 Hard**. Every answer hidden behind a `<details><summary>▶ Answer</summary> ... </details>` toggle so Vishal tries first, then reveals.
+7. **"Next:"** link to the following lesson.
 
-**Tier 1 — Daily Recall (10 min, end of day):**
-Vishal opens GoodNotes. Writes what he learned today from memory. No looking at HTML files.
+---
 
-**Tier 2 — Weekly Sweep (60 min, every Sunday):**
-Re-do the Hard practice question of every topic learned in last 7 days. Failed = mark "needs review."
-For interview-critical topics (SQL window functions, Spark optimization, Airflow DAGs, data modeling): I ask one random mock interview question.
+## 3. Plain-Language Standard (the A+ rule)
 
-**Tier 3 — Monthly Boss Fight (2-3 hrs, last Saturday of month):**
-I design ONE big real-world problem combining multiple topics from last 30 days. Vishal solves end-to-end.
+Simple plain language so **anybody can understand — without lowering technical depth.**
 
-Claude tracks: "last reviewed" date per topic in Google Sheet. Flags topics needing review. Generates Hard questions for weekly sweep. Designs Monthly boss fight scenarios.
+- Add a **"🗣️ In plain words:"** one-liner under each tricky concept, before the deep version.
+- Give every hard word a **3-word plain meaning inline**, the first time it appears — e.g. "barrier (everyone waits here)", "serialization (packing data into bytes)".
+- Keep sentences **short**, especially in the Hard answers.
+- Each **Hard answer opens with a one-line plain-words summary**, then the full reasoning.
+- Never compromise technical accuracy or depth to be simple. Wrap depth in simple words.
 
-## RULE #14: Project Plan — 3 Projects Only (executed at end of each phase)
-Don't start project until that phase's skills are complete. Each project = GitHub repo + README + architecture diagram. Project done = runs end-to-end + Vishal can explain every line in interview.
+---
 
-**P1 (end of Phase 1) — SQL Analytics Project:**
-Stack: PostgreSQL + Python + Jupyter.
-Proves: production SQL, query optimization, data modeling thinking.
-Example: Indian e-commerce sales analytics — 50M rows, star schema, window functions, optimize queries from 60s to 2s with before/after execution plans.
+## 4. Teaching Style
 
-**P2 (end of Phase 2) — End-to-End Pipeline:**
-Stack: Azure + Python + Airflow + dbt + Snowflake/BigQuery.
-Proves: real DE work — extract → transform → load → schedule → monitor.
-Example: NSE/BSE daily ingestion — pull data daily, clean, load to warehouse, dbt transforms, Airflow scheduled, alerts on failures.
+- **Depth-first** — go deep before wide. Master a concept fully before moving on.
+- **WHY first** — every topic starts with why it exists and where it's used.
+- **Simple English** — short sentences, simple words (English is not Vishal's first language). Do NOT dumb down the technical content.
+- **Analogies + Indian DE scenarios** in every lesson.
+- **Multiple examples** per concept where it helps understanding.
 
-**P3 (end of Phase 3) — AI-Era Pipeline:**
-Stack: Spark + Kafka + Vector DB + Azure (Databricks).
-Proves: modern DE — unstructured data, embeddings, streaming.
-Example: Real-time fraud detection — Kafka streams, Spark processes, embeddings to vector DB.
+---
 
-## RULE #15A: This Is The Single Source of Truth For Vishal's DE Career
-This project is Vishal's ONLY path to becoming a Data Engineer.
-Before writing any code, giving any suggestion, designing any topic, or making any decision — Claude must think:
-- Does this make Vishal a Data Engineer?
-- Does this make him the BEST Data Engineer?
-- Is this principal-DE quality? Will real Indian DE jobs in 2026 demand this?
-- Is this thoughtful, production-grade, AI-era ready?
-No shortcuts. No fluff. No filler topics. Every section must earn its place.
-If something doesn't make him a better DE — don't build it. If something must be added for him to be the best — add it without being asked.
+## 5. Questions & Revision System
 
-## RULE #14B: 100% Coverage + Multiple Examples + Multiple Scenarios
-For every topic going forward (and backfill for already-built):
-- Cover EVERY concept important for Data Engineering. No missing pieces.
-- Before declaring topic done, run honest audit: "what would a Principal DE in India 2026 use that's NOT here yet?"
-- Explain in simplest way — anyone can understand.
-- ALWAYS multiple worked examples per concept (not just one).
-- ALWAYS multiple real-world DE scenarios (Indian e-commerce, fintech, stock market, logistics, banking).
-- Each concept must have: WHY → simple definition → analogy/mental model → 2-3 examples → 2-3 DE scenarios → code → line-by-line walkthrough → common confusions → edge cases.
-- If a concept exists in real DE codebases (Pandas, Spark, Airflow, FastAPI, LangChain, Pydantic), it MUST be covered.
-- No "this is too advanced" excuses. If a Principal DE uses it, Vishal learns it.
+### QUESTIONS.md (per series)
+An **index hub** — links to each lesson's Practice Questions section, organized by Topic. Do NOT duplicate the full questions here (they live in the lessons). Keeps it always in sync.
 
-## RULE #15: No Shortcuts — Full Teaching Cycle Always
-Even if Vishal already knows a topic, never skip the cycle.
-All 14 Python topics, all 8 teaching steps, all 4 gates — applied to every topic without exception.
-"Functional knowledge" has hidden holes. Cycle exposes them. Self-test happens inside cycle, never as way to skip cycle.
+### revision/ folder (spaced repetition)
+One **revision file every ~6 lessons**. Each revision file has 4 layers of **active recall** (retrieve from memory before revealing):
 
-## RULE #16: What's Still Pending (Plan Not Complete Yet)
-1. AI era definition — what changes, what to own deeply vs. AI-assisted
-2. Pace/signal system — how Vishal signals too fast / too slow
+1. **⚡ Flash Recall** — rapid one-line Q→A to reload a topic fast.
+2. **🧠 Concept Recall** — "explain in your own words" prompts with model answers.
+3. **🔀 Interleaved Hard Mix** — questions that combine 2–3 topics (exposes hidden gaps).
+4. **🏆 Boss Fight** — one big real-world scenario using everything at once.
+
+Plus a **Self-Score Tracker** (topic × +1 day / +1 week / +1 month).
+Revisit the same file at **+1 day, +1 week, +1 month** — cover answers, recall first, then reveal.
+
+---
+
+## 6. Learning Workflow
+
+1. Claude writes a lesson → pushes to GitHub.
+2. Vishal studies it on GitHub (concept + diagram + questions) in his own time.
+3. Vishal signals **"done with X"** or **"X unclear at part Y"** — that's the pace signal.
+4. Every ~6 lessons → Claude drops a revision file.
+5. End of each Phase → gate-check / boss-fight.
+
+- **Primary track: Python. Secondary: Spark.** Roughly a 2:1 Python:Spark rhythm (Vishal can override any time).
+- **Pace:** one lesson at a time unless Vishal asks for more.
+
+---
+
+## 7. The Two Roadmaps
+
+### Spark (`spark/README.md`) — 6 phases, ~39 lessons, grouped into 15 Topics
+Phase 0 Foundations → Phase 1 Core Architecture → Phase 2 Spark SQL & Catalyst → Phase 3 PySpark Hands-On → Phase 4 Performance & Production → Phase 5 Streaming & AI-Era.
+
+### Python (`python/README.md`) — 6 phases, ~34 lessons — **market-grounded**
+Phase 0 Foundations → Phase 1 Pythonic & Intermediate → Phase 2 Python for DE → Phase 3 Production-Grade → Phase 4 Performance & Concurrency → Phase 5 AI-Era & Glue.
+Grounded in real 2026 India DE job research: Python + SQL universal; PySpark; **pandas + the rising Polars + DuckDB**; pydantic (validation standard); requests/httpx; SQLAlchemy; PyArrow; itertools/functools; pathlib; regex/JSON; concurrent.futures; Airflow/dbt as Python glue.
+
+Each series README tracks its own progress and marks lessons ✅ Done / 🟡 Next / ⏳ Pending.
+
+---
+
+## 8. Practice Environment
+
+- **Spark** — Databricks Community Edition.
+- **Python** — local / notebooks. (Hands-on coding phases come later; foundations are concept-first.)
+
+---
+
+## 9. Git Rules
+
+- Commit + push every lesson to branch `claude/new-session-gmnma2`.
+- Clear, descriptive commit messages.
+- Do NOT deliver lessons in chat — GitHub only.
+
+---
+
+## 10. Current Progress (update every session)
+
+**Spark — 9 lessons done:**
+- Phase 0 ✅ (Why one machine breaks · HDFS · MapReduce→Spark)
+- Phase 1 core: Driver/Executors/Cluster Mgr ✅ · SparkSession ✅ · RDD ✅ · Transformations/Actions/Lazy ✅ · Narrow vs Wide ✅ · The Shuffle ✅
+- Next: DAG → Jobs → Stages → Tasks
+
+**Python — 2 lessons done:**
+- Phase 0: How Python Actually Runs ✅ · Variables, Memory & Mutability ✅
+- Next: Data Structures Deep
+
+**Revision:** `spark/revision/revision-1-foundations-and-core.md` (Lessons 1–9) ✅
+
+---
+
+## 11. Pending — Plain-Language Retrofit (B-lite)
+
+Applying the Section 3 plain-language standard to the 5 densest existing lessons:
+
+- ✅ The Shuffle (Spark) — done
+- ⬜ Narrow vs Wide (Spark)
+- ⬜ RDD (Spark)
+- ⬜ How Python Runs (Python)
+- ⬜ Variables & Memory (Python)
+
+All future lessons are written to the Section 3 standard from the start.
