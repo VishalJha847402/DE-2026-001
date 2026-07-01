@@ -29,7 +29,7 @@ This roadmap is built to cover exactly that — foundations → analytical SQL �
 | Phase 4 | Performance & Internals (the differentiator) | ⏳ Pending |
 | Phase 5 | Modern · Warehouse · AI-Era SQL | ⏳ Pending |
 
-**Progress: 2 of ~26 lessons done.**
+**Progress: 3 of ~26 lessons done.**
 
 > You know SQL at a "functional" level (you write queries to fetch data). Per our teaching rule, we run the **full cycle even on topics you know** — functional SQL hides holes (execution order, why a query is slow, indexes). Speed-read the easy parts; slow down on the WHY, the internals, and optimization.
 
@@ -43,8 +43,8 @@ This roadmap is built to cover exactly that — foundations → analytical SQL �
 |---|--------|--------|
 | 1 | [What SQL Is + The Relational Model (tables, keys, relationships)](./phase-0-foundations/topic-1-relational-model/) | ✅ Done |
 | 2 | [How a Query Actually Executes — the logical order of operations ⭐](./phase-0-foundations/topic-2-query-execution-order/) | ✅ Done |
-| 3 | SELECT · WHERE · filtering · operators · NULL basics | 🟡 Next |
-| 4 | Sorting · DISTINCT · LIMIT · pagination | ⏳ Pending |
+| 3 | [SELECT · WHERE · filtering · operators · NULL basics](./phase-0-foundations/topic-3-select-where-null/) | ✅ Done |
+| 4 | Sorting · DISTINCT · LIMIT · pagination | 🟡 Next |
 
 ---
 
@@ -121,6 +121,6 @@ This roadmap is built to cover exactly that — foundations → analytical SQL �
 
 ---
 
-*Each lesson folder has: `README.md` (full lesson + diagram + revision + 10 practice questions)*
+*Each lesson folder has: `README.md` (full lesson + diagram + revision + 10 practice questions) + `practice.md` (hands-on problems on OrderIQ)*
 *Spaced-repetition recall files live in [`revision/`](./revision/)*
 *Sister series: [Spark](../spark/) · [Python](../python/)*
