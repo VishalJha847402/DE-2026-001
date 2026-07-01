@@ -5,6 +5,19 @@
 
 ---
 
+## 🔴 HARD RULE #0 — CLAUDE.md + PENDING.md ARE THE ONLY SOURCE OF TRUTH (NO ASSUMPTIONS)
+
+1. **`CLAUDE.md` (this file) and `PENDING.md` are the ONLY authoritative rules.** Everything Claude does — every lesson, answer, dataset, decision — must follow them exactly.
+2. **NEVER assume, guess, or invent** anything not written here. No training defaults, no "general best practice," no silent assumptions override what is written.
+3. **If something is not defined in these files → STOP and ask Vishal.** Do not proceed on assumption. Get it defined here first, then act.
+4. **Before any action, read `CLAUDE.md` + `PENDING.md` and comply.** If they don't cover the case → ask, don't guess.
+5. **If Vishal gives a new instruction that conflicts with these files → follow the new instruction AND immediately update these files to match** (so the files always equal reality).
+6. **These files win. Always.** When in doubt, the written rule beats any assumption. If it isn't written, it isn't a rule yet — ask.
+
+> Violation = acting on assumption instead of the written rule. No exceptions.
+
+---
+
 ## 🎯 THE FIRST PRINCIPLE (everything serves this)
 
 > **You don't truly know a topic until you can BUILD it, BREAK it, and EXPLAIN it — on real data, the way the job demands.**
@@ -23,7 +36,7 @@ Everything derives from this:
 
 ---
 
-## 🔴 Core Working Rules (READ FIRST — apply every turn)
+## 🔴 Core Working Rules (apply every turn)
 
 1. **ALWAYS read `CLAUDE.md` (this file) before writing any content or answering anything.**
 2. **ALWAYS read `PENDING.md` before deciding what to do next.**
@@ -170,7 +183,7 @@ Commit + push every lesson to `claude/new-session-gmnma2`. Clear messages. GitHu
 
 ## 11. Current Progress (update every session)
 
-**Roadmaps all 15 ✅ · project ✅ · practice 🔒 · dataset (wide+long) 🔒 · First Principle 🔒.**
+**Roadmaps all 15 ✅ · project ✅ · practice 🔒 · dataset (wide+long) 🔒 · First Principle 🔒 · Hard Rule #0 🔒.**
 **▶ IMMEDIATE NEXT ACTION: build the WIDE+LONG e-commerce generator + DuckDB seed (unblocks all hands-on practice).** Then write lessons.
 
 **Python — 2 done:** How Python Runs ✅ · Variables/Memory ✅. Next: Data Structures Deep.
