@@ -6,31 +6,25 @@
 
 ---
 
-## 🎉 Status: ALL PLANNING COMPLETE ✅
+## 🎉 Status: ALL PLANNING COMPLETE ✅ (15 series + project)
 
-All **10 series roadmaps** + the **flagship project** are built. Nothing left to plan.
-The only work now is **writing the actual lessons**, one at a time.
+Nothing left to plan. Only work now = **writing the actual lessons**, one at a time.
 
 ```
-Core (7):  ✅ Python · ✅ Spark · ✅ SQL · ✅ Data Modeling · ✅ Azure · ✅ Airflow+dbt · ✅ Warehouses+Streaming
-Support(3):✅ Linux · ✅ Git · ✅ Docker
-Project:   ✅ OrderIQ blueprint
+Core (7):  Python · Spark · SQL · Data Modeling · Azure · Airflow+dbt · Warehouses+Streaming
+Support(3):Linux · Git · Docker
+Tier 3 (5):DataOps(CI/CD+IaC) · Kubernetes · Governance & Security · System Design · AI-Era DE
+Project:   OrderIQ blueprint
 ```
 
 ---
 
 ## 📚 1. Next Lessons to Write (pick any series — Vishal chooses)
 
-- **Python** — 🟡 Phase 0 T3: Data Structures Deep
-- **Spark** — 🟡 Phase 1 T4b: DAG → Jobs → Stages → Tasks
-- **SQL** — 🟡 Phase 0 T1: What SQL Is + The Relational Model
-- **Data Modeling** — 🟡 Phase 0 T1: What Data Modeling Is + Why
-- **Azure Cloud** — 🟡 Phase 0 T1: Why Cloud for Data Engineering
-- **Airflow + dbt** — 🟡 Phase 0 T1: What dbt Is + Why
-- **Warehouses + Streaming** — 🟡 Phase 0 T1: Why a Cloud Data Warehouse
-- **Linux** — 🟡 Phase 0 T1: Why Linux for Data Engineering
-- **Git** — 🟡 Phase 0 T1: Why Version Control
-- **Docker** — 🟡 Phase 0 T1: Why Containers
+Every series' next lesson = **Phase 0 Topic 1** (see each `README.md`), except where already started:
+- **Python** — Phase 0 T3: Data Structures Deep
+- **Spark** — Phase 1 T4b: DAG → Jobs → Stages → Tasks
+- All 13 others — Phase 0 T1.
 
 ---
 
@@ -43,7 +37,7 @@ Project:   ✅ OrderIQ blueprint
 ---
 
 ## 🏗️ 3. Flagship Project — blueprint DONE (`projects/README.md`)
-OrderIQ, 3 stages: P1 Batch Analytics Core (after SQL Ph0–2 + Data Modeling Ph0–2 + Python) → P2 Cloud Lakehouse (after Spark+Azure) → P3 Production+Streaming+AI (after Airflow/dbt/Kafka). Grow ONE project.
+OrderIQ, 3 stages: P1 (after SQL Ph0–2 + Data Modeling Ph0–2 + Python) → P2 (after Spark+Azure) → P3 (after Airflow/dbt/Kafka + AI-Era). Grow ONE project.
 
 ---
 
@@ -55,10 +49,11 @@ OrderIQ, 3 stages: P1 Batch Analytics Core (after SQL Ph0–2 + Data Modeling Ph
 
 ## 🗺️ 5. Optional Later Work
 - ⬜ **Sharper market grounding:** paste 20–30 real JDs → precise skill tally (raw Naukri/LinkedIn scraping blocked, 403). Parked.
-- ⬜ **Master `DE-ROADMAP.md`** — one top-level file linking all 10 series + project (offered, not yet created).
+- ⬜ **Master `DE-ROADMAP.md`** — one top-level file linking all 15 series + project (offered, not yet created).
+- ⬜ Cross-series overlap review (Delta/medallion appear in multiple series) — dedupe when writing lessons.
 
 ---
 
 ## 🧭 6. Open Decisions
 - **Pace/signal protocol** — current = "done with X" / "X unclear at Y".
-- **AI-era DE definition** — which tasks AI replaces vs assists vs Vishal owns deeply. Drafted, not locked.
+- **AI-era DE definition** — now has its own full roadmap (`ai-era-de/`); the A/B/C "replace vs assist vs own" framing still to be locked into a lesson.
