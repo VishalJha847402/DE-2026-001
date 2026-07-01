@@ -6,14 +6,15 @@
 
 ---
 
-## 🧭 Status: PLANNING COMPLETE ✅ — now writing lessons
+## 🎉 Status: ALL PLANNING COMPLETE ✅
 
-All 7 core roadmaps + the flagship project blueprint are built. The remaining work is **writing the actual lessons**, one at a time.
+All **10 series roadmaps** + the **flagship project** are built. Nothing left to plan.
+The only work now is **writing the actual lessons**, one at a time.
 
 ```
-✅ Python · ✅ Spark · ✅ SQL · ✅ Data Modeling · ✅ Azure Cloud · ✅ Airflow+dbt · ✅ Warehouses+Streaming
-✅ Flagship project OrderIQ (blueprint)
-(optional lighter series later: Linux · Git · Docker)
+Core (7):  ✅ Python · ✅ Spark · ✅ SQL · ✅ Data Modeling · ✅ Azure · ✅ Airflow+dbt · ✅ Warehouses+Streaming
+Support(3):✅ Linux · ✅ Git · ✅ Docker
+Project:   ✅ OrderIQ blueprint
 ```
 
 ---
@@ -27,6 +28,9 @@ All 7 core roadmaps + the flagship project blueprint are built. The remaining wo
 - **Azure Cloud** — 🟡 Phase 0 T1: Why Cloud for Data Engineering
 - **Airflow + dbt** — 🟡 Phase 0 T1: What dbt Is + Why
 - **Warehouses + Streaming** — 🟡 Phase 0 T1: Why a Cloud Data Warehouse
+- **Linux** — 🟡 Phase 0 T1: Why Linux for Data Engineering
+- **Git** — 🟡 Phase 0 T1: Why Version Control
+- **Docker** — 🟡 Phase 0 T1: Why Containers
 
 ---
 
@@ -39,12 +43,7 @@ All 7 core roadmaps + the flagship project blueprint are built. The remaining wo
 ---
 
 ## 🏗️ 3. Flagship Project — blueprint DONE (`projects/README.md`)
-OrderIQ e-commerce lakehouse, 3 stages:
-- **P1 — Batch Analytics Core** (after SQL Ph0–2 + Data Modeling Ph0–2 + Python) ← first buildable
-- **P2 — Cloud Lakehouse** (after Spark + Azure)
-- **P3 — Production + Streaming + AI** (after Airflow + dbt + Kafka)
-
-Not buildable yet (mid-foundations). Grow ONE project, not many.
+OrderIQ, 3 stages: P1 Batch Analytics Core (after SQL Ph0–2 + Data Modeling Ph0–2 + Python) → P2 Cloud Lakehouse (after Spark+Azure) → P3 Production+Streaming+AI (after Airflow/dbt/Kafka). Grow ONE project.
 
 ---
 
@@ -55,9 +54,8 @@ Not buildable yet (mid-foundations). Grow ONE project, not many.
 ---
 
 ## 🗺️ 5. Optional Later Work
-- ⬜ Lighter series: **Linux · Git · Docker** (supporting tools).
 - ⬜ **Sharper market grounding:** paste 20–30 real JDs → precise skill tally (raw Naukri/LinkedIn scraping blocked, 403). Parked.
-- ⬜ **Master `DE-ROADMAP.md`** — top-level map of all 7 pillars + project (offered, not yet created).
+- ⬜ **Master `DE-ROADMAP.md`** — one top-level file linking all 10 series + project (offered, not yet created).
 
 ---
 
