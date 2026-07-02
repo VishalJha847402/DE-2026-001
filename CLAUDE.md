@@ -154,7 +154,7 @@ Core: Python ~34 · Spark ~39 · SQL ~26 · Data Modeling ~21 · Azure ~24 · Ai
 ## 9. Environment, Tooling & Dataset Strategy
 
 ### 9A. Where Vishal codes each skill
-Python — VS Code + Jupyter (`.ipynb`) + venv · SQL — DuckDB→PostgreSQL→Snowflake · Data Modeling — dbdiagram.io + DuckDB/dbt · Spark — Databricks Community · Airflow/dbt/Kafka — Docker · Azure — Azure free (ADF/Databricks/Fabric) · Warehouses — Snowflake trial · Docker/K8s — Docker Desktop/minikube · Git/Linux — VS Code+GitHub / WSL · DataOps — GitHub Actions+Terraform · AI-Era — Python+Chroma+LLM API.
+Python — VS Code + Jupyter (`.ipynb`) + venv · SQL — DuckDB→PostgreSQL→Snowflake · Data Modeling — dbdiagram.io + DuckDB/dbt · Spark — Databricks Community + local `pip install pyspark` · Airflow/dbt/Kafka — Docker · Azure — Azure free (ADF/Databricks/Fabric) · Warehouses — Snowflake trial · Docker/K8s — Docker Desktop/minikube · Git/Linux — VS Code+GitHub / WSL · DataOps — GitHub Actions+Terraform · AI-Era — Python+Chroma+LLM API.
 
 ### 9B. Python setup (one-time, ~10 min)
 Install Python → VS Code + **Python** + **Jupyter** extensions (notebooks inside VS Code) → `python -m venv .venv` → learn in `.ipynb`. **DuckDB** (`pip install duckdb`) added at Python Phase 2 + all SQL.
@@ -162,12 +162,13 @@ Install Python → VS Code + **Python** + **Jupyter** extensions (notebooks insi
 ### 9C. 🔒 LOCKED — Dataset Strategy: ONE e-commerce spine, WIDE **and** LONG, scaled by volume
 - **ONE dataset across everything: E-commerce (OrderIQ).** Same schema powers Python, SQL, DuckDB, Data Modeling, dbt, and the P1→P2→P3 project.
 - **WIDE (many tables + varied column types) AND LONG (scalable rows)** — wide enough to teach *every* concept, not just long.
-- **Source:** **Olist** e-commerce (real, messy) for story + laptop practice. **Generator (to build):** enriched schema at any size — ~100k rows (laptop/DuckDB) → 20–100M rows (Spark/cloud).
+- **✅ v1 BUILT:** `datasets/generate.py` (stdlib-only, 6 core tables, deliberate messiness, seeded) + `datasets/seed_duckdb.py` (→ `orderiq.duckdb`) + `datasets/README.md`. v2 enrichments below still pending.
+- **Source:** **Olist** e-commerce (real, messy) for story + laptop practice. **Generator:** enriched schema at any size — ~100k rows (laptop/DuckDB) → 20–100M rows (Spark/cloud).
 - **Spark cameo:** **NYC Taxi** for 1–2 Spark Phase-4 performance lessons only.
 
-### 9C-i. Enriched WIDE schema (the generator must produce this)
-- **Core:** customers · products · sellers · orders · order_items · payments · reviews · geolocation · categories.
-- **Enrichments:** price_history (SCD2) · shipments · returns · marketing_campaigns · **clickstream_events** (JSON, high-volume → streaming/Spark scale).
+### 9C-i. Enriched WIDE schema (generator v2 must add)
+- **Core (v1 ✅):** customers · products · sellers · orders · order_items · payments. **v2:** reviews · geolocation · categories.
+- **Enrichments (v2):** price_history (SCD2) · shipments · returns · marketing_campaigns · **clickstream_events** (JSON, high-volume → streaming/Spark scale).
 - **Column-type coverage:** numeric · **text** (reviews→NLP/embeddings) · **timestamps** (windows/time-series/tz) · categorical · **geo** (lat/long) · **JSON/nested** · boolean · **PII** (governance) · **deliberate messiness** (data quality) · **changing attributes** (SCD2).
 - **Covers:** SQL joins/windows/CTEs · Python pandas/regex/JSON/dates · modeling star+snowflake+SCD2 · Spark big-volume · Kafka streaming · AI-era embeddings · governance PII/masking.
 
@@ -183,15 +184,16 @@ Commit + push every lesson to `claude/new-session-gmnma2`. Clear messages. GitHu
 
 ## 11. Current Progress (update every session)
 
-**Roadmaps all 15 ✅ · project ✅ · practice 🔒 · dataset (wide+long) 🔒 · First Principle 🔒 · Hard Rule #0 🔒.**
-**▶ IMMEDIATE NEXT ACTION: build the WIDE+LONG e-commerce generator + DuckDB seed (unblocks all hands-on practice).** Then write lessons.
+**Roadmaps all 15 ✅ · project ✅ · practice 🔒 · dataset v1 ✅ BUILT · First Principle 🔒 · Hard Rule #0 🔒 · content system → `content-system.md` ✅.**
 
-**Python — 2 done:** How Python Runs ✅ · Variables/Memory ✅. Next: Data Structures Deep.
-**Spark — 9 done:** Phase 0 ✅ + Phase 1 (Driver, SparkSession, RDD, Transformations/Lazy, Narrow/Wide, Shuffle) ✅. Next: DAG→Stages→Tasks.
-**Other 13 series — 0 done.**
-**Revision:** `spark/revision/revision-1-foundations-and-core.md` ✅.
+**Python — Phase 0 COMPLETE (5/5) + `revision/phase-0-revision.md` ✅.** T3/T4/T5 full locked format. ⚠️ T1/T2 pre-date the locked format — retrofit in progress (practice.md + plain-words). Next lesson: Phase 1 T1 Iterators & Generators.
+**SQL — Phase 0 COMPLETE (4/26)** ✅ full locked format (T1 relational model · T2 execution order · T3 NULL · T4 sorting/pagination + Phase-0 gate). Next: Phase 1 T1 JOINs Deep.
+**Azure — 3/24** ✅ full locked format (T1 why cloud · T2 basics/cost · T3 identity/security). Next: T4 Data Stack Map (finishes Phase 0).
+**Spark — 9 lessons written; format retrofit 2/6 done** (P1-T1 Driver/Executors ✅ · P1-T2 SparkSession ✅ · pending: RDD, Lazy Eval, Narrow/Wide, Shuffle). Spark Phase 0 (3 lessons) stays on old format per Vishal's instruction ("start from phase 1"). Next new lesson after retrofit: DAG→Stages→Tasks.
+**Other 11 series — 0 lessons.**
+**Revision files:** `spark/revision/revision-1-foundations-and-core.md` ✅ · `python/revision/phase-0-revision.md` ✅.
 
 ---
 
 ## 12. Pending Work
-Full list in **`PENDING.md`**. Build the WIDE+LONG e-commerce generator + DuckDB seed FIRST. Plain-language retrofit (4 left). Phase-wise revision + clickable tracker (pending confirm). Every lesson: §3 plain-language + §2A code-heavy + §2B 3-step examples + a `practice.md` (§6) on the e-commerce dataset (§9C).
+Full list in **`PENDING.md`**. Retrofit queue (in order): Python T1 → Python T2 → Spark RDD/Lazy/Narrow-Wide/Shuffle → SQL T1/T2 first-principle banners (cosmetic). Every lesson: §3 plain-language + §2A code-heavy + §2B 3-step examples + a `practice.md` (§6) on the e-commerce dataset (§9C). Dataset v2 enrichments when lessons need them.
