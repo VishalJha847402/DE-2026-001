@@ -22,20 +22,20 @@ This roadmap is built to cover exactly that — foundations → analytical SQL �
 
 | Phase | Topic | Status |
 |-------|-------|--------|
-| **Phase 0** | SQL Foundations Re-grounded | 🟡 In Progress |
-| Phase 1 | Core Querying (the daily bread) | ⏳ Pending |
+| **Phase 0** | SQL Foundations Re-grounded | ✅ Complete |
+| Phase 1 | Core Querying (the daily bread) | 🟡 Next |
 | Phase 2 | Analytical SQL (interview gold) | ⏳ Pending |
 | Phase 3 | Data Definition & Modeling in SQL | ⏳ Pending |
 | Phase 4 | Performance & Internals (the differentiator) | ⏳ Pending |
 | Phase 5 | Modern · Warehouse · AI-Era SQL | ⏳ Pending |
 
-**Progress: 3 of ~26 lessons done.**
+**Progress: 4 of ~26 lessons done. → Phase 0 complete; take the Phase-0 gate in Topic 4's practice.**
 
 > You know SQL at a "functional" level (you write queries to fetch data). Per our teaching rule, we run the **full cycle even on topics you know** — functional SQL hides holes (execution order, why a query is slow, indexes). Speed-read the easy parts; slow down on the WHY, the internals, and optimization.
 
 ---
 
-## Phase 0 — SQL Foundations Re-grounded 🟡
+## Phase 0 — SQL Foundations Re-grounded ✅
 
 > Fix the hidden holes. The mental models that make everything else click.
 
@@ -44,20 +44,22 @@ This roadmap is built to cover exactly that — foundations → analytical SQL �
 | 1 | [What SQL Is + The Relational Model (tables, keys, relationships)](./phase-0-foundations/topic-1-relational-model/) | ✅ Done |
 | 2 | [How a Query Actually Executes — the logical order of operations ⭐](./phase-0-foundations/topic-2-query-execution-order/) | ✅ Done |
 | 3 | [SELECT · WHERE · filtering · operators · NULL basics](./phase-0-foundations/topic-3-select-where-null/) | ✅ Done |
-| 4 | Sorting · DISTINCT · LIMIT · pagination | 🟡 Next |
+| 4 | [Sorting · DISTINCT · LIMIT · pagination](./phase-0-foundations/topic-4-sorting-distinct-limit/) | ✅ Done |
+
+➡️ **Phase 0 complete.** The Phase-0 gate checklist is at the end of [Topic 4's practice](./phase-0-foundations/topic-4-sorting-distinct-limit/practice.md).
 
 ---
 
-## Phase 1 — Core Querying ⏳ (the daily bread)
+## Phase 1 — Core Querying 🟡 (the daily bread)
 
-| # | Lesson |
-|---|--------|
-| 1 | JOINs Deep — inner / left / right / full / cross / self + how they work + semi/anti |
-| 2 | Aggregations · GROUP BY · HAVING |
-| 3 | Subqueries — scalar · correlated · IN / EXISTS |
-| 4 | CTEs — `WITH`, chained, and recursive |
-| 5 | Set Operations — UNION / INTERSECT / EXCEPT |
-| 6 | CASE · COALESCE · NULL logic deep (the classic gotcha) |
+| # | Lesson | Status |
+|---|--------|--------|
+| 1 | JOINs Deep — inner / left / right / full / cross / self + how they work + semi/anti | 🟡 Next |
+| 2 | Aggregations · GROUP BY · HAVING | ⏳ Pending |
+| 3 | Subqueries — scalar · correlated · IN / EXISTS | ⏳ Pending |
+| 4 | CTEs — `WITH`, chained, and recursive | ⏳ Pending |
+| 5 | Set Operations — UNION / INTERSECT / EXCEPT | ⏳ Pending |
+| 6 | CASE · COALESCE · NULL logic deep (the classic gotcha) | ⏳ Pending |
 
 ---
 
