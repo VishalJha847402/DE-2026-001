@@ -3,6 +3,11 @@
 > **Before you write better Python, understand what happens when you press Run.**
 > This one lesson explains WHY Python is slow, WHY pandas/NumPy are fast, and WHY the GIL exists — three things every DE must know.
 
+> 🎯 **First principle (DE-2026):** you don't own this until you can **BUILD it**
+> (disassemble your own function with `dis`, time loop vs vectorized on OrderIQ),
+> **BREAK it** (watch threads give zero speedup on CPU-bound work), and **EXPLAIN it**
+> (say why NumPy is 100x faster, in plain words). [`practice.md`](./practice.md) drives all three.
+
 ---
 
 ## Why This Exists
@@ -57,6 +62,10 @@ Those `LOAD_FAST`, `BINARY_ADD` lines are bytecode instructions. Your simple `a 
 
 This bytecode is cached in `.pyc` files inside `__pycache__/` folders — that's why the second run of a program is slightly faster (compilation already done).
 
+🗣️ **In plain words:** your code is translated twice. First into "bytecode" — a
+simple middle language — then a program called the interpreter performs those
+bytecode steps one by one. Python never becomes raw CPU language directly.
+
 ### Step 3 — The interpreter executes bytecode, one instruction at a time
 
 Now the **Python interpreter** (a program written in C, called **CPython**) reads the bytecode and executes each instruction. It's a giant loop: read an instruction, do it, read the next, do it, forever — until the program ends.
@@ -90,6 +99,10 @@ It's not one thing. Three costs stack up:
 
 **3. Everything is an object.** Even the number `5` is a full Python object with a type, a reference count, and memory overhead (~28 bytes for a small int, vs 4–8 bytes in C). Working with millions of these objects means lots of memory and pointer-chasing.
 
+🗣️ **In plain words:** Python pays three small taxes on *every single operation* —
+a translator tax, a "what type is this?" tax, and a heavy-object tax. On 10 rows
+you never notice. On 10 million rows, the taxes ARE the runtime.
+
 For a Data Engineer, this matters concretely: a plain Python loop summing 10 million numbers is slow because of all three costs, on every single number.
 
 ---
@@ -102,7 +115,17 @@ If Python is slow, how do NumPy and pandas process millions of rows in milliseco
 
 **Because they don't actually do the work in Python.** Under the hood, NumPy and pandas are written in **C** (and Cython). When you call `df["amount"].sum()`, you are NOT running a Python loop. You're handing the whole column to a pre-compiled C function that loops at machine-code speed, with no interpreter overhead, no per-element type checks, and data stored compactly (not as millions of Python objects).
 
-Compare these two ways to sum 10 million numbers:
+🗣️ **In plain words:** NumPy doesn't make Python fast — it *escapes* Python. You
+hand the whole column to compiled C code, the loop happens there at machine speed,
+and Python only sees the finished answer.
+
+**The DE rule this gives you:** *Never write a Python loop over millions of rows. Push the work into vectorized NumPy/pandas/Spark operations* — they run in compiled code, not the slow interpreter. This single principle, which comes straight from understanding how Python runs, is one of the biggest performance levers in all of data engineering.
+
+---
+
+## The 3-Step Example — see the slow path vs the fast path
+
+### Step 1 — tiny mechanic (10M plain numbers)
 
 ```python
 import numpy as np
@@ -126,7 +149,36 @@ print(f"NumPy: {time.time() - start:.3f}s")          # ~0.01 seconds — 50-100x
 
 Same result. NumPy is 50–100x faster — **not because NumPy is magic, but because it pushes the loop down into compiled C and stores data as a tight block instead of millions of Python objects.**
 
-**The DE rule this gives you:** *Never write a Python loop over millions of rows. Push the work into vectorized NumPy/pandas/Spark operations* — they run in compiled code, not the slow interpreter. This single principle, which comes straight from understanding how Python runs, is one of the biggest performance levers in all of data engineering.
+### Step 2 — OrderIQ e-commerce (same lesson on real data)
+
+```python
+import csv, time
+import numpy as np
+
+# load the OrderIQ order amounts (built in datasets/ — see datasets/README.md)
+with open("datasets/data/orders.csv") as f:
+    amounts = [float(r["amount"]) for r in csv.DictReader(f) if r["amount"]]
+
+# SLOW path — per-row Python: interpreter + type check + object per row
+start = time.time()
+total = 0.0
+for a in amounts:
+    total += a * 1.18          # add GST row by row
+py_time = time.time() - start
+
+# FAST path — one vectorized call into C
+arr = np.array(amounts)
+start = time.time()
+total_np = (arr * 1.18).sum()
+np_time = time.time() - start
+
+print(f"loop: {py_time:.4f}s   numpy: {np_time:.4f}s   speedup: {py_time/np_time:.0f}x")
+```
+
+### Step 3 — practice
+
+You'll disassemble your own function, reproduce this race, and prove the GIL's
+behaviour yourself in [`practice.md`](./practice.md) — always on OrderIQ.
 
 ---
 
@@ -139,6 +191,11 @@ Now the famous one: the **GIL (Global Interpreter Lock)**.
 This means: if you start 8 Python threads to do 8 CPU-heavy calculations, they do NOT run in parallel. They take turns holding the GIL — effectively one core's worth of work, not eight.
 
 **Why does CPython have this lock?** It makes CPython's memory management (reference counting) simple and safe without complex locking everywhere. It was a reasonable trade-off in the 1990s when machines had one core. Today it's the most criticized part of Python — but it's deeply baked in.
+
+🗣️ **In plain words:** the GIL is a single talking-stick. Only the thread holding
+the stick may run Python. Eight threads with one stick = they take turns, not
+parallel. But a thread that's *waiting* (for a network reply, a file) hands the
+stick over — so waiting-heavy work still benefits from threads.
 
 **Why a DE must know this:**
 
@@ -387,6 +444,8 @@ So a more accurate statement: *"CPython compiles to bytecode and interprets it i
 <details>
 <summary>▶ Answer</summary>
 
+🗣️ *Plain-words summary: `.apply` secretly runs slow Python once per row — 8 million times. The fix is always to push the loop back into compiled code.*
+
 **Why `.apply(..., axis=1)` with a Python function is slow:**
 
 `df.apply(func, axis=1)` calls your Python `func` **once per row** — 8 million times. Even though pandas is C under the hood, the moment you hand it a Python function to run per row, you're back in the slow path: for each of the 8M rows, Python pays interpreter overhead, type checks, and object creation/teardown. `apply` with `axis=1` is essentially a disguised Python `for` loop — it defeats the entire point of vectorization. The compiled-C engine is reduced to calling slow Python 8 million times.
@@ -418,6 +477,8 @@ So a more accurate statement: *"CPython compiles to bytecode and interprets it i
 <details>
 <summary>▶ Answer</summary>
 
+🗣️ *Plain-words summary: waiting threads hand back the talking-stick, so waiting-heavy work overlaps; math-heavy threads all want the stick constantly, so they just queue.*
+
 **How the GIL gets released:**
 
 A thread must hold the GIL to execute Python bytecode. But the GIL is *released* in two key situations:
@@ -447,6 +508,8 @@ Computing primes is constant Python bytecode execution — no I/O, no waiting, n
 <details>
 <summary>▶ Answer</summary>
 
+🗣️ *Plain-words summary: scattered heavy objects make the CPU wait for memory and block its multi-number instructions; one tight block of raw numbers keeps the CPU fed and lets it crunch several numbers per step.*
+
 The object-vs-raw-bytes difference has consequences far beyond just using less RAM:
 
 **Consequence 1 — CPU cache efficiency (the big one):**
@@ -473,6 +536,14 @@ A billion Python int objects means a billion allocations, a billion reference co
 **The unifying point:** "everything is an object" isn't just a memory cost — it destroys data locality, blocks SIMD, and floods the allocator/GC. NumPy's raw contiguous storage is fast because it's friendly to how CPUs and memory *physically* work. This is the deep reason vectorization wins, and why every serious DE pushes big-data math into NumPy/pandas/Spark rather than Python objects.
 
 </details>
+
+---
+
+## Practice
+
+👉 Hands-on problems live in [`practice.md`](./practice.md) — disassemble your own
+function with `dis`, race the loop vs NumPy on OrderIQ amounts, and prove the GIL's
+CPU-vs-I/O behaviour with real threads. BUILD → BREAK → EXPLAIN.
 
 ---
 

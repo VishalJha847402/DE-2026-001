@@ -3,6 +3,12 @@
 > **The three-part engine behind every Spark job.**
 > Understand this and you understand WHY Spark behaves the way it does — forever.
 
+> 🎯 **First principle (DE-2026):** you don't truly know this topic until you can
+> **BUILD it** (start a SparkSession and see the Driver + Executors in the Spark
+> UI on the OrderIQ data), **BREAK it** (crash the Driver with `.collect()`, kill
+> an Executor and watch recovery), and **EXPLAIN it** (say who did what and why).
+> The [`practice.md`](./practice.md) makes you do all three on real data.
+
 ---
 
 ## Why This Exists
@@ -21,6 +27,11 @@ When you run a Spark job on a 100-machine cluster, someone has to:
 That "someone" is not magic. It is three separate roles working together: the **Driver**, the **Cluster Manager**, and the **Executors**.
 
 Every single Spark job — from a 10-line script on Databricks to a 5 TB Flipkart pipeline — runs through this exact three-role system. There are no exceptions.
+
+🗣️ **In plain words:** Spark is not one program on one machine. It's a small
+*company*: a boss who plans (Driver), an HR/facilities dept that hands out
+machines (Cluster Manager), and workers who actually do the labour (Executors).
+Nothing runs until all three show up.
 
 ---
 
@@ -59,6 +70,10 @@ When you write a Spark program and run it, the very first thing that starts is t
 7. **Monitors Executors** — Receives heartbeats from all Executors. If a heartbeat stops, the Driver knows that Executor died and reschedules its Tasks elsewhere.
 8. **Collects final results** — Gathers the output from all Executors and either writes it to storage or returns it to your program.
 
+🗣️ **In plain words:** the Driver *thinks and directs* but does not do the heavy
+lifting. It's the site architect with the blueprint — pointing, scheduling,
+checking — never carrying bricks.
+
 ### The Driver's Critical Weakness
 
 The Driver is a **single point of failure**. If it crashes, the entire job fails — even if all 100 Executors are still healthy and working.
@@ -69,6 +84,10 @@ This is a known architectural trade-off. In return for this limitation, the desi
 - Keep the Driver's workload light — the Driver coordinates, it does NOT process data itself
 
 **Important rule you must remember:** Never collect large datasets to the Driver. If you call `.collect()` on a 5 TB DataFrame, it tries to bring 5 TB into the Driver's RAM → Driver crashes. The Driver is a coordinator, not a data processor.
+
+🗣️ **In plain words:** `.collect()` = "everybody bring all your work to the boss's
+tiny desk." On big data the desk overflows and the boss faints (OOM), and with the
+boss down, the whole company stops. You'll actually trigger this in the practice.
 
 ### Where the Driver Runs
 
@@ -88,6 +107,10 @@ The Cluster Manager manages the physical resources of the entire cluster — all
 
 Think of the Cluster Manager as a hotel front desk. The hotel has 200 rooms. When a guest (Driver) arrives and says "I need 50 rooms for 3 hours", the front desk checks availability, assigns 50 rooms, and tells the guest which rooms. The front desk doesn't know what the guest will do in those rooms — sleep, work, cook. It just manages room availability.
 
+🗣️ **In plain words:** the Cluster Manager doesn't care about your data or your
+query. It only hands out machines and takes them back when you're done — like a
+landlord renting rooms, indifferent to what you do inside.
+
 ### What the Cluster Manager Does
 
 1. **Tracks all available machines and their resources** (CPU cores, RAM, disk)
@@ -100,40 +123,23 @@ Think of the Cluster Manager as a hotel front desk. The hotel has 200 rooms. Whe
 There are four types of Cluster Managers Spark supports. You need to know all four:
 
 #### a) Spark Standalone
-
 Spark's own built-in Cluster Manager. No external dependency.
-
-- **Good for:** Learning, small teams, simple setups
-- **How to use:** Start a Standalone master and worker processes yourself
-- **Limitation:** Less efficient resource sharing — can't run non-Spark jobs on the same cluster
-
-**When you'll see it:** Local learning environments, small on-premise setups.
+- **Good for:** Learning, small teams, simple setups. **This is what runs when you do `SparkSession.builder.master("local[*]")` on your laptop for the practice.**
+- **Limitation:** Less efficient resource sharing — can't run non-Spark jobs on the same cluster.
 
 #### b) YARN (Yet Another Resource Negotiator)
-
 Hadoop's resource manager. The most common Cluster Manager in on-premise enterprise setups in India.
-
-- **Good for:** When a company already has a Hadoop cluster (common in banks, telecom, large enterprises in India)
-- **How to use:** Submit Spark jobs to YARN — it handles resource allocation
-- **Advantage:** Can run Spark jobs and MapReduce jobs and other Hadoop tools on the same cluster — shared resource pool
-
-**When you'll see it:** Large Indian banks (SBI, HDFC), telecom companies, any company with on-premise Hadoop. Also AWS EMR uses YARN by default.
+- **Good for:** Companies that already have a Hadoop cluster (banks, telecom, large enterprises).
+- **Advantage:** Can run Spark + MapReduce + other Hadoop tools on one shared cluster.
+- **When you'll see it:** SBI, HDFC, telecom; AWS EMR uses YARN by default.
 
 #### c) Kubernetes
-
 Container-based Cluster Manager. The fastest-growing option in 2026.
-
-- **Good for:** Cloud-native setups, teams already using Kubernetes for other services
-- **How it works:** Each Executor runs inside a Docker container. Kubernetes manages the containers.
-- **Advantage:** Excellent resource isolation, works with any cloud, integrates with modern DevOps pipelines
-
-**When you'll see it:** Startups and modern tech companies (Zomato, Meesho, CRED), cloud-native Spark deployments, Databricks on Kubernetes.
+- **How it works:** Each Executor runs inside a Docker container; Kubernetes manages the containers.
+- **When you'll see it:** Startups and modern tech companies (Zomato, Meesho, CRED), cloud-native Spark, Databricks on K8s.
 
 #### d) Apache Mesos
-
-Older general-purpose Cluster Manager. Largely deprecated in 2026.
-
-**When you'll see it:** Legacy systems only. Don't invest time here for India 2026 jobs.
+Older general-purpose Cluster Manager. Largely deprecated in 2026. Legacy only — don't invest time here.
 
 ### What You Actually Use in 2026 India DE Jobs
 
@@ -144,7 +150,7 @@ Older general-purpose Cluster Manager. Largely deprecated in 2026.
 | Azure HDInsight | Azure Portal | YARN |
 | Google Dataproc | GCP Console | YARN |
 | On-premise Hadoop cluster | spark-submit to YARN | YARN |
-| Local learning | Databricks Community / local mode | Spark Standalone (single machine) |
+| Local learning | local mode | Spark Standalone (single machine) |
 
 **Key insight for your career:** In most jobs, you will NOT configure the Cluster Manager directly. Databricks or the cloud platform does it for you. But you MUST understand how it works — because when a job fails due to "not enough resources" or "Executor allocation timeout", you need to know what's happening and what to tune.
 
@@ -181,7 +187,9 @@ Example: An Executor with 8 cores can run **8 Tasks in parallel at the same time
 
 So when people say "I have a 100-machine cluster with 8-core Executors" — that means 100 × 8 = **800 Tasks can run in parallel** across the entire cluster at any moment.
 
-This is why cluster sizing matters so much. More cores = more parallelism = faster jobs (up to a point).
+🗣️ **In plain words:** one Executor = one worker with several hands (cores). Each
+hand can carry exactly one box (Task) at a time. Total hands across the cluster =
+how many boxes move at once = your real speed.
 
 ### Executor Memory — How It Is Split
 
@@ -210,43 +218,50 @@ When this happens:
 
 This is Spark's **fault tolerance** — you'll learn the exact mechanism (lineage recompute) in Topic 11.
 
+🗣️ **In plain words:** if one worker collapses, the boss just hands that worker's
+unfinished boxes to others. The company keeps running. But if the *boss* collapses
+(Driver), everyone goes home. That asymmetry is the whole safety story of Spark.
+
 ---
 
-## 4. How All Three Work Together — Full Flow
+## 4. The 3-Step Example — from tiny to real
 
-Let's trace a real job from start to finish. You work at Swiggy. You write a Spark job to find the top 10 restaurant categories by order value for every city in India. The dataset is 2 TB of order data in S3.
+### Step 1 — the tiny mechanic (what actually starts)
 
-**Step 1 — Submit the job**
-You run `spark-submit` from your terminal or click "Run" in Databricks. Your Python code starts running in the **Driver** process.
+```python
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.master("local[4]").appName("demo").getOrCreate()
+# local[4] = 1 machine pretending to be a cluster with 4 cores (4 parallel Tasks)
+# Driver = this Python process. Executor = also this process (local mode).
+print(spark.sparkContext.defaultParallelism)   # 4  → 4 slots
+```
 
-**Step 2 — Driver requests resources**
-Driver contacts the **Cluster Manager**: "I need 20 Executors, each with 8 cores and 16 GB RAM."
+### Step 2 — OrderIQ e-commerce (the roles doing real work)
 
-**Step 3 — Cluster Manager allocates machines**
-Cluster Manager finds 20 available worker machines in the cluster. It starts an **Executor** process on each one. Sends back the list of Executor addresses to the Driver.
+```python
+orders = spark.read.csv("datasets/data/orders.csv", header=True, inferSchema=True)
+# Driver: builds the plan, splits orders.csv into partitions → Tasks
+# Executors (your 4 local cores): each reads a chunk, filters it
+delivered = orders.filter(orders.status == "delivered")
+delivered.groupBy("city").count().show()   # groupBy = work that needs a shuffle
+```
 
-**Step 4 — Driver builds the execution plan**
-Driver analyzes your code (read S3 → filter → groupBy city → groupBy category → sum order_value → rank → take top 10). It builds an optimized plan.
+Open the Spark UI (printed URL, usually `localhost:4040`) → **Executors** tab shows
+the Executor(s); **Jobs/Stages** shows the Tasks. You are *seeing* the three roles.
 
-**Step 5 — Driver creates Tasks**
-2 TB ÷ 128 MB per partition = ~16,000 partitions = **16,000 Tasks**. Each Task will process one 128 MB chunk of data.
+### Step 3 — production shape (same roles, 1000× bigger)
 
-**Step 6 — Driver assigns Tasks to Executors**
-20 Executors × 8 cores = 160 Tasks running in parallel at once. Driver sends the first 160 Tasks to the Executors, 8 Tasks per Executor.
+```python
+# On Databricks / EMR, the ONLY thing that changes is master + scale:
+#   .master("yarn")  and a 50-node cluster
+# Driver still plans, Cluster Manager (YARN) hands out 50 machines,
+# Executors read 2 TB from S3 in parallel. Identical mental model.
+orders = spark.read.parquet("s3://orderiq/orders/")
+orders.filter("status='delivered'").groupBy("city").count().write.parquet("s3://orderiq/out/")
+```
 
-**Step 7 — Executors work**
-Each Executor reads its assigned S3 partitions, runs the filter and groupBy logic in RAM, produces partial results.
-
-**Step 8 — Shuffle (when needed)**
-For the `groupBy city` operation, all data for "Mumbai" must be on the same Executor to be aggregated. Executors exchange data with each other over the network. This is called a **shuffle** — you will learn the full details in Topic 6.
-
-**Step 9 — Executors complete Tasks**
-As each Executor finishes a Task, Driver assigns it the next Task. This continues until all 16,000 Tasks are done.
-
-**Step 10 — Driver collects final results**
-The top 10 per city results (small data) are collected by the Driver and either written to S3 or returned to your program.
-
-Total clock time: a job that would take 12 hours on one machine runs in minutes on 20 Executors.
+The lesson: **local[4] on your laptop and a 50-node EMR cluster run the exact same
+three-role architecture.** Learn it small, it scales unchanged.
 
 ---
 
@@ -256,7 +271,7 @@ Total clock time: a job that would take 12 hours on one machine runs in minutes 
 |---|---|---|
 | Executors per job | 5–500 (varies widely) | More Executors = more parallelism |
 | Cores per Executor | 4–8 | Number of Tasks per Executor running in parallel |
-| RAM per Executor | 8–64 GB | More RAM = can process bigger partitions, more caching |
+| RAM per Executor | 8–64 GB | More RAM = bigger partitions, more caching |
 | Tasks per partition | 1:1 | One Task processes one partition — always |
 | Driver RAM needed | 4–16 GB | Driver coordinates, doesn't process data — keep it lean |
 | Partition size target | 100–200 MB | Too small = too many Tasks; too large = spilling |
@@ -270,46 +285,37 @@ graph TB
     subgraph YourCode["Your Code (spark-submit / Databricks)"]
         UC["Your PySpark Script"]
     end
-
     subgraph DriverNode["Driver Node (1 machine)"]
         DR["Driver Process (JVM)"]
         SS["SparkSession"]
         DAG["DAG Scheduler"]
         TS["Task Scheduler"]
     end
-
     subgraph CM["Cluster Manager"]
         YARN["YARN / Kubernetes / Standalone"]
     end
-
     subgraph WorkerCluster["Worker Nodes (many machines)"]
         subgraph W1["Worker Node 1"]
             E1["Executor 1"]
-            T1["Task 1"] 
+            T1["Task 1"]
             T2["Task 2"]
-            T3["Task 3"]
             E1 --> T1
             E1 --> T2
-            E1 --> T3
         end
         subgraph W2["Worker Node 2"]
             E2["Executor 2"]
             T4["Task 4"]
             T5["Task 5"]
-            T6["Task 6"]
             E2 --> T4
             E2 --> T5
-            E2 --> T6
         end
         subgraph W3["Worker Node 3"]
             E3["Executor N ..."]
         end
     end
-
     subgraph Storage["Data Storage (HDFS / S3 / Azure Blob)"]
         DATA["Partitioned Data Files"]
     end
-
     UC -->|"starts"| DR
     DR --> SS
     DR --> DAG
@@ -331,269 +337,48 @@ graph TB
 ## Revision
 
 ### The Three Roles
-
-Every Spark job has exactly three roles: Driver, Cluster Manager, Executors. The Driver plans the job and schedules Tasks. The Cluster Manager provides machines and starts Executor processes on them. The Executors read data, run Tasks, and return results. Remove any one of these three and the job cannot run.
+Every Spark job has exactly three roles: Driver, Cluster Manager, Executors. The Driver plans the job and schedules Tasks. The Cluster Manager provides machines and starts Executor processes. The Executors read data, run Tasks, and return results. Remove any one and the job cannot run.
 
 ### The Driver Is the Brain — And the Bottleneck
-
-The Driver is a single JVM process. It runs your code, builds the execution plan, breaks the job into Tasks, and schedules them across Executors. The Driver is also the single point of failure — if it crashes, the job fails. This is why you never bring large amounts of data back to the Driver (no `.collect()` on big datasets). The Driver coordinates; it does not process data.
+The Driver is a single JVM process. It runs your code, builds the plan, breaks the job into Tasks, and schedules them. It is also the single point of failure — if it crashes, the job fails. This is why you never bring large data back to the Driver (no `.collect()` on big datasets). The Driver coordinates; it does not process data.
 
 ### Cluster Manager = Resource Allocator, Not Spark-Specific
-
-The Cluster Manager knows nothing about Spark. It just manages machines and RAM across the cluster. Spark supports four types: Standalone (simple, built-in), YARN (most common in Indian enterprises), Kubernetes (cloud-native, growing fast), Mesos (legacy, ignore). In Databricks, the Cluster Manager is fully managed — you never configure it directly.
+The Cluster Manager knows nothing about Spark. It just manages machines and RAM. Four types: Standalone (simple/local), YARN (most common in Indian enterprises), Kubernetes (cloud-native, growing), Mesos (legacy). In Databricks it's fully managed.
 
 ### Executors Are the Workers
-
-Executors run on worker machines, one per machine typically. Each Executor has multiple cores (slots) — each core runs one Task in parallel. Each Executor has its own RAM split between execution (shuffle/join/sort) and storage (caching). When an Executor fails, the Driver reschedules its Tasks on other healthy Executors — the job continues.
+Executors run on worker machines. Each has cores (slots) — each core runs one Task in parallel — and RAM split between execution (shuffle/join/sort) and storage (caching). When an Executor fails, the Driver reschedules its Tasks on healthy Executors — the job continues.
 
 ### The Full Flow
-
-You submit code → Driver starts → Driver asks Cluster Manager for resources → Cluster Manager starts Executors on worker machines → Driver creates Tasks (one per partition) → Driver sends Tasks to Executors → Executors read data from storage, process it, return results → Driver collects final output. This loop happens for every Spark job, every time, with no exceptions.
+Submit code → Driver starts → Driver asks Cluster Manager for resources → Cluster Manager starts Executors → Driver creates Tasks (one per partition) → Driver sends Tasks to Executors → Executors read, process, return → Driver collects final output. Every Spark job, every time.
 
 ---
 
-## Practice Questions
+## Test yourself — quick recall (full hands-on set in `practice.md`)
 
-### 🟢 Easy
-
-**E1. What is the role of the Driver in a Spark job? Name three things it does.**
-
-<details>
-<summary>▶ Answer</summary>
-
-The Driver is the brain of a Spark job. Three things it does:
-
-1. **Runs your application code** — Your Python/Scala/Java code executes inside the Driver process.
-2. **Breaks the job into Tasks** — Divides the work into small units (one Task per data partition) and schedules them on Executors.
-3. **Monitors Executors** — Receives heartbeats from all Executors. If one dies, the Driver reschedules its Tasks on another healthy Executor.
-
-Other things it does: builds the execution plan, talks to Cluster Manager to request resources, collects final results.
-
+<details><summary>1. One-line job of each of the three roles?</summary>
+Driver plans + schedules; Cluster Manager provides machines; Executors do the work.
+</details>
+<details><summary>2. Why is <code>.collect()</code> on 500 GB dangerous?</summary>
+It streams all rows into the Driver's small RAM → OOM → Driver dies → whole job fails. Write to storage or sample instead.
+</details>
+<details><summary>3. Executor with 8 cores runs how many Tasks at once?</summary>
+8 — one Task per core.
+</details>
+<details><summary>4. Driver crash vs Executor crash — what's the difference?</summary>
+Executor crash = its Tasks rescheduled elsewhere, job continues. Driver crash = whole job fails.
+</details>
+<details><summary>5. Which Cluster Manager is most common in Indian enterprises?</summary>
+YARN.
 </details>
 
 ---
 
-**E2. What is an Executor? If an Executor has 8 cores, how many Tasks can it run at the same time?**
-
-<details>
-<summary>▶ Answer</summary>
-
-An Executor is a JVM process that runs on a worker machine in the cluster. It is the actual laborer — it reads data, runs the computation, and returns results.
-
-With 8 cores, an Executor can run **8 Tasks simultaneously** — one Task per core at any given moment.
-
-If a cluster has 20 Executors with 8 cores each → 20 × 8 = **160 Tasks can run in parallel** across the entire cluster at the same time.
-
-</details>
-
----
-
-**E3. Name the four types of Cluster Managers Spark supports. Which one is most commonly used in Indian enterprise setups?**
-
-<details>
-<summary>▶ Answer</summary>
-
-1. **Standalone** — Spark's own built-in manager. Simple, no external dependencies.
-2. **YARN** — Hadoop's resource manager. Most common in Indian enterprise setups (banks, telecom, large companies with on-premise Hadoop).
-3. **Kubernetes** — Container-based. Modern cloud-native setups. Growing fast.
-4. **Mesos** — Legacy, mostly deprecated.
-
-**Most common in Indian enterprise setups: YARN.** Banks like HDFC, SBI, and large companies running on-premise Hadoop clusters all use YARN. Cloud platforms (EMR, HDInsight) also use YARN under the hood.
-
-</details>
-
----
-
-### 🟡 Medium
-
-**M1. You work at Flipkart. A Spark job processes a 4 TB orders file. The cluster has 50 Executors, each with 8 cores. Each partition is 128 MB. How many Tasks will be created? How many run in parallel at once?**
-
-<details>
-<summary>▶ Answer</summary>
-
-**Number of partitions (= number of Tasks):**
-4 TB = 4,000 GB = 4,096,000 MB ÷ 128 MB = **32,000 Tasks**
-
-**Parallel Tasks at one time:**
-50 Executors × 8 cores = **400 Tasks running in parallel simultaneously**
-
-**How the job runs:**
-Driver sends the first 400 Tasks to Executors. As each Task finishes, Driver sends the next one. The cluster processes Tasks in waves of 400 until all 32,000 are done.
-
-At 400 Tasks/wave: 32,000 ÷ 400 = **80 waves of parallel execution**.
-
-</details>
-
----
-
-**M2. Your Spark job's Driver crashes mid-way through processing. The 100 Executors are still healthy and have completed 60% of the Tasks. What happens?**
-
-<details>
-<summary>▶ Answer</summary>
-
-**The entire job fails.** The Driver is the single point of failure. When it crashes:
-
-- All Executors lose their connection to the Driver
-- Cluster Manager detects the Driver is dead
-- All Executor processes are terminated (their resources released back to the cluster)
-- The 60% completed work is lost — partial results in Executor RAM are gone
-
-**To restart:** You must re-submit the entire job. It starts from scratch.
-
-**How production teams handle this:**
-- Run Driver in **cluster mode** on a reliable, managed machine (not your laptop)
-- Use Databricks or cloud-managed Spark which can auto-restart the Driver
-- Design jobs with **checkpointing** — periodic snapshots of intermediate results to disk so a restart can resume from the last checkpoint, not from scratch (you'll learn this in streaming topics)
-
-</details>
-
----
-
-**M3. An Executor on Worker Node 7 dies mid-job. It was running Tasks 201 through 208 (8 Tasks, one per core). What exactly happens next? Does the job fail?**
-
-<details>
-<summary>▶ Answer</summary>
-
-**No — the job does NOT fail.** Only those 8 Tasks are affected.
-
-Here is what happens step by step:
-
-1. Driver stops receiving heartbeats from Executor on Worker Node 7
-2. After a timeout (~60 seconds by default), Driver marks Executor 7 as dead
-3. Driver marks Tasks 201–208 as "failed" and adds them back to the pending Task queue
-4. Driver reschedules all 8 Tasks on other healthy Executors that have free slots
-5. Those Executors re-read the data for those 8 partitions from HDFS/S3 and re-process them
-6. Job continues — only these 8 Tasks were lost; all others proceed normally
-
-**The cost:** Some slowdown because of the timeout wait and re-execution. If the Executor died because of a systematic issue (bad data partition causing OOM), it may fail repeatedly — and Spark will retry a limited number of times before truly failing the job.
-
-</details>
-
----
-
-**M4. A junior DE says: "Why do we need the Cluster Manager? Can't the Driver just directly start Executors on machines?" What's the problem with skipping the Cluster Manager?**
-
-<details>
-<summary>▶ Answer</summary>
-
-In theory, yes — and Spark Standalone actually does something close to this. But in a real multi-tenant environment, skipping the Cluster Manager causes serious problems:
-
-**Problem 1 — Resource conflicts:** Multiple Spark jobs run on the same cluster simultaneously (your job + your colleague's job + the nightly ETL). Without a Cluster Manager, every Driver would try to use every machine → all jobs starve each other or crash.
-
-**Problem 2 — No resource tracking:** The Cluster Manager knows which machines have 20 free cores vs 0 free cores. Without it, the Driver has no way to know what's available — it would have to guess.
-
-**Problem 3 — No fair sharing:** YARN implements resource queues — "team A gets 40% of the cluster, team B gets 60%". Without a Cluster Manager, no way to enforce this policy.
-
-**Problem 4 — Non-Spark workloads:** In a company, the same machines run Spark jobs, MapReduce jobs, Python scripts, ML training. YARN/Kubernetes manages ALL of them together. If Spark bypassed the Cluster Manager, it would fight with these other workloads.
-
-The Cluster Manager is the referee that makes a multi-tenant cluster work predictably.
-
-</details>
-
----
-
-### 🔴 Hard
-
-**H1. You run `.collect()` on a 500 GB DataFrame in production. The Driver has 16 GB RAM. Walk through exactly what happens and why this is dangerous.**
-
-<details>
-<summary>▶ Answer</summary>
-
-`.collect()` is an Action that tells Spark: "Bring ALL rows of this DataFrame back to the Driver as a Python list."
-
-Here is what happens step by step:
-
-1. Driver sends Tasks to Executors to process the 500 GB data
-2. All Executors produce their results and start streaming them back to the Driver over the network
-3. Driver starts receiving rows and accumulating them in its JVM heap memory
-4. Driver's 16 GB RAM fills up — it has received maybe 50 GB of the 500 GB
-5. JVM heap overflows → **OutOfMemoryError (OOM)** → Driver process crashes
-6. **Entire job fails.** All 50 Executors are terminated. 450 GB of data never processed.
-
-**Why this is dangerous in production:**
-- The job crashes after running for hours — wasted compute cost
-- If it's a scheduled pipeline, downstream jobs waiting for this output also fail
-- Recovery requires re-running the entire job
-
-**What to do instead:**
-- Write output to storage: `.write.parquet("s3://bucket/output/")` — Executors write directly to S3, nothing goes to Driver
-- Take a sample: `.limit(1000).collect()` or `.sample(0.001).collect()` for inspection
-- Use `.show(20)` to view a few rows — only sends 20 rows to Driver, safe
-
-**The rule:** The Driver coordinates. It never processes or holds large data. Everything large goes directly to storage.
-
-</details>
-
----
-
-**H2. On Databricks, you don't configure YARN or Kubernetes directly. Does that mean understanding Cluster Managers is irrelevant for Databricks users? Argue for and against.**
-
-<details>
-<summary>▶ Answer</summary>
-
-**For (irrelevant):** In Databricks, you configure a cluster via UI: "I want 8 worker nodes, each Standard_DS3_v2 (4 cores, 14 GB RAM)". Databricks handles the rest — starts Executors, manages node failures, auto-scales. You never write a YARN config file.
-
-**Against (absolutely relevant) — and this wins:**
-
-**1. Resource request tuning:** When your job shows "Executor allocation timeout" or "not enough resources", you need to know what's happening at the Cluster Manager level to fix it. "Add more workers" or "change the cluster config" requires understanding what you're actually changing.
-
-**2. Spark UI interpretation:** Databricks gives you full Spark UI. The Executors tab shows each Executor, its cores, its memory usage, its Tasks completed. If you don't know what an Executor is, you can't diagnose performance issues.
-
-**3. `spark.executor.memory`, `spark.executor.cores`, `spark.driver.memory`:** These are configs you set in Databricks cluster settings or in `SparkConf`. If you don't know what Executor memory does, you can't tune them — and untuned jobs spill, OOM, and run 10x slower than they should.
-
-**4. Understanding job failures:** "Executor killed by YARN for exceeding memory limits" — this error message only makes sense if you know what YARN and Executors are.
-
-**Verdict:** Databricks abstracts the operations. It does not abstract the concepts. You still need to understand Driver/Executor/Cluster Manager to configure clusters correctly, tune performance, and diagnose failures. The abstraction removes configuration work, not conceptual understanding.
-
-</details>
-
----
-
-**H3. A Spark cluster has 10 Executors with 10 cores each = 100 parallel Tasks. A job has 50 partitions (= 50 Tasks). Only 50 Tasks ever run in parallel even though 100 slots are available. Then someone says: "Increase partitions to 1000." Will the job run faster? When does more partitions stop helping?**
-
-<details>
-<summary>▶ Answer</summary>
-
-**Will 1000 partitions run faster than 50 partitions on this 100-slot cluster?**
-
-Yes, likely — up to a point. Here's why:
-
-With 50 partitions and 100 slots:
-- Only 50 Tasks run at the same time (50 partitions = max 50 Tasks)
-- 50 slots are always idle — half the cluster is wasted
-- Each Task processes `total_data / 50` of data
-
-With 1000 partitions and 100 slots:
-- 100 Tasks run in parallel (full cluster utilized)
-- 1000 ÷ 100 = 10 waves of Tasks
-- Each Task processes `total_data / 1000` = smaller, faster per Task
-- Cluster utilization: 100% (100 slots / 100 slots)
-
-**So yes — more partitions → better parallelism → faster.**
-
-**But: when does more partitions stop helping?**
-
-**Too many partitions causes its own problems:**
-
-1. **Task scheduling overhead:** The Driver must schedule, track, and monitor 1,000,000 Tasks (if you went extreme). The Driver itself becomes a bottleneck — scheduling overhead exceeds processing time.
-
-2. **Too-small partitions:** If each partition is 1 KB, the Task startup overhead (JVM initialization, network comm, serialization) is larger than the actual work. You waste more time on overhead than computation.
-
-3. **Shuffle amplification:** Operations like `groupBy` require shuffling data between Executors. With 1M partitions, the shuffle creates 1M × 1M possible network connections — impractical.
-
-**The sweet spot:**
-- Target **100–200 MB per partition** for general workloads
-- Target **2–4× the number of available cores** as number of partitions for maximum parallelism with minimal overhead
-- For this 100-slot cluster: 200–400 partitions is a reasonable range
-
-**The formula you'll use in Phase 4 (Performance):**
-```
-ideal_partitions = max(2 × total_executor_cores, total_data_size_MB / 200)
-```
-
-This is called **repartitioning strategy** — one of the most important tuning levers for Spark performance.
-
-</details>
+## Practice
+
+👉 Do [`practice.md`](./practice.md) — you'll **start a real local SparkSession on
+the OrderIQ dataset**, read the Executors/Stages tabs in the Spark UI, **crash the
+Driver on purpose** with `.collect()`, reason about Task/partition math, and fix a
+Driver-OOM pipeline. BUILD → BREAK → EXPLAIN.
 
 ---
 

@@ -3,6 +3,12 @@
 > **Your application's front door into Spark.**
 > Before you can read a file, run a query, or process a single row — you need one of these.
 
+> 🎯 **First principle (DE-2026):** you don't own this until you can **BUILD it**
+> (create a `SparkSession` on your laptop and read OrderIQ), **BREAK it** (start
+> with a 1-core `local`, leave shuffle partitions at 200 on tiny data, watch it
+> crawl), and **EXPLAIN it** (say what `.getOrCreate()` actually does under the
+> hood). [`practice.md`](./practice.md) drives all three.
+
 ---
 
 ## Why This Exists
@@ -19,326 +25,205 @@ That connection between your code and the Spark engine is what **SparkSession** 
 
 Without one of these — you cannot do anything in Spark. No reading. No writing. No processing.
 
-Think of SparkSession like turning the key in a car's ignition. The engine exists. The fuel exists. But nothing works until you turn the key.
+🗣️ **In plain words:** SparkSession is the ignition key of the car. The engine
+(cluster), the fuel (data) all exist — but nothing moves until you turn the key.
+`spark = SparkSession.builder...getOrCreate()` **is** turning the key.
 
 ---
 
 ## 1. SparkContext — The Original (Spark 1.x)
 
-### What It Is
-
-SparkContext was Spark's original entry point. It was introduced when Spark was first built. It connected your application to the cluster and allowed you to work with RDDs (the original Spark data structure — you will learn RDDs in the next topic).
-
-In Spark 1.x, you started every application like this:
+SparkContext was Spark's original entry point. It connected your application to the cluster and let you work with RDDs (the original Spark data structure — next topic).
 
 ```python
 from pyspark import SparkContext, SparkConf
-
 conf = SparkConf().setAppName("OrderAnalysis").setMaster("yarn")
 sc = SparkContext(conf=conf)
-
-# Now you can work with RDDs
-data = sc.textFile("hdfs:///data/orders.csv")
+data = sc.textFile("hdfs:///data/orders.csv")   # RDD
 ```
 
 ### The Problem That Grew
 
-As Spark became more powerful, it added more features:
-- DataFrames (for structured data — like tables)
-- SQL support
-- Hive integration
-- Streaming
+As Spark added DataFrames, SQL, Hive, and Streaming, each feature needed its own entry point:
+- `SparkContext` → RDDs
+- `SQLContext` → DataFrames and SQL
+- `HiveContext` → Hive-compatible SQL
+- `StreamingContext` → streaming
 
-Each feature needed its own entry point:
-- `SparkContext` → for RDDs
-- `SQLContext` → for DataFrames and SQL
-- `HiveContext` → for Hive-compatible SQL
-- `StreamingContext` → for streaming
+A developer using all of Spark had to create and juggle 4 different context objects. Messy and error-prone. Spark 2.0 fixed this.
 
-A developer using all of Spark had to create and manage 4 different context objects. That was messy, confusing, and easy to get wrong.
-
-Spark 2.0 fixed this.
+🗣️ **In plain words:** the old Spark made you carry four different keys for four
+doors of the same house. Spark 2.0 gave you one master key.
 
 ---
 
 ## 2. SparkSession — The Modern Entry Point (Spark 2.0+)
 
-### What It Is
-
-SparkSession was introduced in Spark 2.0 as a **unified entry point** for everything. One object. All features.
-
-You use SparkSession for:
-- Reading data (CSV, Parquet, JSON, Delta, databases)
-- Running SQL queries
-- Working with DataFrames
-- Accessing RDDs (via `spark.sparkContext`)
-- Configuring Spark
-- Streaming setup
-
-### How to Create It
+SparkSession is a **unified entry point** for everything: reading data, SQL, DataFrames, RDDs (via `spark.sparkContext`), config, streaming. One object. All features.
 
 ```python
 from pyspark.sql import SparkSession
 
-spark = SparkSession.builder \
-    .appName("FlipkartOrderAnalysis") \
-    .master("yarn") \
-    .config("spark.executor.memory", "8g") \
-    .config("spark.executor.cores", "4") \
-    .getOrCreate()
+spark = (SparkSession.builder
+    .appName("FlipkartOrderAnalysis")
+    .master("yarn")
+    .config("spark.executor.memory", "8g")
+    .config("spark.executor.cores", "4")
+    .getOrCreate())
 ```
-
-Let's read each part:
 
 | Part | What It Does |
 |------|-------------|
 | `SparkSession.builder` | Starts building the configuration |
-| `.appName("FlipkartOrderAnalysis")` | Names your job — shows up in Spark UI |
-| `.master("yarn")` | Tells Spark which Cluster Manager to use |
-| `.config("spark.executor.memory", "8g")` | Sets 8 GB RAM per Executor |
-| `.config("spark.executor.cores", "4")` | Sets 4 cores per Executor |
-| `.getOrCreate()` | Builds the session (or returns existing one) |
+| `.appName(...)` | Names your job — shows in Spark UI |
+| `.master(...)` | Which Cluster Manager to use |
+| `.config(...)` | Sets a Spark config key |
+| `.getOrCreate()` | Builds the session (or returns the existing one) |
 
-### SparkContext Still Exists Inside SparkSession
-
-SparkSession wraps SparkContext. SparkContext didn't disappear — it's still there doing the actual cluster connection. You can access it like this:
+### SparkContext Still Lives Inside SparkSession
 
 ```python
-sc = spark.sparkContext  # Get the underlying SparkContext
-
-# Both of these are available:
-spark.read.csv(...)         # SparkSession API (modern, DataFrames)
-sc.textFile("hdfs://...")   # SparkContext API (old, RDDs)
+sc = spark.sparkContext        # the underlying cluster connection
+spark.read.csv(...)            # modern DataFrame API
+sc.textFile("hdfs://...")      # old RDD API
 ```
 
-For real work in 2026, you almost always use `spark` (SparkSession), not `sc` directly. But knowing that SparkContext is inside helps you understand what's happening.
+In 2026 you almost always use `spark`, not `sc` directly. But knowing `sc` is *inside* `spark` explains what's happening.
+
+🗣️ **In plain words:** SparkSession is a nice modern wrapper around the old
+SparkContext engine. The engine never left — it's under the hood.
 
 ---
 
-## 3. What Actually Happens When You Call `.getOrCreate()`
+## 3. What `.getOrCreate()` Actually Does (the important part)
 
-This is the important part. When `SparkSession.builder.getOrCreate()` runs, a lot happens under the hood:
+**Step 1 — Singleton check:** if a SparkSession already exists in this JVM, return it. Do NOT create a second.
 
-**Step 1 — Singleton check:**
-Spark checks if a SparkSession already exists in this JVM. If yes, it returns the existing one. It does NOT create a second one. (More on why this matters shortly.)
+**Step 2 — SparkContext is created:** contacts the **Cluster Manager**, requests the Executors you configured, waits for them to start, opens communication channels.
 
-**Step 2 — SparkContext is created:**
-A SparkContext is created, which:
-- Contacts the **Cluster Manager** (YARN/Kubernetes/Standalone)
-- Requests the number of Executors you configured
-- Waits for Executors to start on worker machines
-- Opens communication channels to all Executors
+**Step 3 — Internal components init:** **Catalyst** (query optimizer), **Tungsten** (memory layout), **Spark UI** (port 4040) all start.
 
-**Step 3 — Internal components initialize:**
-- **Catalyst Optimizer** starts — will optimize your DataFrame queries
-- **Tungsten** starts — manages memory layout for fast processing
-- **SparkUI** starts on port 4040 — the web interface where you can watch your jobs run
+**Step 4 — SparkSession returned:** you get `spark`, connected and ready.
 
-**Step 4 — SparkSession returned:**
-You get back the `spark` object. Now you're connected to the cluster and ready to work.
+This takes a few seconds — the "startup overhead." Spark isn't instant like pandas; the first seconds are setup cost, then the cluster is ready.
 
-The whole process takes a few seconds. This is the "startup overhead" you'll notice — Spark isn't instant like pandas. The first few seconds are startup cost. After that, the cluster is ready.
+🗣️ **In plain words:** `.getOrCreate()` is not "make an object." It's "phone the
+landlord (Cluster Manager), rent the workers (Executors), boot the optimizer, and
+open the dashboard." That's why it takes a few seconds.
 
 ---
 
 ## 4. SparkConf — Configuring Spark
 
-### What Is SparkConf
+SparkConf is key-value settings that control how Spark behaves.
 
-SparkConf is a collection of key-value pairs that control how Spark behaves. You pass these configurations when creating SparkSession.
-
-### How to Set Configuration
-
-**Method 1 — In code (highest priority):**
 ```python
-spark = SparkSession.builder \
-    .config("spark.executor.memory", "16g") \
-    .config("spark.executor.cores", "8") \
-    .config("spark.driver.memory", "4g") \
-    .config("spark.sql.shuffle.partitions", "400") \
-    .getOrCreate()
-```
+# Method 1 — in code (highest priority)
+spark = (SparkSession.builder
+    .config("spark.executor.memory", "16g")
+    .config("spark.sql.shuffle.partitions", "400")
+    .getOrCreate())
 
-**Method 2 — After session created:**
-```python
+# Method 2 — after creation
 spark.conf.set("spark.sql.shuffle.partitions", "200")
 ```
 
-**Method 3 — spark-submit command (overrides conf file):**
-```bash
-spark-submit \
-  --conf spark.executor.memory=16g \
-  --conf spark.executor.cores=8 \
-  my_script.py
-```
+Also via `spark-submit --conf ...` and `spark-defaults.conf`.
 
-**Method 4 — spark-defaults.conf file (cluster-wide defaults, lowest priority):**
-```
-spark.executor.memory    8g
-spark.executor.cores     4
-```
+**Priority:** `code (.config) > spark-submit --conf > spark-defaults.conf > built-in defaults`. Code always wins.
 
-### Priority Order (Important)
+### Configs to Know
 
-When the same config is set in multiple places, Spark follows this priority:
-
-```
-Code (.config())  >  spark-submit --conf  >  spark-defaults.conf  >  Spark built-in defaults
-   (highest)                                                              (lowest)
-```
-
-Code always wins. This means you can override cluster defaults in your application code.
-
-### The Most Important Configs to Know
-
-| Config Key | What It Controls | Typical Value |
+| Config Key | Controls | Typical |
 |---|---|---|
-| `spark.app.name` | Job name — shows in Spark UI | Your pipeline name |
-| `spark.master` | Which Cluster Manager to connect to | `yarn`, `local[*]`, `k8s://...` |
-| `spark.executor.memory` | RAM per Executor | `8g`, `16g`, `32g` |
-| `spark.executor.cores` | CPU cores per Executor | `4`, `8` |
-| `spark.driver.memory` | RAM for the Driver process | `4g`, `8g` |
-| `spark.executor.instances` | How many Executors to request | `10`, `50`, `200` |
-| `spark.sql.shuffle.partitions` | Number of partitions after a shuffle (groupBy, join) | Default 200; tune to `2-4x cores` |
-| `spark.default.parallelism` | Default parallelism for RDD operations | Set to `2x total cores` |
+| `spark.app.name` | Job name in UI | your pipeline |
+| `spark.master` | which Cluster Manager | `yarn`, `local[*]` |
+| `spark.executor.memory` | RAM per Executor | `8g`–`32g` |
+| `spark.executor.cores` | cores per Executor | `4`–`8` |
+| `spark.driver.memory` | Driver RAM | `4g`–`8g` |
+| `spark.executor.instances` | number of Executors | `10`–`200` |
+| `spark.sql.shuffle.partitions` | partitions after a shuffle | default 200; tune to 2–4× cores |
 
-The most commonly tuned config in real DE jobs is `spark.sql.shuffle.partitions`. The default is 200 — which is too many for small data (hundreds of tiny files) and too few for very large data (creates huge partitions that spill). You'll learn exactly how to tune this in Phase 4.
+🗣️ **In plain words:** the one config you'll touch most is
+`spark.sql.shuffle.partitions`. Default 200 = too many for small data (hundreds of
+tiny files), too few for huge data (giant partitions that spill). Always right-size it.
 
 ---
 
-## 5. master() — How to Tell Spark Which Cluster to Use
-
-The `.master()` setting is critical. It tells Spark WHERE to run.
-
-### Local Mode (for learning and testing)
+## 5. master() — Where Spark Runs
 
 ```python
-# Use 1 core on your local machine — slowest, for quick tests
-spark = SparkSession.builder.master("local").getOrCreate()
-
-# Use 4 cores on your local machine
-spark = SparkSession.builder.master("local[4]").getOrCreate()
-
-# Use ALL available cores on your local machine — best for local dev
-spark = SparkSession.builder.master("local[*]").getOrCreate()
+.master("local")      # 1 core on your machine
+.master("local[4]")   # 4 cores
+.master("local[*]")   # ALL your cores — best for local dev
+.master("yarn")       # Hadoop cluster
+.master("k8s://https://k8s-api:443")   # Kubernetes
 ```
 
-In local mode, the Driver and Executors are all the same JVM process on your machine. No cluster needed. Perfect for Databricks Community Edition, local Jupyter notebooks, or unit tests.
-
-### YARN (on-premise Hadoop cluster)
-
-```python
-spark = SparkSession.builder.master("yarn").getOrCreate()
-```
-
-Spark connects to YARN. YARN allocates machines on the Hadoop cluster.
-
-### Kubernetes
-
-```python
-spark = SparkSession.builder.master("k8s://https://k8s-api-server:443").getOrCreate()
-```
-
-### Databricks (special case — master is managed for you)
-
-In Databricks, you don't set `.master()` at all. Databricks controls it. `spark` is already created and waiting for you. You just use it:
-
-```python
-# In any Databricks notebook — this just works:
-df = spark.read.parquet("/mnt/data/orders/")
-spark.sql("SELECT city, COUNT(*) FROM orders GROUP BY city").show()
-```
+In local mode, Driver and Executors are the same JVM on your machine — no cluster needed. **On Databricks you don't set `.master()` at all** — `spark` is already created and managed for you; just use it.
 
 ---
 
 ## 6. The getOrCreate() Singleton — Why It Matters
 
-`.getOrCreate()` enforces an important rule: **only one active SparkContext per JVM at a time**.
-
-This is not just a convention — Spark throws an error if you try to create a second SparkContext while one is running. Here's why this rule exists:
-
-- Each SparkContext connects to the Cluster Manager and claims Executors
-- Two SparkContexts in the same JVM would both try to claim Executors from the same pool — causing conflicts, double-counting, and unpredictable behavior
-
-The `.getOrCreate()` pattern safely handles this:
+Only **one active SparkContext per JVM**. Spark errors if you try to create a second (two contexts would both claim Executors from the same pool → conflicts).
 
 ```python
-# First call — creates SparkSession
 spark1 = SparkSession.builder.appName("Job1").getOrCreate()
-
-# Second call anywhere in your code — returns the SAME SparkSession, no new one created
 spark2 = SparkSession.builder.appName("Job2").getOrCreate()
-
-# spark1 and spark2 are the exact same object
-print(spark1 is spark2)  # True
+print(spark1 is spark2)   # True — same object; "Job2" appName ignored
 ```
 
-In Databricks, `spark` is already created when your notebook starts. So calling `SparkSession.builder.getOrCreate()` in a Databricks notebook just returns the existing Databricks-managed session — which is exactly what you want.
+🗣️ **In plain words:** ask for a session twice, you get the *same* one back — not a
+copy. On Databricks that's exactly why `getOrCreate()` returns the cluster's shared
+session.
 
 ---
 
-## 7. Reading the Spark UI
+## 7. Spark UI, Stopping, and Common Mistakes
 
-When you create a SparkSession, Spark starts a web UI at `http://localhost:4040` (in local mode) or accessible through Databricks' cluster UI.
+The UI (`localhost:4040` in local mode) has tabs: **Jobs · Stages · Tasks · Executors · SQL · Environment**. You'll live here in Phase 4 to diagnose slow jobs.
 
-The Spark UI shows you:
-- **Jobs tab** — every Action you've triggered
-- **Stages tab** — breakdown of each Job into Stages
-- **Tasks tab** — individual Tasks and how long each took
-- **Executors tab** — all Executors, their memory, cores, Tasks completed
-- **SQL tab** — query plans for DataFrame operations
-- **Environment tab** — all your SparkConf settings
+Stop with `spark.stop()` (releases Executors, closes UI). **Never call `spark.stop()` in Databricks** — it crashes the shared cluster.
 
-You will use the Spark UI constantly in Phase 4 to diagnose slow jobs. Get comfortable opening it.
+**Common mistakes:** no `.build()`/`.create()` exists (always `.getOrCreate()`); don't create SparkSession inside a loop (create once, reuse); don't set `.master()` or call `.stop()` on Databricks; don't leave `spark.sql.shuffle.partitions` at 200 for very large or very small data.
 
 ---
 
-## 8. Stopping Spark
+## 8. The 3-Step Example — from tiny to real
 
-When your application finishes:
+### Step 1 — the tiny mechanic (turn the key)
 
 ```python
-spark.stop()
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.master("local[*]").appName("t2").getOrCreate()
+print(spark.version)                       # engine is on
+print(spark is SparkSession.builder.getOrCreate())   # True — singleton
 ```
 
-This:
-- Releases all Executor processes (Cluster Manager gets resources back)
-- Closes connection to Cluster Manager
-- Shuts down Spark UI
-- Closes SparkContext
+### Step 2 — OrderIQ e-commerce (use the session for real work)
 
-**Important:** In Databricks, **never call `spark.stop()`**. Databricks manages the cluster lifecycle. Stopping Spark in a notebook will crash the cluster for everyone sharing it.
-
----
-
-## 9. Common Mistakes
-
-**Mistake 1 — Forgetting `.getOrCreate()` and using `.build()` or `.create()`:**
-There is no `.build()` or `.create()`. Always use `.getOrCreate()`.
-
-**Mistake 2 — Creating SparkSession inside a loop:**
 ```python
-# WRONG — creates/retrieves SparkSession on every iteration
-for file in files:
-    spark = SparkSession.builder.getOrCreate()  # wasteful, confusing
-    spark.read.parquet(file)...
-
-# RIGHT — create once, reuse everywhere
-spark = SparkSession.builder.appName("MyPipeline").getOrCreate()
-for file in files:
-    spark.read.parquet(file)...
+# right-size shuffle partitions for tiny local data BEFORE the groupBy shuffle
+spark.conf.set("spark.sql.shuffle.partitions", "8")
+orders = spark.read.csv("datasets/data/orders.csv", header=True, inferSchema=True)
+orders.createOrReplaceTempView("orders")           # now SQL works too
+spark.sql("SELECT city, COUNT(*) FROM orders GROUP BY city").show()
 ```
 
-**Mistake 3 — Calling `spark.stop()` in Databricks:**
-Will kill the cluster. Don't do it.
+One `spark` object gave you **both** the DataFrame API and SQL — that's the "unified entry point" in action.
 
-**Mistake 4 — Setting `spark.master` in Databricks:**
-Databricks ignores it or throws an error. Master is managed. Just omit `.master()`.
+### Step 3 — production shape (same code, different config)
 
-**Mistake 5 — Leaving `spark.sql.shuffle.partitions` at default 200 forever:**
-For a job processing 10 GB, 200 partitions may create 50 MB partitions — fine.
-For a job processing 5 TB, 200 partitions creates 25 GB partitions — guaranteed OOM and spilling.
-Always tune this config for your data size in production.
+```python
+# On Databricks: delete the builder entirely — 'spark' already exists.
+# On EMR/YARN: .master("yarn"), bigger executors, 50000 shuffle partitions for TBs.
+spark.conf.set("spark.sql.shuffle.partitions", "50000")
+orders = spark.read.parquet("s3://orderiq/orders/")
+spark.sql("SELECT city, COUNT(*) c FROM orders GROUP BY city").write.parquet("s3://orderiq/out/")
+```
+
+The mental model never changes — only `master` and a couple of configs do.
 
 ---
 
@@ -347,36 +232,25 @@ Always tune this config for your data size in production.
 ```mermaid
 graph TD
     subgraph YourCode["Your PySpark Code"]
-        SS["SparkSession.builder\n.appName(...)\n.master(...)\n.config(...)\n.getOrCreate()"]
+        SS["SparkSession.builder\n.appName / .master / .config\n.getOrCreate()"]
     end
-
     subgraph SparkSessionObject["SparkSession (spark)"]
-        direction TB
-        SC["SparkContext (sc)\n↳ connects to cluster\n↳ manages Executors\n↳ RDD operations"]
-        SQL["SQLContext\n↳ DataFrame API\n↳ spark.read / spark.sql\n↳ Catalyst optimizer"]
-        CONF["SparkConf\n↳ spark.executor.memory\n↳ spark.executor.cores\n↳ spark.sql.shuffle.partitions"]
-        UI["Spark UI\n↳ port 4040\n↳ jobs / stages / tasks"]
+        SC["SparkContext (sc)\n↳ connects to cluster\n↳ manages Executors\n↳ RDDs"]
+        SQL["DataFrame / SQL API\n↳ spark.read / spark.sql\n↳ Catalyst optimizer"]
+        CONF["SparkConf\n↳ executor.memory / cores\n↳ sql.shuffle.partitions"]
+        UI["Spark UI (port 4040)"]
     end
-
     subgraph Cluster["Cluster"]
-        CM["Cluster Manager\n(YARN / K8s / Standalone)"]
+        CM["Cluster Manager (YARN / K8s / Standalone)"]
         E1["Executor 1"]
         E2["Executor 2"]
-        E3["Executor N..."]
         CM --> E1
         CM --> E2
-        CM --> E3
     end
-
     SS -->|"getOrCreate()"| SparkSessionObject
     SC -->|"requests resources"| CM
     SC <-->|"tasks + heartbeats"| E1
     SC <-->|"tasks + heartbeats"| E2
-    SC <-->|"tasks + heartbeats"| E3
-
-    subgraph DatabricksNote["On Databricks"]
-        PREBUILT["spark is pre-created\nJust use it directly\nDo NOT call spark.stop()"]
-    end
 ```
 
 ---
@@ -384,325 +258,42 @@ graph TD
 ## Revision
 
 ### SparkContext Was First, SparkSession Replaced It
-
-SparkContext was Spark's original entry point in Spark 1.x. It connected your code to the cluster and let you work with RDDs. But as Spark added DataFrames, SQL, Hive, and streaming — each feature got its own entry point (SQLContext, HiveContext, StreamingContext). This became messy. Spark 2.0 introduced SparkSession as one single entry point for everything. SparkContext still exists inside SparkSession — accessible via `spark.sparkContext`. In 2026, you always start with SparkSession.
+SparkContext was Spark 1.x's entry point for RDDs. As DataFrames/SQL/Hive/streaming arrived, each got its own context — messy. Spark 2.0 unified them into SparkSession. SparkContext still lives inside (`spark.sparkContext`). In 2026 you always start with SparkSession.
 
 ### SparkSession Is the Key — Turn It to Start Everything
-
-When you call `SparkSession.builder.getOrCreate()`, Spark connects to the Cluster Manager, requests Executors, starts the Spark UI, and initializes the Catalyst optimizer and Tungsten memory manager. The `spark` object you get back is your gateway to everything: reading files, running SQL, writing output, checking configuration. Without a SparkSession, your Spark code cannot run. Create it once at the top of your application. Reuse it everywhere.
+`getOrCreate()` connects to the Cluster Manager, requests Executors, starts the UI, and boots Catalyst + Tungsten. The `spark` object is your gateway to reading, SQL, writing, and config. Create it once at the top; reuse everywhere.
 
 ### getOrCreate() Enforces One Context Per JVM
-
-Only one SparkContext can be active per JVM at a time — Spark throws an error if you try to create a second. `.getOrCreate()` solves this safely: if a SparkSession already exists, it returns that one; if not, it creates a new one. This means calling `.getOrCreate()` multiple times in your code is safe and idiomatic. In Databricks, `spark` is pre-created — calling `getOrCreate()` returns the existing Databricks session.
+Only one active SparkContext per JVM. `getOrCreate()` returns the existing session if present, else creates one — so calling it repeatedly is safe. On Databricks it returns the pre-created shared session.
 
 ### SparkConf Controls How Spark Runs
+Every tunable — executor memory/cores, shuffle partitions — is a config. Set via `.config()` or `spark.conf.set()`. Priority: code > spark-submit > conf file > defaults. Most-tuned in production: `spark.sql.shuffle.partitions`.
 
-Every tunable aspect of Spark — executor memory, executor cores, number of partitions, shuffle behavior — is a key-value config. You set these via `.config("key", "value")` in the builder, or after the session via `spark.conf.set()`. Priority: code > spark-submit > conf file > defaults. The most important config to tune in production is `spark.sql.shuffle.partitions` (default 200, must be tuned per data size). You will use SparkConf constantly in Phase 4.
-
-### Databricks Is a Special Case — spark Is Pre-Built
-
-In Databricks Community Edition (where you practice), you never write `SparkSession.builder...`. Databricks creates `spark` and `sc` for you when the cluster starts. Open a notebook and `spark` is already there, connected to the cluster, ready to use. Never call `spark.stop()` in Databricks — it will crash the cluster. Outside Databricks (local machine, spark-submit to YARN), you always create SparkSession yourself at the top of your script.
+### Databricks Is a Special Case
+`spark` and `sc` are pre-created. Don't set `.master()`, don't call `.stop()`. Outside Databricks (local, spark-submit) you always create the session yourself.
 
 ---
 
-## Practice Questions
+## Test yourself — quick recall (full hands-on set in `practice.md`)
 
-### 🟢 Easy
-
-**E1. What was the problem with SparkContext in Spark 1.x that led to SparkSession being created?**
-
-<details>
-<summary>▶ Answer</summary>
-
-In Spark 1.x, different features needed different entry points:
-- `SparkContext` for RDD operations
-- `SQLContext` for DataFrames and SQL
-- `HiveContext` for Hive-compatible SQL
-- `StreamingContext` for streaming
-
-Developers had to create and manage multiple context objects for a single application. This was confusing, error-prone, and messy.
-
-Spark 2.0 introduced **SparkSession** as a single unified entry point for all of these. One object gives you access to everything — DataFrames, SQL, RDDs (via `spark.sparkContext`), configuration, and more.
-
-</details>
+<details><summary>1. Why did SparkSession replace the multiple 1.x contexts?</summary>
+One unified entry point instead of juggling SparkContext + SQLContext + HiveContext + StreamingContext.</details>
+<details><summary>2. What are the 4 things getOrCreate() does under the hood?</summary>
+Singleton check → create SparkContext (contact Cluster Manager, request Executors) → init Catalyst/Tungsten/UI → return spark.</details>
+<details><summary>3. Two getOrCreate() calls with different appNames — what do you get?</summary>
+The same session object; the second appName is ignored.</details>
+<details><summary>4. local vs local[4] vs local[*]?</summary>
+1 core / 4 cores / all cores — Driver+Executor in one JVM.</details>
+<details><summary>5. Two things you must NOT do on Databricks?</summary>
+Don't set .master(); don't call spark.stop().</details>
 
 ---
 
-**E2. Write the code to create a SparkSession for a job called "ZomatoOrderPipeline" that runs on YARN with 16 GB RAM and 8 cores per Executor.**
-
-<details>
-<summary>▶ Answer</summary>
-
-```python
-from pyspark.sql import SparkSession
-
-spark = SparkSession.builder \
-    .appName("ZomatoOrderPipeline") \
-    .master("yarn") \
-    .config("spark.executor.memory", "16g") \
-    .config("spark.executor.cores", "8") \
-    .getOrCreate()
-```
-
-After this, `spark` is connected to the YARN cluster with the requested resources. You can now read files, run SQL, and process data.
-
-</details>
-
----
-
-**E3. In Databricks, how do you create a SparkSession? What is different from a local machine setup?**
-
-<details>
-<summary>▶ Answer</summary>
-
-In Databricks, you **do not create** a SparkSession. Databricks creates it for you when the cluster starts. The variable `spark` is available in every notebook cell automatically.
-
-```python
-# On a local machine — you must create it yourself:
-from pyspark.sql import SparkSession
-spark = SparkSession.builder.appName("MyApp").master("local[*]").getOrCreate()
-
-# On Databricks — spark is already there, just use it:
-df = spark.read.csv("/mnt/data/orders.csv")
-```
-
-Two other differences:
-1. **Do not set `.master()`** in Databricks — Databricks manages it
-2. **Do NOT call `spark.stop()`** in Databricks — will crash the cluster
-
-</details>
-
----
-
-### 🟡 Medium
-
-**M1. What exactly happens under the hood when you call `SparkSession.builder.getOrCreate()` for the first time? List the steps in order.**
-
-<details>
-<summary>▶ Answer</summary>
-
-1. **Singleton check** — Spark checks if a SparkSession already exists in this JVM. First time = none exists.
-
-2. **SparkContext is created** — Connects to the Cluster Manager (YARN/K8s/Standalone), requests the configured number of Executors with the requested memory and cores. Waits for Executors to start on worker machines.
-
-3. **Internal components initialize:**
-   - **Catalyst Optimizer** — will optimize your DataFrame and SQL query plans
-   - **Tungsten** — memory manager for fast, off-heap processing
-   - **Spark UI** — web dashboard starts on port 4040 (local) or managed by platform (Databricks)
-
-4. **SparkSession object returned** — You receive the `spark` variable. The cluster is now ready.
-
-Total time: a few seconds to ~30 seconds depending on cluster size and resource availability.
-
-</details>
-
----
-
-**M2. You set `spark.sql.shuffle.partitions = 200` (the default) and run a groupBy on a 5 TB dataset. Why is this a problem? What value should you use instead?**
-
-<details>
-<summary>▶ Answer</summary>
-
-**The problem:**
-
-After a groupBy, Spark creates a new set of partitions for the aggregated result. The number of those partitions = `spark.sql.shuffle.partitions`.
-
-With 200 partitions on 5 TB data:
-- Each partition = 5 TB ÷ 200 = **25 GB per partition**
-- Each Executor Task must hold 25 GB in RAM to process its partition
-- Even a 32 GB Executor runs out of memory → **OOM error** or heavy disk spilling
-- Job is extremely slow or fails
-
-**What to use instead:**
-
-Rule of thumb: target **100–200 MB per partition after shuffle**.
-
-```
-5 TB = 5,000,000 MB
-ideal partitions = 5,000,000 MB ÷ 150 MB = ~33,000 partitions
-```
-
-A reasonable starting point: **50,000 partitions** for 5 TB. Then tune down if scheduling overhead becomes visible.
-
-```python
-spark.conf.set("spark.sql.shuffle.partitions", "50000")
-```
-
-Or set it at session creation:
-```python
-spark = SparkSession.builder \
-    .config("spark.sql.shuffle.partitions", "50000") \
-    .getOrCreate()
-```
-
-</details>
-
----
-
-**M3. You call `SparkSession.builder.appName("Job1").getOrCreate()` early in your script. Later, another function calls `SparkSession.builder.appName("Job2").getOrCreate()`. Which app name does Spark use? What object do you get back in the second call?**
-
-<details>
-<summary>▶ Answer</summary>
-
-**App name:** "Job1" — the first one created.
-
-**Object returned in second call:** The EXACT SAME SparkSession object that was created the first time. `.getOrCreate()` checks for an existing session first. Since one exists, it returns it immediately without creating anything new.
-
-The `.appName("Job2")` in the second builder call is **ignored** — it has no effect because no new session is being created.
-
-```python
-spark1 = SparkSession.builder.appName("Job1").getOrCreate()
-spark2 = SparkSession.builder.appName("Job2").getOrCreate()
-
-print(spark1 is spark2)          # True — same object
-print(spark2.conf.get("spark.app.name"))  # "Job1" — second appName ignored
-```
-
-This is why `.getOrCreate()` is called "singleton" behavior. One SparkSession per JVM, always.
-
-</details>
-
----
-
-**M4. What is the difference between `local[*]`, `local[4]`, and `local` as master values? When do you use each?**
-
-<details>
-<summary>▶ Answer</summary>
-
-All three run Spark on your local machine with no cluster — the entire Spark application (Driver + Executors) runs in one JVM process.
-
-| Master | Cores Used | When to Use |
-|---|---|---|
-| `local` | 1 core only | Minimal testing — one thing at a time, no parallelism |
-| `local[4]` | 4 cores | When you want to test with a fixed level of parallelism |
-| `local[*]` | All available cores on your machine | Local development and learning — uses maximum parallelism your machine can provide |
-
-**Practical advice:**
-- Learning on Databricks Community → no master setting needed (Databricks handles it)
-- Local machine dev/testing → `local[*]` almost always
-- CI/CD tests where you want deterministic parallelism → `local[4]` or specific number
-
-```python
-# Most common for local learning:
-spark = SparkSession.builder \
-    .appName("Test") \
-    .master("local[*]") \
-    .getOrCreate()
-```
-
-On a 4-core laptop, `local[*]` = `local[4]`. On a 16-core server, `local[*]` = `local[16]`.
-
-</details>
-
----
-
-### 🔴 Hard
-
-**H1. A senior DE says: "Never set spark.executor.memory and spark.executor.cores in your application code. Set them at the spark-submit level or in the cluster config." Why might this be good advice in a team environment?**
-
-<details>
-<summary>▶ Answer</summary>
-
-This is good advice for several reasons in a shared team environment:
-
-**1. Code configs are hard to change without a deployment:**
-If `spark.executor.memory = "8g"` is in Python code in a git repo, changing it requires: code change → PR → review → merge → deploy. Urgent tuning during a production incident is slow.
-
-At the spark-submit level (cluster config or job parameters), a DevOps/DE can change the memory without touching application code — faster response to production issues.
-
-**2. Cluster admins need control:**
-A cluster admin needs to ensure no single job hogs all cluster resources. If teams hardcode executor configs in code, the admin loses the ability to enforce resource quotas through queue configs. They can override with higher priority, but it's a cat-and-mouse game.
-
-**3. Same code, different environments:**
-Dev cluster has 8 GB executors. Prod cluster has 64 GB executors. If memory is hardcoded in code, you either have wrong settings in one environment, or you need separate code branches. If set externally (spark-submit, cluster config), the same code runs correctly in both environments.
-
-**4. Config drift:**
-Over time, 20 different jobs with hardcoded configs become impossible to audit. Which jobs are using how much memory? Finding out requires reading each codebase. With centralized configs, it's one place.
-
-**When to override in code:**
-`spark.sql.shuffle.partitions` and job-logic-specific configs (that depend on the data shape your job processes) are reasonable to set in code. Resource sizing (`executor.memory`, `executor.cores`) is better externalized.
-
-</details>
-
----
-
-**H2. You have a PySpark script that works perfectly on Databricks. You try to run it on your laptop with `master("local[*]")` and it fails with "ModuleNotFoundError: No module named 'pyspark'". You install pyspark via pip and it fails again — this time running out of memory on a 200 MB file. Explain both failures and how to fix them.**
-
-<details>
-<summary>▶ Answer</summary>
-
-**Failure 1 — ModuleNotFoundError:**
-
-Your Python environment doesn't have PySpark installed. Databricks pre-installs PySpark as part of the cluster image.
-
-Fix:
-```bash
-pip install pyspark
-```
-
-Or for a specific version matching Databricks:
-```bash
-pip install pyspark==3.5.0
-```
-
-**Failure 2 — Out of memory on 200 MB file:**
-
-This is a configuration mismatch, not a real memory problem. Likely causes:
-
-a) **SparkSession config has no `.master()` set** — Spark can't start in local mode. Error may be misleading.
-
-b) **JVM heap too small** — By default, PySpark starts a JVM with ~1 GB heap. On a 200 MB file with a complex transformation, shuffled intermediate data can exceed 1 GB.
-
-Fix:
-```python
-spark = SparkSession.builder \
-    .appName("LocalTest") \
-    .master("local[*]") \
-    .config("spark.driver.memory", "4g")  # Give Driver 4 GB heap
-    .config("spark.executor.memory", "4g")  # In local mode, Driver IS the Executor
-    .getOrCreate()
-```
-
-c) **`spark.sql.shuffle.partitions` = 200 on 200 MB data** — creates 200 partitions of 1 MB each. Task scheduling overhead may dominate:
-
-```python
-.config("spark.sql.shuffle.partitions", "8")  # Match your local core count
-```
-
-**Key lesson:** Databricks has pre-tuned defaults for cluster environments. Local mode needs different tuning. The same code works on both — but configs should be environment-specific.
-
-</details>
-
----
-
-**H3. SparkSession is a "singleton per JVM." But in production, companies run hundreds of Spark jobs simultaneously. If each job can only have one SparkContext, how do hundreds of jobs run at the same time?**
-
-<details>
-<summary>▶ Answer</summary>
-
-The "singleton per JVM" rule applies **within a single JVM process** — not across the entire cluster.
-
-Every Spark job runs as its own separate JVM process (its own Driver process). Each Driver has its own SparkContext. They are completely isolated from each other.
-
-Here is the breakdown:
-
-```
-Job 1 (Flipkart ETL)      → Driver JVM process A → SparkContext A → Executors {1,2,3,4,5}
-Job 2 (Zomato Analytics)  → Driver JVM process B → SparkContext B → Executors {6,7,8,9,10}
-Job 3 (IRCTC Reports)     → Driver JVM process C → SparkContext C → Executors {11,12,13,14}
-```
-
-All three run simultaneously. They each have their own SparkContext in their own process. No conflict.
-
-The Cluster Manager (YARN/K8s) manages ALL of them — it tracks which Executor slots are taken by which job, enforces resource limits, and makes sure no single job starves the others.
-
-**The constraint that matters in practice:**
-"One SparkContext per JVM" means you cannot have TWO Spark jobs sharing a single Driver process. They must be separate submitted jobs. This is the correct design — isolation between jobs means one job failing doesn't affect others.
-
-**Where this matters for you:**
-In Databricks, you might run multiple notebooks on the same cluster. Each notebook shares the SAME SparkSession (same JVM, same cluster). This is why `getOrCreate()` returns the existing session — all notebooks on a cluster share one SparkContext intentionally. They compete for Executor resources within that shared context.
-
-</details>
+## Practice
+
+👉 [`practice.md`](./practice.md) — build a SparkSession on OrderIQ, prove the
+singleton, use one `spark` for **both** DataFrame + SQL, and **break it** by
+leaving shuffle partitions at 200 on tiny data (then fix it). BUILD → BREAK → EXPLAIN.
 
 ---
 
